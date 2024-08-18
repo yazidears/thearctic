@@ -1,73 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>theArctic: vSYMPHONY</title>
+<title>theArctic: Unoptimized</title>
 <style>
 body {
-    background-color: #f0f8ff; /* Light blue background */
-    overflow: hidden;
-    font-family: 'Helvetica Neue', sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #000000;
+    color: #00ff00; 
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    transition: background-color 0.5s ease; /* For the flash animation */
 }
 
-.title {
-    font-size: 3em;
-    margin-bottom: 20px;
-    text-align: center;
+.status {
+    font-size: 1.2em;
+    margin-bottom: 10px;
 }
 
-.title span:first-child {
-    font-weight: bold;
+.archive-list {
+    list-style: none;
+    padding: 0;
 }
 
-.title span:last-child {
-    font-weight: lighter;
+.archive-item {
+    margin-bottom: 5px;
 }
 
-.note-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 80%;
-    max-width: 600px;
+.archive-link {
+    color: #00ffff;
+    text-decoration: none;
 }
 
-.note {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 10px;
-    cursor: pointer;
-    transition: transform 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
+.controls {
+    margin-top: 20px;
 }
 
-/* NYC Subway Line Colors */
-.note:nth-child(1) { background-color: #ee352e; color:white;} /* 1 Line - Red */
-.note:nth-child(2) { background-color: #00933c; color:white;} /* 2 Line - Green */
-.note:nth-child(3) { background-color: #0039a6; color:white;} /* 3 Line - Blue */
-.note:nth-child(4) { background-color: #ff6319; color:white;} /* 4 Line - Orange */
-.note:nth-child(5) { background-color: #fccc0a; } /* 5 Line - Yellow */
-.note:nth-child(6) { background-color: #996633; } /* 6 Line - Brown */
-.note:nth-child(7) { background-color: #a7a9ac; } /* 7 Line - Gray */
-
-.note:hover {
-    transform: scale(1.1);
-}
-
-.wtf-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #000000; 
-    color: #ffffff;
+.button {
+    background-color: #00ff00; 
+    color: #000000;
     border: none;
     padding: 10px 20px;
     text-align: center;
@@ -76,6 +45,29 @@ body {
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    margin-right: 10px;
+
+}
+
+.system-info {
+    margin-top: 10px;
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #00ff00; 
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius:   
+ 5px;
     z-index: 1000;
 }
 
@@ -88,64 +80,140 @@ body {
     background-color: rgba(0, 0, 0, 0.8);
     display: none;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
+    color: #ffffff; /* Set text color to white */
     z-index: 1001;
 }
 
 .explanation-text {
-    color: #ffffff;
     font-size: 1.2em;
     text-align: center;
     max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
 }
 </style>
 </head>
 <body>
 
-<div class="title">
-    <span>theARCTIC</span> 
-    <span>vSYMPHONY</span>
-</div>
+<ul class="archive-list"></ul>
 
-<div class="note-container">
-</div>
+<div class="controls">
+    <button class="button" onclick="pauseSearch()">Pause</button>
+    <div class="status">theArctic's advanced algorithm is diligently searching for art pieces...</div>
 
-<audio id="cNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="dNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="eNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="fNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="gNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="aNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
-<audio id="bNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+    <div class="system-info"></div> 
+</div>
 
 <button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
 
 <div class="explanation-overlay">
     <div class="explanation-text">
-        Ah, the eternal question...<br><br>
-        This digital canvas is a playground for my ever-evolving learning journey. Here, boundaries blur, conventions shatter, and the unexpected reigns supreme. Embrace the flux, for in the dance of change lies the essence of growth.<br><br>
-        Expect the unpredictable, and revel in the metamorphosis.
+        <span class="info-emoji">🛈</span> 
+        <p>
+        theArctic's advanced algorithm is tirelessly searching for hidden art pieces.<br>
+        Once discovered, these masterpieces will be unveiled below for your viewing pleasure.
+        </p>
     </div>
     <button class="wtf-button" onclick="hideExplanation()">Close</button>
 </div>
 
 <script>
-const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const noteContainer = document.querySelector('.note-container');
+const statusDiv = document.querySelector('.status');
+const archiveList = document.querySelector('.archive-list');
+const systemInfoDiv = document.querySelector('.system-info');
+const allowedChars = 'abcdefghijklmnopqrstuvwxyz';
+let currentGuess = 'a';
+let isPaused = false;
 
-notes.forEach(note => {
-    const noteElement = document.createElement('div');
-    noteElement.classList.add('note');
-    noteElement.textContent = note;
-    noteContainer.appendChild(noteElement);
+function checkFile() {
+    if (isPaused) return; 
 
-    noteElement.addEventListener('click', () => {
-        const audioId = note.toLowerCase() + 'Note';
-        const audio = document.getElementById(audioId);
-        audio.currentTime = 0; // Reset audio to the beginning
-        audio.play();
-    });
+    const filename = currentGuess + '.html';
+    statusDiv.textContent = `Checking: ${filename}`;
+
+    fetch(filename)
+        .then(response => {
+            if (response.ok) {
+                const listItem = document.createElement('li');
+                listItem.classList.add('archive-item');
+                const link = document.createElement('a');
+                link.href = filename;
+                link.textContent = filename;
+                link.classList.add('archive-link');
+                listItem.appendChild(link);
+                archiveList.appendChild(listItem);
+
+                // Flash animation when a website is found
+                document.body.style.backgroundColor = '#00ffff'; 
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '#000000'; 
+                }, 300); 
+            }
+
+            nextGuess();
+            checkFile(); 
+        })
+        .catch(error => {
+            nextGuess();
+            checkFile(); 
+        });
+}
+function nextGuess() {
+    if (currentGuess.length === 1 && currentGuess === allowedChars.charAt(allowedChars.length - 1)) {
+        currentGuess = allowedChars.charAt(0) + allowedChars.charAt(0); 
+    } else if (currentGuess.endsWith('z')) {
+        let i = currentGuess.length - 1;
+        while (i >= 0 && currentGuess.charAt(i) === 'z') {
+            i--;
+        }
+        if (i >= 0) {
+            let newFirstPart = currentGuess.slice(0, i);
+            let charToIncrement = currentGuess.charAt(i);
+            let index = allowedChars.indexOf(charToIncrement);
+            let newChar = allowedChars.charAt(index + 1);
+            currentGuess = newFirstPart + newChar + 'a'.repeat(currentGuess.length - i - 1);
+        } else {
+            currentGuess = 'a' + currentGuess;
+        }
+    } else {
+        const lastChar = currentGuess.charAt(currentGuess.length - 1);
+        const index = allowedChars.indexOf(lastChar);
+        const newLastChar = allowedChars.charAt(index + 1);
+        currentGuess = currentGuess.slice(0, -1) + newLastChar;
+    }
+}
+
+function pauseSearch() {
+    isPaused = !isPaused; 
+    const pauseButton = document.querySelector('.controls .button');
+    if (isPaused) {
+        pauseButton.textContent = 'Resume';
+        statusDiv.textContent = 'Search paused.';
+    } else {
+        pauseButton.textContent = 'Pause';
+        checkFile(); 
+    }
+}
+
+checkFile(); 
+// Get system information (Chrome API)
+chrome.system.cpu.getInfo(cpuInfo => {
+    systemInfoDiv.textContent = `CPU: ${cpuInfo.modelName} | Usage: ${cpuInfo.userPercent}%`;
 });
+
+chrome.system.memory.getInfo(memoryInfo => {
+    const usedMemoryMB = (memoryInfo.capacity - memoryInfo.availableCapacity) / (1024 * 1024);
+    systemInfoDiv.textContent += ` | Memory: ${usedMemoryMB.toFixed(2)} MB / ${ (memoryInfo.capacity / (1024 * 1024)).toFixed(2)} MB`;
+});
+
+checkFile(); 
 
 function showExplanation() {
     document.querySelector('.explanation-overlay').style.display = 'flex';

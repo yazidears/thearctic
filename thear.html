@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: vSYMPHONY</title>
+<style>
+body {
+    background-color: #f0f8ff; /* Light blue background */
+    overflow: hidden;
+    font-family: 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.title {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.title span:first-child {
+    font-weight: bold;
+}
+
+.title span:last-child {
+    font-weight: lighter;
+}
+
+.note-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    max-width: 600px;
+}
+
+.note {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+
+/* NYC Subway Line Colors */
+.note:nth-child(1) { background-color: #ee352e; color:white;} /* 1 Line - Red */
+.note:nth-child(2) { background-color: #00933c; color:white;} /* 2 Line - Green */
+.note:nth-child(3) { background-color: #0039a6; color:white;} /* 3 Line - Blue */
+.note:nth-child(4) { background-color: #ff6319; color:white;} /* 4 Line - Orange */
+.note:nth-child(5) { background-color: #fccc0a; } /* 5 Line - Yellow */
+.note:nth-child(6) { background-color: #996633; } /* 6 Line - Brown */
+.note:nth-child(7) { background-color: #a7a9ac; } /* 7 Line - Gray */
+
+.note:hover {
+    transform: scale(1.1);
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #000000; 
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.explanation-text {
+    color: #ffffff;
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+}
+</style>
+</head>
+<body>
+
+<div class="title">
+    <span>theARCTIC</span> 
+    <span>vSYMPHONY</span>
+</div>
+
+<div class="note-container">
+</div>
+
+<audio id="cNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="dNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="eNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="fNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="gNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="aNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+<audio id="bNote" src="https://www.myinstants.com/media/sounds/sound-effect-file-ring-mp3.mp3"></audio>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        Ah, the eternal question...<br><br>
+        This digital canvas is a playground for my ever-evolving learning journey. Here, boundaries blur, conventions shatter, and the unexpected reigns supreme. Embrace the flux, for in the dance of change lies the essence of growth.<br><br>
+        Expect the unpredictable, and revel in the metamorphosis.
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const noteContainer = document.querySelector('.note-container');
+
+notes.forEach(note => {
+    const noteElement = document.createElement('div');
+    noteElement.classList.add('note');
+    noteElement.textContent = note;
+    noteContainer.appendChild(noteElement);
+
+    noteElement.addEventListener('click', () => {
+        const audioId = note.toLowerCase() + 'Note';
+        const audio = document.getElementById(audioId);
+        audio.currentTime = 0; // Reset audio to the beginning
+        audio.play();
+    });
+});
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: vSYMPHONY</title>
+<style>
+body {
+    background-color: #000000;
+    overflow: hidden;
+    font-family: 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.title {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff; /* White text on black background */
+}
+
+.title span:first-child {
+    font-weight: bold;
+}
+
+.title span:last-child {
+    font-weight: lighter;
+}
+
+.disco-ball {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, #ffffff, #c0c0c0); /* Silver gradient */
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: rotateBall 10s linear infinite;
+}
+
+@keyframes rotateBall {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.sparkle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkleAnimation 2s linear infinite;
+}
+
+@keyframes sparkleAnimation {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ffffff; 
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.explanation-text {
+    color: #ffffff;
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+}
+</style>
+</head>
+<body>
+
+<div class="title">
+    <span>theARCTIC</span> 
+    <span>discodiva</span>
+</div>
+
+<div class="disco-ball"></div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        Ah, the eternal question...<br><br>
+        This digital canvas is a playground for my ever-evolving learning journey. Here, boundaries blur, conventions shatter, and the unexpected reigns supreme. Embrace the flux, for in the dance of change lies the essence of growth.<br><br>
+        Expect the unpredictable, and revel in the metamorphosis.
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+const discoBall = document.querySelector('.disco-ball');
+
+discoBall.addEventListener('mousemove', (event) => {
+    const ballRect = discoBall.getBoundingClientRect();
+    const x = event.clientX - ballRect.left - ballRect.width / 2;
+    const y = event.clientY - ballRect.top - ballRect.height / 2;
+
+    for (let i = 0; i < 5; i++) {
+        createSparkle(x, y);
+    }
+});
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = x + 'px';
+    sparkle.style.top = y + 'px';
+    sparkle.style.animationDelay = Math.random() * 1 + 's';
+    discoBall.appendChild(sparkle);
+
+    setTimeout(() => {
+        sparkle.remove();
+    }, 2000);
+}
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

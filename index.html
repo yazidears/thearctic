@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic</title>
+<style>
+body {
+    background-color: #f0f8ff; /* Alice blue background */
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.iceberg {
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    background-color: #ffffff;
+    border-radius: 50% 50% 0 0 / 60% 60% 0 0; /* Iceberg shape */
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    animation: icebergFloat 15s infinite linear;
+}
+
+@keyframes icebergFloat {
+    0% { left: -200px; top: 30vh; }
+    100% { left: 100vw; top: 30vh; }
+}
+
+.polar-bear {
+    position: absolute;
+    width: 80px;
+    height: 60px;
+    background-image: url('https://www.google.com/search?q=polar+bear+silhouette&tbm=isch'); /* Replace with actual polar bear silhouette URL */
+    background-size: cover;
+    left: 40px;
+    top: 230px;
+    animation: bearWalk 8s infinite linear;
+}
+
+@keyframes bearWalk {
+    0% { left: 40px; }
+    100% { left: 160px; }
+}
+
+.northern-lights {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 20vh;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,255,0,0.5) 20%, rgba(0,0,255,0.7) 50%, rgba(255,0,0,0.3) 80%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    animation: auroraAnimation 10s infinite;
+}
+
+@keyframes auroraAnimation {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Above the button */
+}
+
+.explanation-text {
+    color: #ffffff;
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+}
+</style>
+</head>
+<body>
+
+<div class="iceberg"></div>
+<div class="polar-bear"></div>
+<div class="northern-lights"></div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        Ah, the eternal question...<br><br>
+        This digital canvas is a playground for my ever-evolving learning journey. Here, boundaries blur, conventions shatter, and the unexpected reigns supreme. Embrace the flux, for in the dance of change lies the essence of growth.<br><br>
+        Expect the unpredictable, and revel in the metamorphosis.
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

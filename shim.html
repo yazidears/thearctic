@@ -1,77 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>theArctic: Essence</title>
+<title>theArctic: Shimmer</title>
 <style>
 body {
-    background: linear-gradient(to bottom, #f0f8ff, #ffffff); 
+    background-color: #e0ffff; /* Light cyan background */
     overflow: hidden;
     margin: 0;
 }
 
-.polar-bear-abstract {
+.ice-surface {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 150px;
-}
-
-.bear-part {
-    position: absolute;
-    background-color: #333333; /* Dark gray */
-    border-radius: 10px;
-    animation: partMove 5s ease-in-out infinite;
-}
-
-.head {
-    width: 50px;
-    height: 50px;
     top: 0;
-    left: 75px;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('https://img.freepik.com/free-vector/realistic-frost-texture-backgroung_23-2149221855.jpg'); /* Replace with a seamless ice texture image */
+    background-size: 300px 300px; /* Adjust as needed */
+    mix-blend-mode: overlay;
 }
 
-.body {
-    width: 100px;
-    height: 80px;
-    top: 50px;
-    left: 50px;
-}
-
-.leg1, .leg2 {
-    width: 30px;
-    height: 60px;
-    bottom: 0;
-}
-
-.leg1 {
-    left: 40px;
-}
-
-.leg2 {
-    left: 130px;
-}
-
-@keyframes partMove {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
-
-.snowflake {
+.light-ray {
     position: absolute;
     width: 10px;
-    height: 10px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    opacity: 0.7;
-    animation: snowflakeFall 8s linear infinite;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    transform: rotate(45deg);
+    opacity: 0;
+    animation: lightRayAnimation 5s ease-in-out infinite;
 }
 
-@keyframes snowflakeFall {
-    0% { top: -10px; }
-    100% { top: 100vh; }
+@keyframes lightRayAnimation {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .wtf-button {
@@ -134,31 +96,7 @@ body {
 </head>
 <body>
 
-<div class="polar-bear-abstract">
-    <div class="bear-part head"></div>
-    <div class="bear-part body"></div>
-    <div class="bear-part leg1"></div>
-    <div class="bear-part leg2"></div>
-</div>
-
-<script>
-// Create snowflakes
-for (let i = 0; i < 50; i++) {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.style.left = Math.random() * 100 + 'vw';
-    snowflake.style.animationDelay = Math.random() * 5 + 's';
-    document.body.appendChild(snowflake);
-}
-
-function showExplanation() {
-    document.querySelector('.explanation-overlay').style.display = 'flex';
-}
-
-function hideExplanation() {
-    document.querySelector('.explanation-overlay').style.display = 'none';
-}
-</script>
+<div class="ice-surface"></div>
 
 <button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
 
@@ -173,6 +111,34 @@ function hideExplanation() {
     </div>
     <button class="wtf-button" onclick="hideExplanation()">Close</button>
 </div>
+
+<script>
+const iceSurface = document.querySelector('.ice-surface');
+
+iceSurface.addEventListener('mousemove', (event) => {
+    createLightRay(event.clientX);
+});
+
+function createLightRay(x) {
+    const ray = document.createElement('div');
+    ray.classList.add('light-ray');
+    ray.style.left = x - 5 + 'px'; 
+    ray.style.animationDelay = Math.random() * 2 + 's';
+    iceSurface.appendChild(ray);
+
+    setTimeout(() => {
+        ray.remove();
+    }, 5000); 
+}
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
 
 </body>
 </html>

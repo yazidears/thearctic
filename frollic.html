@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Frolic</title>
+<style>
+body {
+    background: linear-gradient(to bottom, #f0f8ff, #ffffff); 
+    overflow: hidden;
+    margin: 0;
+}
+
+.fox {
+    position: absolute;
+    width: 80px;
+    height: 50px;
+    background-image: url('https://www.google.com/search?q=arctic+fox+silhouette&tbm=isch'); /* Replace with an Arctic fox silhouette */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: foxJump 3s ease-in-out infinite;
+}
+
+@keyframes foxJump {
+    0% { bottom: 20px; transform: translateY(0) rotate(0deg); }
+    50% { bottom: 120px; transform: translateY(-50px) rotate(10deg); }
+    100% { bottom: 20px; transform: translateY(0) rotate(0deg); }
+}
+
+.snowball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: snowballThrow 2s linear forwards;
+}
+
+@keyframes snowballThrow {
+    0% { opacity: 0; transform: translate(0, 0); }
+    100% { opacity: 1; transform: translate(200px, -100px); }
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #264653; /* Dark teal */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; 
+    z-index: 1001;
+}
+
+.explanation-text {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-family: 'Great Vibes', cursive; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.explanation-text p {
+    line-height: 1.6; 
+    margin-bottom: 20px;
+}
+
+.explanation-text strong {
+    font-weight: bold;
+    color: #00ffff; 
+}
+</style>
+</head>
+<body>
+
+<div class="fox" style="left: 20vw;"></div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+const fox = document.querySelector('.fox');
+
+fox.addEventListener('click', () => {
+    throwSnowball();
+});
+
+function throwSnowball() {
+    const snowball = document.createElement('div');
+    snowball.classList.add('snowball');
+    snowball.style.left = fox.offsetLeft + fox.offsetWidth / 2 - 10 + 'px'; // Center the snowball
+    snowball.style.top = fox.offsetTop + 'px';
+    document.body.appendChild(snowball);
+
+    setTimeout(() => {
+        snowball.remove();
+    }, 2000); 
+}
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

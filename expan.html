@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Expanse</title>
+<style>
+body {
+    background: linear-gradient(to bottom, #f0f8ff, #b0e0e6); /* Light blue to pale turquoise gradient */
+    color: #333333; /* Dark gray text */
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    perspective: 1000px; /* For 3D effect */
+}
+
+.landscape {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.mountain {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 200px solid #ffffff;
+    left: 20vw;
+    animation: mountainDrift 60s linear infinite; /* Slow drift */
+}
+
+@keyframes mountainDrift {
+    0% { left: 20vw; }
+    100% { left: 80vw; }
+}
+
+.glacier {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 150px;
+    background-color: #ffffff;
+    border-radius: 0 50% 50% 0 / 0 80% 80% 0; /* Glacier shape */
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.2);
+    animation: glacierDrift 45s linear infinite; /* Slower drift */
+}
+
+@keyframes glacierDrift {
+    0% { right: -300px; }
+    100% { right: 100vw; }
+}
+
+.ice-floe {
+    position: absolute;
+    width: 50px;
+    height: 30px;
+    background-color: #ffffff;
+    border-radius: 50% 30% 60% 20% / 70% 20% 30% 60%; /* Irregular shape */
+    opacity: 0.8;
+    animation: floeDrift 20s linear infinite;
+}
+
+@keyframes floeDrift {
+    0% { left: -50px; top: 60vh; }
+    100% { left: 100vw; top: 60vh; }
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #264653; /* Dark teal */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; 
+    z-index: 1001;
+}
+
+.explanation-text {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-family: 'Great Vibes', cursive; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.explanation-text p {
+    line-height: 1.6; 
+    margin-bottom: 20px;
+}
+
+.explanation-text strong {
+    font-weight: bold;
+    color: #00ffff; 
+}
+</style>
+</head>
+<body>
+
+<div class="landscape">
+    <div class="mountain"></div>
+    <div class="glacier"></div>
+
+    <script>
+    // Create multiple ice floes
+    for (let i = 0; i < 10; i++) {
+        const iceFloe = document.createElement('div');
+        iceFloe.classList.add('ice-floe');
+        iceFloe.style.left = Math.random() * 100 + 'vw';
+        iceFloe.style.top = Math.random() * 30 + 50 + 'vh'; // Keep them in the lower half
+        iceFloe.style.animationDelay = Math.random() * 10 + 's';
+        document.querySelector('.landscape').appendChild(iceFloe);
+    }
+    </script>
+</div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

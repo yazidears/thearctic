@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Whispers</title>
+<style>
+body {
+    background-color: #333333; /* Dark gray background */
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.message {
+    font-size: 2em;
+    opacity: 0;
+    animation: fadeInAndOut 8s ease-in-out infinite;
+}
+
+@keyframes fadeInAndOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.hidden-message {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #2a9d8f; /* Slightly lighter teal */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; 
+    z-index: 1001;
+}
+
+.explanation-text {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-family: 'Great Vibes', cursive; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.explanation-text p {
+    line-height: 1.6; 
+    margin-bottom: 20px;
+}
+
+.explanation-text strong {
+    font-weight: bold;
+    color: #00ffff; 
+}
+</style>
+</head>
+<body>
+
+<div class="message">Listen closely...</div>
+<div class="hidden-message">The secrets lie beneath the ice.</div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+const messages = [
+    "Listen closely...",
+    "The wind whispers secrets.",
+    "The ice holds ancient tales.",
+    "Beneath the surface lies the truth."
+];
+
+const messageElement = document.querySelector('.message');
+const hiddenMessage = document.querySelector('.hidden-message');
+
+function showRandomMessage() {
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    messageElement.textContent = messages[randomIndex];
+}
+
+setInterval(showRandomMessage, 5000); // Change message every 5 seconds
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 's') { // Reveal hidden message on 's' key press
+        hiddenMessage.style.display = 'block';
+        setTimeout(() => {
+            hiddenMessage.style.display = 'none';
+        }, 3000); 
+    }
+});
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

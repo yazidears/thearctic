@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Majesty</title>
+<style>
+body {
+    background: linear-gradient(to bottom, #f0f8ff, #ffffff); /* Light blue to white gradient */
+    overflow: hidden;
+    margin: 0;
+}
+
+.polar-bear {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 200px;
+    background-image: url('https://media.istockphoto.com/id/1313575950/vector/polar-bear-silhouette-vector-illustration.jpg?s=612x612&w=0&k=20&c=4F3RNlAU5JOYbCYQg6KQhJcVbsz2Tk39EtN2JzALeUU='); /* Replace with a polar bear walking silhouette */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: bearWalk 10s linear infinite;
+}
+
+@keyframes bearWalk {
+    0% { left: 10%; }
+    100% { left: 90%; }
+}
+
+.snowflake {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: snowflakeFall 8s linear infinite;
+}
+
+@keyframes snowflakeFall {
+    0% { top: -10px; }
+    100% { top: 100vh; }
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #264653; /* Dark teal */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; 
+    z-index: 1001;
+}
+
+.explanation-text {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-family: 'Great Vibes', cursive; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.explanation-text p {
+    line-height: 1.6; 
+    margin-bottom: 20px;
+}
+
+.explanation-text strong {
+    font-weight: bold;
+    color: #00ffff; 
+}
+</style>
+</head>
+<body>
+
+<div class="polar-bear"></div>
+
+<script>
+// Create snowflakes
+for (let i = 0; i < 50; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(snowflake);
+}
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+</body>
+</html>

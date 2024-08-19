@@ -10,7 +10,21 @@ body {
     padding: 20px;
     transition: background-color 0.5s ease; /* For the flash animation */
 }
-
+p{
+    color:white;
+    font-family:"Helvetica Neue","Helvetica",sans-serif;
+    font-size:0.9em;
+    margin: 0;
+    font-weight:400;
+}
+h1{
+    color:white;
+    text-align: left;
+    font-family:"Helvetica Neue","Helvetica",sans-serif;
+    font-size:1.2em;
+    font-weight:bold;
+    line-height: 0;
+}
 .status {
     font-size: 1.2em;
     margin-bottom: 10px;
@@ -66,8 +80,23 @@ body {
     display: inline-block;
     font-size: 16px;
     cursor: pointer;
-    border-radius:   
- 5px;
+    border-radius:5px;
+    z-index: 1000;
+}
+.wtf-button2 {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #ffff; 
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius:5px;
     z-index: 1000;
 }
 
@@ -93,7 +122,10 @@ body {
     flex-direction: column;
     align-items: center; 
 }
-
+.statuses{
+    font-family:"Helvetica Neue", sans-serif;
+    color:white;
+}
 .info-emoji {
     font-size: 3em;
     margin-bottom: 10px;
@@ -102,24 +134,33 @@ body {
 </head>
 <body>
 
+<div class="status">theArctic's advanced algorithm is diligently searching for art pieces...</div>
 <ul class="archive-list"></ul>
 
-<div class="controls">
-    <button class="button" onclick="pauseSearch()">Pause</button>
-    <div class="status">theArctic's advanced algorithm is diligently searching for art pieces...</div>
-
-    <div class="system-info"></div> 
-</div>
-
 <button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+<br>
+<button class="wtf-button2" onclick="pauseSearch()">Pause</button>
 
 <div class="explanation-overlay">
     <div class="explanation-text">
-        <span class="info-emoji">🛈</span> 
-        <p>
-        theArctic's advanced algorithm is tirelessly searching for hidden art pieces.<br>
-        Once discovered, these masterpieces will be unveiled below for your viewing pleasure.
-        </p>
+        <p>Behold the <strong><strong></strong>UnOptimized®</strong></strong> Engine, the crown jewel of theArctic's technological prowess. This algorithm, deliberately defying conventional optimization paradigms, is a marvel of brute-force efficiency that redefines file discovery and web navigation.
+</p><h1>
+            Architectural Brilliance:</h1><p>
+            
+            <strong>UnOptimized®</strong>'s architecture transcends the limitations of single-threaded processing. It dynamically spawns multiple threads within a single thread, creating a self-contained parallel processing environment. This unique capability allows it to scour vast digital landscapes, meticulously capturing every byte of data.
+        </p><h1>
+            Web Discovery Reimagined:</h1><p>            
+            <strong>UnOptimized®</strong>'s web discovery process is a testament to its tenacity. While it may take its time, the results are unparalleled. Once a potential website is detected, a rigorous validation process ensues. The engine consults the central theArctic server, along with theArcticValidity Services and the enigmatic YZDE®, ensuring the website's legitimacy and security.
+        </p><h1>
+            User-Centric Design:</h1><p>
+            
+            Validated websites are presented in a visually intuitive manner, highlighted in blue, signifying their readiness for exploration. A simple click establishes a secure connection, ushering the user into the digital realm.
+        </p><h1>
+            Advanced User Perspective:</h1><p>
+            
+            <strong>UnOptimized®</strong> is a testament to theArctic's commitment to pushing technological boundaries. Its unconventional approach to optimization, coupled with its multi-threaded architecture and robust validation protocols, delivers an unparalleled web discovery experience. This engine is a testament to the power of embracing deliberate inefficiency in the pursuit of comprehensive results.
+            
+            <strong>Disclaimer: UnOptimized®</strong>'s deliberate focus on thoroughness may result in longer processing times. However, for those who value accuracy and security above all else, this engine is the ultimate tool for navigating the vast expanse of the World Wide Web.</p>
     </div>
     <button class="wtf-button" onclick="hideExplanation()">Close</button>
 </div>
@@ -192,7 +233,7 @@ function nextGuess() {
 
 function pauseSearch() {
     isPaused = !isPaused; 
-    const pauseButton = document.querySelector('.controls .button');
+    const pauseButton = document.querySelector('.wtf-button2');
     if (isPaused) {
         pauseButton.textContent = 'Resume';
         statusDiv.textContent = 'Search paused.';

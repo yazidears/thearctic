@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Essence</title>
+<style>
+body {
+    background: linear-gradient(to bottom, #f0f8ff, #ffffff); 
+    overflow: hidden;
+    margin: 0;
+}
+
+.polar-bear-abstract {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 150px;
+}
+
+.bear-part {
+    position: absolute;
+    background-color: #333333; /* Dark gray */
+    border-radius: 10px;
+    animation: partMove 5s ease-in-out infinite;
+}
+
+.head {
+    width: 50px;
+    height: 50px;
+    top: 0;
+    left: 75px;
+}
+
+.body {
+    width: 100px;
+    height: 80px;
+    top: 50px;
+    left: 50px;
+}
+
+.leg1, .leg2 {
+    width: 30px;
+    height: 60px;
+    bottom: 0;
+}
+
+.leg1 {
+    left: 40px;
+}
+
+.leg2 {
+    left: 130px;
+}
+
+@keyframes partMove {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.snowflake {
+    /* ... (Same as previous version) ... */
+}
+
+.wtf-button {
+    /* ... (Same as previous version) ... */
+}
+
+.explanation-overlay {
+    /* ... (Same as previous version) ... */
+}
+
+.explanation-text {
+    /* ... (Same as previous version) ... */
+}
+
+.info-emoji {
+    /* ... (Same as previous version) ... */
+}
+
+.explanation-text p {
+    /* ... (Same as previous version) ... */
+}
+
+.explanation-text strong {
+    /* ... (Same as previous version) ... */
+}
+</style>
+</head>
+<body>
+
+<div class="polar-bear-abstract">
+    <div class="bear-part head"></div>
+    <div class="bear-part body"></div>
+    <div class="bear-part leg1"></div>
+    <div class="bear-part leg2"></div>
+</div>
+
+<script>
+// Create snowflakes
+for (let i = 0; i < 50; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(snowflake);
+}
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+</body>
+</html>

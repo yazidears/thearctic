@@ -1,51 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>theArctic: Ice</title>
+<title>theArctic: Depths</title>
 <style>
 body {
-    background-color: #e0ffff; /* Light cyan background */
+    background-color: #001f3f; /* Deep blue background */
     overflow: hidden;
     margin: 0;
+    cursor: none; /* Hide the default cursor */
 }
 
-.ice-pattern {
+.bubble {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url('https://img.freepik.com/free-vector/realistic-frost-texture-backgroung_23-2149221855.jpg'); /* Replace with a seamless ice texture image */
-    background-size: 300px 300px; /* Adjust as needed */
-    mix-blend-mode: overlay; /* Blend with background color */
-    animation: iceMelt 30s linear infinite;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: bubbleRise 5s linear infinite;
 }
 
-@keyframes iceMelt {
-    0% { opacity: 1; }
-    100% { opacity: 0.5; }
+@keyframes bubbleRise {
+    0% { bottom: -20px; left: 10vw; opacity: 0; }
+    20% { opacity: 1; }
+    100% { bottom: 100vh; left: 90vw; opacity: 0; }
 }
 
-.crack {
+.submarine {
     position: absolute;
-    width: 2px;
-    height: 200px;
-    background-color: #000000;
-    transform: rotate(45deg);
-    opacity: 0;
-    animation: crackAppear 5s ease-in-out forwards;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 40px;
+    background-color: #ffff00; /* Yellow submarine */
+    border-radius: 20px;
 }
 
-@keyframes crackAppear {
-    0% { opacity: 0; }
-    100% { opacity: 0.7; }
+.submarine-light {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .wtf-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #264653; /* Dark teal */
+    background-color: #2a9d8f; /* Slightly lighter teal */
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -101,7 +107,9 @@ body {
 </head>
 <body>
 
-<div class="ice-pattern"></div>
+<div class="submarine">
+    <div class="submarine-light"></div>
+</div>
 
 <button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
 
@@ -118,18 +126,23 @@ body {
 </div>
 
 <script>
-const icePattern = document.querySelector('.ice-pattern');
-
-icePattern.addEventListener('click', (event) => {
-    const crack = document.createElement('div');
-    crack.classList.add('crack');
-    crack.style.left = event.clientX + 'px';
-    crack.style.top = event.clientY + 'px';
-    icePattern.appendChild(crack);
+// Create bubbles
+setInterval(() => {
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    bubble.style.left = Math.random() * 100 + 'vw';
+    bubble.style.animationDelay = Math.random() * 3 + 's';
+    document.body.appendChild(bubble);
 
     setTimeout(() => {
-        crack.remove();
-    }, 5000); 
+        bubble.remove();
+    }, 5000);
+}, 500); 
+
+// Submarine movement
+const submarine = document.querySelector('.submarine');
+document.addEventListener('mousemove', (event) => {
+    submarine.style.left = event.clientX - 40 + 'px'; // Adjust for submarine width
 });
 
 function showExplanation() {

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>theArctic: Mirage</title>
+<style>
+    /* NOT FOR PUBLIC - EASTER EGG*/
+body {
+    background-color: #e0ffff; /* Light cyan background */
+    color: #333333; /* Dark gray text */
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    height: 300vh; /* Make the page taller for scrolling */
+    perspective: 1000px; /* For 3D effect */
+}
+
+.parallax-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.layer-1 {
+    background-image: url('https://www.google.com/search?q=abstract+ice+patterns&tbm=isch'); /* Replace with an abstract ice pattern image */
+    z-index: 3;
+}
+
+.layer-2 {
+    background-image: url('https://www.google.com/search?q=geometric+shapes+background&tbm=isch'); /* Replace with a geometric shapes background */
+    z-index: 2;
+}
+
+.layer-3 {
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 1;
+}
+
+.wtf-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #264653; /* Dark teal */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.explanation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff; 
+    z-index: 1001;
+}
+
+.explanation-text {
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-family: 'Great Vibes', cursive; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+}
+
+.info-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.explanation-text p {
+    line-height: 1.6; 
+    margin-bottom: 20px;
+}
+
+.explanation-text strong {
+    font-weight: bold;
+    color: #00ffff; 
+}
+</style>
+</head>
+<body>
+
+<div class="parallax-container">
+    <div class="parallax-layer layer-1"></div>
+    <div class="parallax-layer layer-2"></div>
+    <div class="parallax-layer layer-3"></div>
+</div>
+
+<button class="wtf-button" onclick="showExplanation()">wtf is this?</button>
+
+<div class="explanation-overlay">
+    <div class="explanation-text">
+        <span class="info-emoji">🛈</span> 
+        <p>
+        Buckle up, because theArctic's Unoptimized® engine is on the hunt for some seriously cool websites! <br>
+        We're talking a full-on brute-force assault on the filesystem, hunting down the coolest, most experimental websites out there. <br>
+        As each gem is unearthed, it'll appear right here for your viewing pleasure. 
+        </p>
+    </div>
+    <button class="wtf-button" onclick="hideExplanation()">Close</button>
+</div>
+
+<script>
+const layers = document.querySelectorAll('.parallax-layer');
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    layers.forEach(layer => {
+        const depth = layer.dataset.depth || 1; // Default depth is 1
+        const movement = -(scrollTop * depth) / 3; // Adjust the divisor for desired parallax effect
+        layer.style.transform = `translateY(${movement}px)`;
+    });
+});
+
+function showExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'flex';
+}
+
+function hideExplanation() {
+    document.querySelector('.explanation-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

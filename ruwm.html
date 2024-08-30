@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Balloon Pop Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(120deg, #ff9c00 0%, #ffbc1a 100%);
+            font-family: 'Courier New', Courier, monospace;
+            color: #333;
+        }
+        .balloon {
+            position: absolute;
+            width: 100px;
+            height: 120px;
+            background: radial-gradient(circle at 50% 30%, #fff, #ff6865);
+            border-radius: 50%;
+            cursor: pointer;
+            animation: float 8s linear infinite, wiggle 1s infinite;
+        }
+        .string {
+            position: absolute;
+            top: 110px;
+            left: 57px;
+            width: 4px;
+            height: 100px;
+            background: #d6d6d6;
+            animation: wiggle 1s infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-150px); }
+        }
+        @keyframes wiggle {
+            0% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
+        }
+        #sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+        #score {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 2rem;
+        }
+        .pop {
+            position: absolute;
+            width: 100px;
+            height: 120px;
+            background: radial-gradient(circle at 50% 30%, transparent, #ff5954, #ff251e);
+            border-radius: 50%;
+            animation: scalePop 0.5s forwards;
+        }
+        @keyframes scalePop {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="score">Score: 0</div>
+
+<script>
+    const sky = document.getElementById('sky');
+    const scoreDisplay = document.getElementById('score');
+    let score = 0;
+
+    function createBalloon() {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        
+        const string = document.createElement('div');
+        string.classList.add('string');
+        balloon.appendChild(string);
+        
+        sky.appendChild(balloon);
+
+        balloon.addEventListener('click', () => {
+            score++;
+            scoreDisplay.textContent = 'Score: ' + score;
+            createPopEffect(balloon.style.left, balloon.style.top);
+            balloon.remove();
+        });
+
+        setTimeout(() => {
+            if (balloon.parentElement) {
+                balloon.remove();
+            }
+        }, 8000);
+    }
+
+    function createPopEffect(left, top) {
+        const popEffect = document.createElement('div');
+        popEffect.classList.add('pop');
+        popEffect.style.left = left;
+        popEffect.style.top = top;
+
+        sky.appendChild(popEffect);
+
+        setTimeout(() => {
+            popEffect.remove();
+        }, 500);
+    }
+
+    setInterval(createBalloon, 1500);
+
+    function playMusic() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(300 + Math.random() * 400, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.2);
+    }
+
+    setInterval(playMusic, 800);
+
+    window.addEventListener('focus', () => {
+        score = 0;
+        scoreDisplay.textContent = 'Score: 0';
+        Array.from(document.querySelectorAll('.balloon')).forEach(balloon => balloon.remove());
+    });
+</script>
+</body>
+</html>

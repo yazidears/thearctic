@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Whimsical Clockwork Forest</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f5f5f5;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    #forest {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-image: linear-gradient(to bottom, #8BC6EC, #9599E2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .tree {
+        position: absolute;
+        bottom: -10%;
+        fill: #3E4A89;
+        animation: sway infinite 3s ease-in-out;
+    }
+    @keyframes sway {
+        0%, 100% { transform: rotate(-2deg); }
+        50% { transform: rotate(2deg); }
+    }
+    .clock {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #fff;
+        border: 5px solid #333;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .hand {
+        position: absolute;
+        width: 4px;
+        height: 50px;
+        background: #333;
+        top: 25px;
+        transform-origin: bottom;
+    }
+    #hour {
+        height: 40px;
+        transform: rotate(90deg);
+    }
+    #minute {
+        height: 55px;
+        transform: rotate(180deg);
+    }
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        animation: drift infinite linear;
+        background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+    }
+    @keyframes drift {
+        0% { opacity: 0; transform: translateY(100%) scale(0); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: translateY(-100%) scale(0); }
+    }
+</style>
+</head>
+<body>
+<div id="forest">
+    <svg class="tree" style="left: 10%; width: 100px; height: 260px;" viewBox="0 0 64 128" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 0 L64 64 L0 64 Z"/>
+        <path d="M32 32 L64 128 L0 128 Z"/>
+    </svg>
+    <svg class="tree" style="left: 30%; width: 140px; height: 340px;" viewBox="0 0 64 128" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 0 L64 64 L0 64 Z"/>
+        <path d="M32 32 L64 128 L0 128 Z"/>
+    </svg>
+    <svg class="tree" style="left: 60%; width: 110px; height: 280px;" viewBox="0 0 64 128" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 0 L64 64 L0 64 Z"/>
+        <path d="M32 32 L64 128 L0 128 Z"/>
+    </svg>
+    <svg class="tree" style="left: 80%; width: 90px; height: 240px;" viewBox="0 0 64 128" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 0 L64 64 L0 64 Z"/>
+        <path d="M32 32 L64 128 L0 128 Z"/>
+    </svg>
+    <div id="clock" class="clock">
+        <div id="hour" class="hand"></div>
+        <div id="minute" class="hand"></div>
+    </div>
+</div>
+<script>
+    function createParticles() {
+        for(let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = particle.style.height = `${Math.random() * 10 + 10}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            document.getElementById('forest').appendChild(particle);
+        }
+    }
+    
+    function setClock() {
+        const now = new Date();
+        const seconds = now.getSeconds();
+        const minutes = now.getMinutes();
+        const hours = now.getHours();
+        const minuteHand = document.getElementById('minute');
+        const hourHand = document.getElementById('hour');
+        minuteHand.style.transform = `rotate(${minutes * 6 + seconds / 10}deg)`;
+        hourHand.style.transform = `rotate(${hours * 30 + minutes / 2}deg)`;
+    }
+    
+    createParticles();
+    setInterval(setClock, 1000);
+    setClock();
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Adventure: Orbit Oddities</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1c2731, #112535);
+            color: #ffffff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+        }
+        #universe {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            animation: spinUniverse 100s linear infinite;
+        }
+        .planet, .ufo {
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit infinite linear;
+        }
+        .planet {
+            background-color: #ffe082;
+            box-shadow: 0 0 20px #ffe082, 0 0 30px #ffd54f;
+        }
+        .ufo {
+            width: 40px;
+            height: 20px;
+            background-color: #9c27b0;
+            top: -30px;
+            left: -30px;
+            animation-duration: 15s;
+        }
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+        @keyframes spinUniverse {
+            to { transform: rotate(360deg); }
+        }
+        .star {
+            --star-color: #fff;
+            width: 2px;
+            height: 2px;
+            background: var(--star-color);
+            border-radius: 50%;
+            position: absolute;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+          from { opacity: 0.3; }
+          to { opacity: 1; }
+        }
+        .message {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            animation: fadeInOut 6s infinite;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="universe">
+        <div class="planet" style="width: 40px; height: 40px; top: 50px; left: 50%; animation-duration: 10s;"></div>
+        <div class="planet" style="width: 30px; height: 30px; bottom: 100px; right: 40%; animation-duration: 12s;"></div>
+        <div class="planet" style="width: 50px; height: 50px; top: 200px; left: 20%; animation-duration: 8s;"></div>
+        <div class="ufo" style="animation-delay: 5s;"></div>
+        <div class="message">Welcome to the Cosmic Adventure!</div>
+        <script>
+            const universe = document.getElementById('universe');
+            let starCount = 0;
+            while (starCount < 100) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                universe.appendChild(star);
+                starCount++;
+            }
+            universe.addEventListener('click', () => {
+                const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+                document.querySelectorAll('.planet').forEach(planet => {
+                    planet.style.backgroundColor = color;
+                    planet.style.boxShadow = `0 0 20px ${color}, 0 0 30px ${color}`;
+                });
+                document.querySelector('.ufo').style.backgroundColor = color;
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Enchanted Nightscape</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #1a1a2e; }
+        #moon { position: absolute; top: 10%; left: 75%; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #fff, #efefef); box-shadow: 0 0 10px #fff, 0 0 30px #f8f8f8; animation: glow 3s infinite alternate-reverse; }
+        @keyframes glow { 0% { box-shadow: 0 0 10px #fff, 0 0 30px #f8f8f8; } 100% { box-shadow: 0 0 20px #fff, 0 0 40px #f8f8f8; } }
+        #stars { position: absolute; width: 100%; height: 100%; }
+        .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle 2s infinite ease-in-out alternate; }
+        @keyframes twinkle { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+        .shooting-star { width: 3px; height: 3px; position: absolute; background: linear-gradient(-45deg, white, transparent); animation: shooting 1.5s ease-in-out infinite; }
+        @keyframes shooting { 0% { transform: translateX(0) translateY(0) scale(0.8); opacity: 1; } 100% { transform: translateX(-600px) translateY(-400px) scale(0); opacity: 0; } }
+        #ground { position: absolute; bottom: 0; width: 100%; height: 25%; background: linear-gradient(to top, #0d0d1d, transparent); }
+        #tree { position: absolute; top: 65%; left: 10%; width: 60px; height: 120px; background: #4d2600; border-radius: 5px; }
+        #tree:before, #tree:after { content: ''; position: absolute; width: 100px; height: 80px; background: #1b5e20; border-radius: 50%; }
+        #tree:before { top: -60px; left: -35px; }
+        #tree:after { top: -100px; left: -35px; }
+        #owl { position: absolute; top: calc(65% - 30px); left: calc(10% + 20px); width: 40px; height: 40px; background: #ffbf00; border-radius: 50%; box-shadow: 0 0 10px #ffbf00; animation: hoot 4s infinite ease-in-out alternate; }
+        @keyframes hoot { 0% { top: calc(65% - 35px); } 100% { top: calc(65% - 30px); } }
+        #owl:before, #owl:after { content: ''; position: absolute; background: black; border-radius: 50%; }
+        #owl:before { top: 20%; left: 20%; width: 8px; height: 8px; }
+        #owl:after { top: 20%; right: 20%; width: 8px; height: 8px; }
+        @keyframes blink { 0%, 20%, 50%, 80%, 100% { height: 8px; } 40%, 60% { height: 2px; } }
+    </style>
+</head>
+<body>
+    <div id="moon"></div>
+    <div id="stars"></div>
+    <div id="shooting-stars"></div>
+    <div id="ground"></div>
+    <div id="tree"></div>
+    <div id="owl"></div>
+    
+    <script>
+        for (let i = 0; i < 100; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            document.getElementById('stars').appendChild(star);
+        }
+
+        createShootingStar();
+
+        function createShootingStar() {
+            let shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = Math.random() * window.innerHeight / 2 + 'px';
+            shootingStar.style.left = Math.random() * window.innerWidth + 'px';
+            shootingStar.style.animationDelay = Math.random() * 3 + 's';
+            document.getElementById('shooting-stars').appendChild(shootingStar);
+            
+            setTimeout(() => {
+                shootingStar.remove();
+                createShootingStar();
+            }, 1500);
+        }
+
+        function randomColor() {
+            return 'rgb(' + (Math.floor(Math.random() * 156) + 100) + ',' + (Math.floor(Math.random() * 156) + 100) + ',' + (Math.floor(Math.random() * 156) + 100) + ')';
+        }
+        
+    </script>
+</body>
+</html>

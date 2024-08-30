@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>Sea of Surreal Circuits</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d0d0d, #3a3a3a);
+            font-family: 'Courier New', Courier, monospace;
+            color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .circuit {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #f9a825;
+            box-shadow: 0 0 10px #f9a825, 0 0 30px #fff;
+            animation: flicker 2s infinite;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.1; transform: scale(1.5); }
+        }
+        canvas {
+            border: 2px dashed #aaa;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .interaction-text {
+            position: absolute;
+            bottom: 5%;
+            font-size: 24px;
+            text-align: center;
+            width: 100%;
+            animation: glow 3s infinite;
+        }
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #f9a825, 0 0 15px #f9a825, 0 0 20px #f9a825; }
+            50% { text-shadow: 0 0 20px #fff, 0 0 30px #f9a825, 0 0 40px #f9a825, 0 0 50px #f9a825; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="circuitCanvas" width="800" height="400"></canvas>
+    <div class="interaction-text">Move your cursor to reveal the circuits...</div>
+    <script>
+        const canvas = document.getElementById('circuitCanvas');
+        const ctx = canvas.getContext('2d');
+        let circuits = [];
+
+        for (let i = 0; i < 200; i++) {
+            let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            let size = Math.random() * 3 + 1;
+            circuits.push({ x, y, size });
+        }
+
+        function drawCircuits(mouseX, mouseY) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < circuits.length; i++) {
+                let dx = mouseX - circuits[i].x;
+                let dy = mouseY - circuits[i].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let shine = Math.max(0, 1 - distance / 100);
+
+                ctx.beginPath();
+                ctx.arc(circuits[i].x, circuits[i].y, circuits[i].size, 0, Math.PI * 2, false);
+                ctx.fillStyle = `rgba(249, 168, 37, ${shine})`;
+                ctx.fill();
+                ctx.lineWidth = 0.5;
+                ctx.strokeStyle = `rgba(255, 255, 255, ${shine})`;
+                ctx.stroke();
+            }
+        }
+
+        document.addEventListener('mousemove', function(event) {
+            const mousePos = {
+                x: event.clientX - canvas.getBoundingClientRect().left,
+                y: event.clientY - canvas.getBoundingClientRect().top
+            };
+            drawCircuits(mousePos.x, mousePos.y);
+        });
+
+        let circuitElements = [];
+        for (let i = 0; i < 20; i++) {
+            let circuitDiv = document.createElement('div');
+            circuitDiv.className = 'circuit';
+            circuitDiv.style.left = Math.random() * window.innerWidth + 'px';
+            circuitDiv.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(circuitDiv);
+            circuitElements.push(circuitDiv);
+        }
+        
+        function animateCircuits() {
+            circuitElements.forEach(circuit => {
+                let moveX = Math.random() * 2 - 1;
+                let moveY = Math.random() * 2 - 1;
+                let currentX = parseFloat(circuit.style.left);
+                let currentY = parseFloat(circuit.style.top);
+                circuit.style.left = (currentX + moveX) + 'px';
+                circuit.style.top = (currentY + moveY) + 'px';
+            });
+            requestAnimationFrame(animateCircuits);
+        }
+
+        animateCircuits();
+    </script>
+</body>
+</html>

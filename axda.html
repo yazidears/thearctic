@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Enchanted Kaleidoscope</title>
+<style>
+    body, html { margin: 0; padding: 0; overflow: hidden; font-family: 'Comic Sans MS', sans-serif; }
+    body { background: radial-gradient(circle, #ffaaee, #aaffee); }
+    .kaleidoscope { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; }
+    .petal { position: absolute; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.8); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); transition: transform 0.5s; }
+    .petal:hover { transform: scale(1.2); }
+    .magic-text { position: absolute; color: #333; font-size: 24px; animation: floatText 10s infinite; }
+    @keyframes floatText {
+        0% { top: 0%; left: 0%; opacity: 0; }
+        25% { top: 15%; left: 15%; opacity: 0.7; }
+        50% { top: 50%; left: 50%; opacity: 1; }
+        75% { top: 85%; left: 85%; opacity: 0.7; }
+        100% { top: 100%; left: 100%; opacity: 0; }
+    }
+</style>
+</head>
+<body>
+<div class="kaleidoscope" id="kaleidoscope"></div>
+<script>
+    const kaleidoscope = document.getElementById('kaleidoscope');
+    for (let i = 0; i < 8; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.transform = `rotate(${i * 45}deg) translate(50%, -50%)`;
+        kaleidoscope.appendChild(petal);
+    }
+    const magicText = document.createElement('div');
+    magicText.className = 'magic-text';
+    magicText.textContent = "Welcome to the world of magic!";
+    document.body.appendChild(magicText);
+
+    document.body.onclick = function() {
+        const randomColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        document.body.style.background = `radial-gradient(circle, ${randomColor}, #aaffee)`;
+    };
+</script>
+</body>
+</html>

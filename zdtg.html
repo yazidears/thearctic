@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Chaos Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            z-index: 10;
+            font-size: 1.2em;
+        }
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: particleAnim 5s infinite linear;
+        }
+        @keyframes particleAnim {
+            0% {
+                transform: translate(0, 0);
+                background-color: rgba(255, 0, 0, 1);
+            }
+            50% {
+                background-color: rgba(0, 255, 255, 0.5);
+                transform: translate(500px, 500px);
+            }
+            100% {
+                transform: translate(-500px, -500px);
+                background-color: rgba(255, 255, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="info">Click anywhere to add chaos!</div>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        function createParticle(x, y) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => document.body.removeChild(particle), 5000);
+        }
+
+        function initParticles() {
+            for(let i = 0; i < 100; i++) {
+                let x = Math.random() * window.innerWidth;
+                let y = Math.random() * window.innerHeight;
+                createParticle(x, y);
+            }
+        }
+
+        window.addEventListener('click', (event) => {
+            createParticle(event.clientX, event.clientY);
+        });
+
+        function drawQuantumField() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 1000; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let gradient = ctx.createRadialGradient(x, y, 0, x, y, 100);
+
+                gradient.addColorStop(0, 'rgba(255,255,255,0.3)');
+                gradient.addColorStop(0.5, 'rgba(100,100,255,0.1)');
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+                ctx.beginPath();
+                ctx.fillStyle = gradient;
+                ctx.arc(x, y, Math.random() * 100, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            drawQuantumField();
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>

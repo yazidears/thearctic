@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystic Orb of Peculiarity</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+        }
+        #universe {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        #orb {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff4081, #40c4ff);
+            animation: float 5s infinite ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit 10s infinite linear;
+        }
+        .planet-1 {
+            width: 30px;
+            height: 30px;
+            background: #ffab40;
+            top: -70px;
+            left: 0;
+            transform-origin: 0 80px;
+            animation-duration: 12s;
+        }
+        .planet-2 {
+            width: 40px;
+            height: 40px;
+            background: #8e24aa;
+            top: -100px;
+            left: 10px;
+            transform-origin: 0 100px;
+            animation-duration: 8s;
+        }
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #message {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .appear { opacity: 1; }
+        #button {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            line-height: 50px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            top: 30%;
+            left: calc(50% - 25px);
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    <div id="message"></div>
+    <script>
+        const universe = document.getElementById('universe');
+        const message = document.getElementById('message');
+        
+        for(let i=0; i<100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.opacity = Math.random();
+            universe.appendChild(star);
+        }
+
+        const orb = document.createElement('div');
+        orb.id = 'orb';
+        orb.innerText = '?';
+        universe.appendChild(orb);
+
+        for (let i = 0; i < 2; i++) {
+            const planet = document.createElement('div');
+            planet.className = `planet planet-${i+1}`;
+            universe.appendChild(planet);
+        }
+
+        const button = document.createElement('div');
+        button.id = 'button';
+        button.innerText = 'Tap';
+        button.onclick = () => {
+            message.classList.add('appear');
+            message.innerHTML = "You've activated the orb!<br>That was unexpected, wasn't it?";
+            setTimeout(() => { orb.innerText = '✔'; }, 1000);
+        };
+        universe.appendChild(button);
+        
+        setTimeout(() => { message.innerText = 'Hover over the orb and planets to interact.'; }, 2000);
+    </script>
+</body>
+</html>

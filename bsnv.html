@@ -1,0 +1,130 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Balloons & Dancing Bunnies</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #89fffd, #f2b1f7);
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #mainCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        #bunny {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-image: url('https://via.placeholder.com/200?text=Bunny');
+            background-size: cover;
+            z-index: 2;
+            cursor: pointer;
+            animation: dance 2s infinite;
+        }
+        @keyframes dance {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        #message {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 200px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            transform: translateX(-50%);
+            font-weight: bold;
+            border-radius: 10px;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mainCanvas"></canvas>
+    <div id="bunny"></div>
+    <div id="message">Catch the Bunny!</div>
+    <script>
+        const canvas = document.getElementById("mainCanvas");
+        const ctx = canvas.getContext("2d");
+        const bunny = document.getElementById("bunny");
+
+        let balloons = [];
+        const colors = ['#ff8a00', '#c71585', '#2f4f4f', '#1e90ff', '#ff4500'];
+
+        function random(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        class Balloon {
+          constructor(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.dy = random(-2, -0.5);
+          }
+
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+          }
+
+          update() {
+            this.y += this.dy;
+            if (this.y + this.radius < 0) {
+              this.y = canvas.height + this.radius;
+              this.x = random(0, canvas.width);
+            }
+            this.draw();
+          }
+        }
+
+        function init() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          for (let i = 0; i < 20; i++) {
+            const radius = random(10, 30);
+            balloons.push(new Balloon(random(0, canvas.width), random(0, canvas.height), radius, colors[Math.floor(random(0, colors.length))]));
+          }
+          animate();
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          balloons.forEach(balloon => balloon.update());
+          requestAnimationFrame(animate);
+        }
+
+        function moveBunny() {
+          bunny.style.left = random(0, window.innerWidth - 200) + 'px';
+          bunny.style.top = random(0, window.innerHeight - 200) + 'px';
+        }
+
+        bunny.addEventListener('click', () => {
+          moveBunny();
+        });
+
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+
+        moveBunny();
+        init();
+    </script>
+</body>
+</html>
+```

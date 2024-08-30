@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Whirlwind</title>
+    <style>
+        body {
+            margin: 0; 
+            overflow: hidden; 
+            background: linear-gradient(135deg, #ffcc00, #6a0dad);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .whirlwind {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            animation: spin 5s infinite linear, float 3s infinite alternate;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg) translate(-50%, -50%); }
+            to { transform: rotate(360deg) translate(-50%, -50%); }
+        }
+
+        @keyframes float {
+            from { top: 45%; }
+            to { top: 55%; }
+        }
+
+        .whirlwind::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px dashed magenta;
+            animation: dashRotate 7s infinite linear;
+        }
+
+        @keyframes dashRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-720deg); }
+        }
+
+        .random-shapes {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: moveShapes 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveShapes {
+            0% { transform: scale(0.5) translateY(0px); opacity: 0.5; }
+            100% { transform: scale(1.5) translateY(-200px); opacity: 1; }
+        }
+
+        .flying-objects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            background-color: #f06292;
+            will-change: transform;
+        }
+    </style>
+    <script>
+        function random(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function createShapes(num) {
+            const container = document.querySelector('.random-shapes');
+            for (let i = 0; i < num; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+                shape.style.left = `${random(0, 100)}vw`;
+                shape.style.top = `${random(0, 100)}vh`;
+                container.appendChild(shape);
+            }
+        }
+
+        function createFlyingObjects() {
+            const numObjects = 50;
+            const objects = Array.from({ length: numObjects }).map(() => document.createElement('div'));
+
+            objects.forEach(obj => {
+                obj.className = 'flying-objects';
+                document.body.appendChild(obj);
+                animateFlyingObject(obj);
+            });
+        }
+
+        function animateFlyingObject(obj) {
+            const angle = random(0, 360);
+            const radius = random(50, 200);
+            const speed = random(5, 15);
+
+            let step = 0;
+            function move() {
+                const radian = ((angle + step) * Math.PI) / 180;
+                const x = radius * Math.cos(radian) + window.innerWidth / 2;
+                const y = radius * Math.sin(radian) + window.innerHeight / 2;
+                obj.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${step}deg)`;
+                step += speed;
+                requestAnimationFrame(move);
+            }
+            move();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createShapes(20);
+            createFlyingObjects();
+        });
+    </script>
+</head>
+<body>
+    <div class="whirlwind"></div>
+    <div class="random-shapes"></div>
+</body>
+</html>

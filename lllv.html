@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bouncy World of Oddballs</title>
+<style>
+  body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1a1a; }
+  canvas { position: absolute; top: 0; left: 0; }
+  .interaction-panel { position: absolute; top: 10px; left: 10px; background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 10px; }
+  button { background-color: #ff0099; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-size: 16px; }
+  button:hover { background-color: #ff66b2; }
+</style>
+</head>
+<body>
+<canvas id="bouncyCanvas"></canvas>
+<div class="interaction-panel">
+  <button onclick="changeColors()">Change Colors</button>
+  <button onclick="addBall()">Add Ball</button>
+  <button onclick="togglePause()">Pause/Play</button>
+</div>
+<script>
+let canvas = document.getElementById("bouncyCanvas");
+let ctx = canvas.getContext("2d");
+let balls = [];
+let animationId;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.onresize = () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+};
+
+function randomColor() {
+  return `hsl(${Math.random() * 360}, 100%, 50%)`;
+}
+
+class Ball {
+  constructor(x, y, dx, dy, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.radius = radius;
+    this.color = color;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+
+  update() {
+    if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+      this.dx = -this.dx;
+    }
+    if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+      this.dy = -this.dy;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+    this.draw();
+  }
+}
+
+function init() {
+  for (let i = 0; i < 5; i++) {
+    let radius = Math.random() * 30 + 10;
+    let x = Math.random() * (canvas.width - radius * 2) + radius;
+    let y = Math.random() * (canvas.height - radius * 2) + radius;
+    let dx = (Math.random() - 0.5) * 4;
+    let dy = (Math.random() - 0.5) * 4;
+    let color = randomColor();
+    balls.push(new Ball(x, y, dx, dy, radius, color));
+  }
+}
+
+function animate() {
+  animationId = requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  balls.forEach(ball => ball.update());
+}
+
+function changeColors() {
+  balls.forEach(ball => ball.color = randomColor());
+}
+
+function addBall() {
+  let radius = Math.random() * 30 + 10;
+  let x = Math.random() * (canvas.width - radius * 2) + radius;
+  let y = Math.random() * (canvas.height - radius * 2) + radius;
+  let dx = (Math.random() - 0.5) * 4;
+  let dy = (Math.random() - 0.5) * 4;
+  let color = randomColor();
+  balls.push(new Ball(x, y, dx, dy, radius, color));
+}
+
+function togglePause() {
+  if (!animationId) {
+    animate();
+  } else {
+    cancelAnimationFrame(animationId);
+    animationId = undefined;
+  }
+}
+
+init();
+animate();
+</script>
+</body>
+</html>

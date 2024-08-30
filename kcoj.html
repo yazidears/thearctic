@@ -1,0 +1,128 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+        }
+        .flying-text {
+            position: absolute;
+            font-size: 24px;
+            animation: float 6s linear infinite;
+        }
+        @keyframes float {
+            0% { top: 100vh; left: calc(50% - 75px); }
+            50% { top: 50px; left: calc(50% - 200px); }
+            100% { top: 100vh; left: calc(50% - 75px); }
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #jiggly-image {
+            width: 100px;
+            height: 100px;
+            animation: jiggle 2s infinite;
+        }
+        @keyframes jiggle {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(5px, -5px); }
+            50% { transform: translate(0, -10px); }
+            75% { transform: translate(-5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+        .button {
+            font-size: 18px;
+            background: #ff00cc;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            position: relative;
+            top: 40%;
+            z-index: 10;
+        }
+        .mysterious-bg {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 10px,
+                rgba(255, 255, 255, 0.1) 20px
+            );
+        }
+        .hidden-gadget {
+            position: absolute;
+            top: 90vh;
+            left: 50vw;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        .hidden-gadget:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flying-text" style="animation-delay: 0s;">Flying Text 1</div>
+        <div class="flying-text" style="animation-delay: 1s;">Flying Text 2</div>
+        <div class="flying-text" style="animation-delay: 2s;">Flying Text 3</div>
+        <div class="flying-text" style="animation-delay: 3s;">Flying Text 4</div>
+        <canvas id="canvas"></canvas>
+        <img id="jiggly-image" src="https://placekitten.com/100/100" style="top: 50px; left: 50px; position: absolute;">
+        <input type="button" class="button" value="Click for Surprise" onclick="revealGadget()">
+        <div class="hidden-gadget" onclick="startSpin()">Secret Gadget</div>
+        <div class="mysterious-bg"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        function drawRandomPattern() {
+            for (let i = 0; i < 100; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 50, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + Math.floor(Math.random() * 255) + ', ' + Math.floor(Math.random() * 255) + ', ' + Math.floor(Math.random() * 255) + ', 0.5)';
+                ctx.fill();
+            }
+        }
+
+        function animatePattern() {
+            requestAnimationFrame(animatePattern);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRandomPattern();
+        }
+
+        function revealGadget() {
+            const gadget = document.querySelector('.hidden-gadget');
+            gadget.style.top = '50vh';
+            gadget.style.transition = 'top 1s ease';
+        }
+
+        function startSpin() {
+            alert('The gadget is now spinning!');
+        }
+
+        animatePattern();
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Bubble Popper</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .score {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 30px;
+            font-size: 24px;
+            color: #333;
+        }
+        .game-over {
+            font-size: 64px;
+            text-align: center;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            border: 4px dotted #fff;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+<div class="score">Score: <span id="score">0</span></div>
+<div class="game-over" id="game-over">Game Over!<br>Final Score: <span id="final-score"></span><br><button onclick="restart()">Restart</button></div>
+
+<script>
+    const bubbleColors = ['#ffffff', '#f8ffb6', '#90f0f2', '#ffafcc', '#f9f871'];
+    let score = 0;
+    let gameEnd = false;
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function createBubble() {
+        if (gameEnd) return;
+        const bubble = document.createElement('div');
+        const size = getRandomInt(20, 100);
+        bubble.className = 'bubble';
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${getRandomInt(0, window.innerWidth - size)}px`;
+        bubble.style.top = `${getRandomInt(0, window.innerHeight - size)}px`;
+        bubble.style.backgroundColor = bubbleColors[getRandomInt(0, bubbleColors.length)];
+        bubble.onclick = function() {
+            popBubble(bubble);
+        };
+        document.body.appendChild(bubble);
+        bubble.animationFrameId = requestAnimationFrame(() => moveBubble(bubble));
+        setTimeout(() => removeBubble(bubble), 5000);
+    }
+
+    function moveBubble(bubble) {
+        bubble.style.transform = `translateY(-${bubble.offsetTop + 5}px)`;
+        bubble.animationFrameId = requestAnimationFrame(() => moveBubble(bubble));
+    }
+
+    function popBubble(bubble) {
+        cancelAnimationFrame(bubble.animationFrameId);
+        bubble.style.transform = 'scale(0)';
+        bubble.style.transition = 'transform 0.5s';
+        score++;
+        document.getElementById('score').textContent = score;
+        setTimeout(() => {
+            try { document.body.removeChild(bubble); } catch (e) {}
+        }, 500);
+        clearAndContinue();
+    }
+
+    function removeBubble(bubble) {
+        if (document.body.contains(bubble)) {
+            gameEnd = true;
+            document.getElementById('game-over').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+        }
+    }
+
+    function clearAndContinue() {
+        if (!gameEnd) createBubble();
+    }
+
+    function restart() {
+        score = 0;
+        document.getElementById('score').textContent = score;
+        document.getElementById('game-over').style.display = 'none';
+        gameEnd = false;
+        createBubble();
+    }
+
+    window.onload = createBubble;
+</script>
+
+</body>
+</html>

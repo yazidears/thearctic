@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fantastic Journey to Bloblandia</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            border: 2px solid #fff;
+        }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            transform-origin: center;
+        }
+        #themeToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #444;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        #themeToggle:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="instructions">Welcome to Bloblandia! Click blobs to change their color. Use the button to toggle between day and night.</div>
+    <canvas id="canvas"></canvas>
+    <button id="themeToggle">Toggle Theme</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const blobs = [];
+        const themes = [
+            {bg: '#222', blob: '#f00'},
+            {bg: '#fff', blob: '#0f0'}
+        ];
+        let currentTheme = 0;
+
+        class Blob {
+            constructor(x, y, size, color) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.directionX = Math.random() * 2 - 1;
+                this.directionY = Math.random() * 2 - 1;
+                this.angle = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            update() {
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.angle += 0.01;
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.directionY = -this.directionY;
+                }
+            }
+        }
+
+        function init() {
+            blobs.length = 0;
+            for (let i = 0; i < 50; i++) {
+                let size = Math.random() * 30 + 20;
+                let x = Math.random() * (canvas.width - size * 2) + size;
+                let y = Math.random() * (canvas.height - size * 2) + size;
+                let color = themes[currentTheme].blob;
+                blobs.push(new Blob(x, y, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach(blob => {
+                blob.update();
+                blob.draw();
+            });
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            blobs.forEach(blob => {
+                const dist = Math.hypot(blob.x - mouseX, blob.y - mouseY);
+                if (dist < blob.size) {
+                    blob.color = blob.color === themes[0].blob ? themes[1].blob : themes[0].blob;
+                }
+            });
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            currentTheme = 1 - currentTheme;
+            document.body.style.backgroundColor = themes[currentTheme].bg;
+            blobs.forEach(blob => blob.color = themes[currentTheme].blob);
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

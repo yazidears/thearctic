@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal to the Jelly Realm</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #081c24; color: #f0f8ff; font-family: 'Courier New', Courier, monospace; }
+        canvas { position: absolute; top: 0; left: 0; display: block; z-index: -1; }
+        #content { padding: 20px; z-index: 2; position: relative; }
+        h1 { font-size: 3em; text-align: center; margin-top: 20vh; }
+        h2 { text-align: center; font-size: 2em; }
+        #portal { width: 150px; height: 150px; background: radial-gradient(circle, #ff69b4, #e91e63); border-radius: 50%; margin: 30px auto; display: flex; align-items: center; justify-content: center; animation: rotatePortal 4s infinite linear; }
+        #portal:after { content: ''; display: block; border-radius: 50%; width: 130px; height: 130px; background: radial-gradient(circle, transparent, #e91e63); animation: pulse 2s infinite; }
+        @keyframes rotatePortal { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        #jelly-beans { max-width: 800px; margin: 20px auto; text-align: center; }
+        .jelly { font-size: 1.5em; animation: jiggle 2s infinite; cursor: pointer; display: inline-block; margin: 5px; transition: transform 0.3s; }
+        .jelly:hover { transform: translateY(-10px); }
+        @keyframes jiggle { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } 100% { transform: rotate(0deg); } }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div id="content">
+        <h1>The Jelly Realm Awaits</h1>
+        <div id="portal"></div>
+        <h2>Select Your Jelly Totem</h2>
+        <div id="jelly-beans">
+            <span class="jelly">🍇</span>
+            <span class="jelly">🍉</span>
+            <span class="jelly">🍒</span>
+            <span class="jelly">🍓</span>
+            <span class="jelly">🍈</span>
+            <span class="jelly">🍑</span>
+            <span class="jelly">🍋</span>
+            <span class="jelly">🥝</span>
+        </div>
+    </div>
+    <script>
+        class Starfield {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.stars = Array(300).fill().map(() => this.createStar());
+                window.addEventListener('resize', () => this.resize());
+                this.resize();
+                this.render();
+            }
+
+            createStar() {
+                return {
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    z: Math.random() * this.canvas.width,
+                };
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.ctx.fillStyle = '#ffffff';
+            }
+
+            render() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.stars.forEach(star => {
+                    star.z -= 0.2;
+                    if (star.z < 1) star = this.createStar();
+
+                    let k = 128.0 / star.z;
+                    let px = star.x * k + this.canvas.width / 2;
+                    let py = star.y * k + this.canvas.height / 2;
+
+                    if (px >= 0 && px <= this.canvas.width && py >= 0 && py <= this.canvas.height) {
+                        let size = (1 - star.z / this.canvas.width);
+                        this.ctx.beginPath();
+                        this.ctx.arc(px, py, size, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                });
+                requestAnimationFrame(() => this.render());
+            }
+        }
+
+        new Starfield(document.getElementById('starfield'));
+
+        const messages = [
+            "You are destined for greatness!",
+            "Embrace the unexpected!",
+            "Adventure awaits you!",
+            "Believe in the cosmos...",
+            "Stars are your guide.",
+            "Jelly secrets unlocked!"
+        ];
+
+        document.querySelectorAll('.jelly').forEach(jelly => {
+            jelly.onclick = () => {
+                alert(messages[Math.floor(Math.random() * messages.length)]);
+            };
+        });
+    </script>
+</body>
+</html>

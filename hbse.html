@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Islands</title>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden; 
+            background: linear-gradient(to bottom, #87CEEB, #f0f9ff);
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+        }
+        .menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .menu button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            background: #ffcccb;
+            color: #fff;
+            transition: background 0.3s;
+        }
+        .menu button:hover {
+            background: #ff7675;
+        }
+        @keyframes sway {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <button onclick="addIsland()">Add Floating Island</button>
+        <button onclick="changeSky()">Change Sky</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const islands = [];
+        
+        function randomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 75%)`;
+        }
+        
+        function drawIsland(x, y, size, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x, y - size / 2);
+            ctx.lineTo(x - size / 2, y);
+            ctx.lineTo(x + size / 2, y);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.fillStyle = "#664D00"; 
+            ctx.fillRect(x - size / 8, y, size / 4, size / 3);
+            ctx.restore();
+        }
+        
+        function addIsland() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const size = 50 + Math.random() * 50;
+            const color = randomColor();
+            islands.push({x, y, size, color});
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            islands.forEach(island => {
+                island.y += Math.sin(Date.now() * 0.001 + island.x) * 0.1;
+                drawIsland(island.x, island.y, island.size, island.color);
+            });
+            requestAnimationFrame(animate);
+        }
+        
+        function changeSky() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, `hsl(${Math.random() * 360}, 100%, 75%)`);
+            gradient.addColorStop(1, '#f0f9ff');
+            document.body.style.background = gradient;
+        }
+        
+        animate();
+    </script>
+</body>
+</html>

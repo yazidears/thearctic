@@ -1,0 +1,114 @@
+<html>
+<head>
+    <title>The Whimsical Pocket Universe</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #001f3f;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #ffffff;
+            text-align: center;
+        }
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        #portal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            margin-left: -75px;
+            margin-top: -75px;
+            background: conic-gradient(from 0deg, orange, violet, orange);
+            border-radius: 50%;
+            animation: spin 5s infinite linear;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #character {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 100px;
+            cursor: pointer;
+        }
+        .text-bubble {
+            display: inline-block;
+            background: #333;
+            color: #fff;
+            border-radius: 10px;
+            padding: 5px 10px;
+            position: relative;
+            bottom: 120px;
+            border: 2px solid #fff;
+        }
+        #message {
+            width: 100%;
+            height: 50px;
+            position: absolute;
+            top: 0;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            color: #ffe;
+            animation: marquee 10s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div id="message">✨ Welcome to the Whimsical Pocket Universe! Click around and let the magic unfold! ✨</div>
+    <div id="portal"></div>
+    <div id="character" onclick="jump()">😎</div>
+    <div id="thoughts"></div>
+    <script>
+        let stars = [];
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = star.style.height = Math.random() * 3 + 2 + 'px';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(star);
+            stars.push(star);
+            if (stars.length > 100) {
+                document.body.removeChild(stars.shift());
+            }
+        }
+        setInterval(createStar, 100);
+        
+        let characterThoughts = ["I see stars!", "Feels like flying!", "What's over there?", "Zoom Zoom!", "Stellar!"];
+        function jump() {
+            const pup = document.getElementById('character');
+            pup.style.transition = 'transform 0.5s';
+            pup.style.transform = 'translateY(-150px)';
+            setTimeout(() => {
+                pup.style.transform = 'translateY(0)';
+                showThought();
+            }, 500);
+        }
+        function showThought() {
+            const thoughtBubble = document.createElement('div');
+            thoughtBubble.classList.add('text-bubble');
+            thoughtBubble.innerText = characterThoughts[Math.floor(Math.random() * characterThoughts.length)];
+            document.getElementById('thoughts').appendChild(thoughtBubble);
+            setTimeout(() => thoughtBubble.remove(), 2000);
+        }
+    </script>
+</body>
+</html>

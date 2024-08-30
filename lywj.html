@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intergalactic Jellybean Orchestra</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #171e26, #3a405a);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        .control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        .jellybean {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #f4a261, #e76f51);
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% {transform: translateY(0px);}
+            50% {transform: translateY(-20px);}
+        }
+        #score {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #264653;
+            margin-bottom: 10px;
+        }
+        #speedLabel, #sizeLabel {
+            display: block;
+            margin: 8px 0 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="control-panel">
+        <div id="score">Score: 0</div>
+        <label id="speedLabel">Speed: <span id="speedValue">1</span></label>
+        <input type="range" min="1" max="10" value="1" id="speedControl">
+        <label id="sizeLabel">Size: <span id="sizeValue">50</span></label>
+        <input type="range" min="30" max="100" value="50" id="sizeControl">
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+        const speedControl = document.getElementById('speedControl');
+        const sizeControl = document.getElementById('sizeControl');
+        const speedValue = document.getElementById('speedValue');
+        const sizeValue = document.getElementById('sizeValue');
+        const jellybeans = [];
+        let score = 0;
+        let speed = parseInt(speedControl.value);
+        let size = parseInt(sizeControl.value);
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        speedControl.oninput = function () {
+            speed = parseInt(this.value);
+            speedValue.textContent = speed;
+        };
+
+        sizeControl.oninput = function () {
+            size = parseInt(this.value);
+            sizeValue.textContent = size;
+            jellybeans.forEach(jb => jb.size = size);
+        };
+
+        function createJellybean() {
+            const jb = {};
+            jb.x = Math.random() * (canvas.width - size);
+            jb.y = Math.random() * (canvas.height - size);
+            jb.vx = (Math.random() - 0.5) * 2 * speed;
+            jb.vy = (Math.random() - 0.5) * 2 * speed;
+            jb.size = size;
+            jellybeans.push(jb);
+        }
+
+        function updateJellybeans() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            jellybeans.forEach(jb => {
+                jb.x += jb.vx;
+                jb.y += jb.vy;
+                if (jb.x < 0 || jb.x > canvas.width - jb.size) jb.vx *= -1;
+                if (jb.y < 0 || jb.y > canvas.height - jb.size) jb.vy *= -1;
+                ctx.fillStyle = '#f4a261';
+                ctx.beginPath();
+                ctx.arc(jb.x + jb.size / 2, jb.y + jb.size / 2, jb.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function clickJellybean(event) {
+            const clickX = event.clientX;
+            const clickY = event.clientY;
+
+            for (let i = 0; i < jellybeans.length; i++) {
+                const jb = jellybeans[i];
+                if (clickX >= jb.x && clickX <= jb.x + jb.size && clickY >= jb.y && clickY <= jb.y + jb.size) {
+                    jellybeans.splice(i, 1);
+                    score++;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                    break;
+                }
+            }
+        }
+
+        function loop() {
+            if (jellybeans.length < 10) {
+                createJellybean();
+            }
+            updateJellybeans();
+            requestAnimationFrame(loop);
+        }
+
+        canvas.addEventListener('click', clickJellybean);
+
+        loop();
+    </script>
+</body>
+</html>

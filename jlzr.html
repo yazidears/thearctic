@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Blob Ballet</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; overflow: hidden; font-family: 'Comic Sans MS', cursive; color: #fff; }
+        .stage { width: 400px; height: 400px; position: relative; }
+        .blob { width: 100px; height: 100px; background: linear-gradient(45deg, #ff79c6, #8be9fd); border-radius: 50%; position: absolute; animation: dance 3s infinite ease-in-out; }
+        @keyframes dance {
+            0% { transform: scale(1) translate(0, 0); }
+            25% { transform: scale(1.2) translate(-50px, -50px); }
+            50% { transform: scale(1) translate(50px, 50px); }
+            75% { transform: scale(0.8) translate(-50px, 50px); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+        .blob:nth-child(2) { animation-delay: 0.5s; background: linear-gradient(45deg, #ffb86c, #50fa7b); }
+        .blob:nth-child(3) { animation-delay: 1s; background: linear-gradient(45deg, #f1fa8c, #bd93f9); }
+        .blob:nth-child(4) { animation-delay: 1.5s; background: linear-gradient(45deg, #ff5555, #ff79c6); }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <script>
+        const blobs = document.querySelectorAll('.blob');
+        blobs.forEach(blob => {
+            blob.addEventListener('click', function() {
+                const randomRGB = () => Math.floor(Math.random() * 256);
+                this.style.background = `rgb(${randomRGB()}, ${randomRGB()}, ${randomRGB()})`;
+                const newSize = Math.random() * 150 + 50;
+                this.style.width = newSize + 'px';
+                this.style.height = newSize + 'px';
+            });
+        });
+
+        const backgroundMusic = new Audio('https://www.soundjay.com/button/beep-07.wav');
+        backgroundMusic.loop = true;
+        backgroundMusic.play();
+
+        document.body.addEventListener('click', () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+        });
+    </script>
+</body>
+</html>

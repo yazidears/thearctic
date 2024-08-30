@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Jellyfish Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001f3f, #0074D9);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .jellyfish {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            background: radial-gradient(circle, #FFDC00 25%, #FF4136 75%);
+            animation: drift 20s infinite ease-in-out;
+            box-shadow: 0 0 10px 5px rgba(255,255,255,0.3);
+            transition: transform 0.2s ease;
+        }
+        .jellyfish:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        @keyframes drift {
+            0% { top: -20%; left: 50%; transform: translate(-50%, 0) rotate(0deg); }
+            25% { transform: translate(10%, 10%) rotate(45deg); }
+            50% { top: 110%; left: 60%; transform: translate(-50%, 0) rotate(90deg); }
+            75% { transform: translate(-10%, -10%) rotate(135deg); }
+            100% { top: -20%; left: 40%; transform: translate(-50%, 0) rotate(180deg); }
+        }
+        #interface {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #FFFFFF;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #FF851B;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px #FF5733;
+        }
+        .button:active {
+            box-shadow: none;
+            transform: translateY(4px);
+        }
+        #scoreBoard {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        #score {
+            font-family: 'Courier New', Courier, monospace;
+            color: #B10DC9;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="interface">
+        <button class="button" onclick="addJellyfish()">Spawn Jellyfish</button>
+        <div id="scoreBoard">Jellyfish Count: <span id="score">0</span></div>
+        <audio id="oceanSound" loop>
+            <source src="https://www.soundjay.com/ocean/ocean-wave-5.mp3" type="audio/mp3">
+        </audio>
+    </div>
+    <script>
+        const container = document.getElementById('container');
+        let jellyfishCount = 0;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function addJellyfish() {
+            const jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            jellyfish.style.width = jellyfish.style.height = `${random(40, 80)}px`;
+            jellyfish.style.left = `${random(0, window.innerWidth)}px`;
+            jellyfish.style.background = `radial-gradient(circle, rgb(${random(200, 255)}, ${random(100, 200)}, ${random(100, 255)}) 25%, rgba(${random(125, 230)}, ${random(50, 150)}, ${random(150, 255)}) 75%)`;
+            container.appendChild(jellyfish);
+            jellyfishCount++;
+            updateScore();
+            playSound();
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = jellyfishCount;
+        }
+
+        function playSound() {
+            const sound = document.getElementById('oceanSound');
+            if (!sound.paused) return;
+            sound.volume = 0.3;
+            sound.play();
+        }
+
+        window.addEventListener('resize', () => {
+            container.style.height = `${window.innerHeight}px`;
+        });
+
+        container.style.height = `${window.innerHeight}px`;
+    </script>
+</body>
+</html>

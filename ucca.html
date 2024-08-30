@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Infinite Maze of Colors</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #222;
+            font-family: 'Courier New', monospace;
+            color: white;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #infoPanel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #infoPanel button {
+            background: #ff4444;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        #infoPanel button:hover {
+            background: #ff8888;
+        }
+    </style>
+</head>
+<body>
+    <div id="infoPanel">
+        <h3>The Infinite Maze of Colors</h3>
+        <p>Use Arrow Keys to navigate the never-ending maze.</p>
+        <button onclick="toggleMusic()">
+            🎵 Toggle Music
+        </button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const TILE_SIZE = 40;
+        const halfTile = TILE_SIZE / 2;
+        const player = { x: halfTile, y: halfTile, size: 20, color: 'white' };
+        const mazeColors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        let musicPlaying = false;
+
+        document.addEventListener('keydown', handleKeyDown);
+        const audio = new Audio('https://www.bensound.com/bensound-music/bensound-dreams.mp3');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawMaze();
+        }
+
+        function drawMaze() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cols = Math.ceil(canvas.width / TILE_SIZE);
+            const rows = Math.ceil(canvas.height / TILE_SIZE);
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const color = mazeColors[(row + col) % mazeColors.length];
+                    ctx.fillStyle = color;
+                    ctx.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                }
+            }
+            drawPlayer();
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function handleKeyDown(e) {
+            switch (e.key) {
+                case 'ArrowUp': movePlayer(0, -TILE_SIZE); break;
+                case 'ArrowDown': movePlayer(0, TILE_SIZE); break;
+                case 'ArrowLeft': movePlayer(-TILE_SIZE, 0); break;
+                case 'ArrowRight': movePlayer(TILE_SIZE, 0); break;
+            }
+        }
+
+        function movePlayer(dx, dy) {
+            player.x = (player.x + dx + canvas.width) % canvas.width;
+            player.y = (player.y + dy + canvas.height) % canvas.height;
+            drawMaze();
+        }
+
+        function toggleMusic() {
+            musicPlaying ? audio.pause() : audio.play();
+            musicPlaying = !musicPlaying;
+        }
+    </script>
+</body>
+</html>

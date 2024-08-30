@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intergalactic Jellyfish Orchestra</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+        }
+        .title {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        .jellyfish {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(230,230,255,0.6) 20%, transparent 80%);
+            animation: swim infinite alternate;
+        }
+        @keyframes swim {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-100px) scale(1.2); }
+        }
+        canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Intergalactic Jellyfish Orchestra</div>
+    <script>
+        const jellyfishCount = 50;
+        const jellyfishArray = [];
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillators = [];
+        
+        function createJellyfish() {
+            for (let i = 0; i < jellyfishCount; i++) {
+                const jelly = document.createElement('div');
+                const size = Math.random() * 50 + 30;
+                jelly.classList.add('jellyfish');
+                jelly.style.width = `${size}px`;
+                jelly.style.height = `${size}px`;
+                jelly.style.left = `${Math.random() * window.innerWidth - size}px`;
+                jelly.style.top = `${Math.random() * window.innerHeight - size}px`;
+                jelly.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                
+                const oscillator = audioContext.createOscillator();
+                oscillator.frequency.setValueAtTime((Math.random() * 1500) + 300, audioContext.currentTime);
+                oscillator.type = 'sine';
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+                oscillators.push(oscillator);
+
+                document.body.appendChild(jelly);
+                jellyfishArray.push(jelly);
+            }
+        }
+        
+        function moveJellyfish() {
+            jellyfishArray.forEach((jelly, index) => {
+                const updatePosition = () => {
+                    jelly.style.left = `${parseFloat(jelly.style.left) + Math.random() * 4 - 2}px`;
+                    jelly.style.top = `${parseFloat(jelly.style.top) + Math.random() * 4 - 2}px`;
+                };
+                setInterval(updatePosition, 100);
+            });
+        }
+
+        createJellyfish();
+        moveJellyfish();
+
+        const canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.body.appendChild(canvas);
+        const context = canvas.getContext('2d');
+
+        function drawStars() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 300; i++) {
+                context.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
+                context.beginPath();
+                context.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+                context.fill();
+            }
+            requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+    </script>
+</body>
+</html>

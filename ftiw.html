@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Dance Party</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #00004d, #001a66, #003399);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            width: 2px;
+            height: 2px;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        .planet {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ee9, #dd4, #aa4);
+            animation: orbit 10s infinite linear;
+        }
+        .alien {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: lime;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            margin: -40px 0 0 -40px;
+            animation: wiggle 0.5s infinite alternate ease-in-out;
+        }
+        .alien:after, .alien:before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: black;
+            border-radius: 50%;
+            top: 20px;
+        }
+        .alien:after {
+            left: 15px;
+        }
+        .alien:before {
+            right: 15px;
+        }
+        @keyframes wiggle {
+            from { transform: rotate(10deg); }
+            to { transform: rotate(-10deg); }
+        }
+        @keyframes orbit {
+            to { transform: rotate(360deg); }
+        }
+        .bubble {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: rise 5s infinite ease-in;
+            will-change: transform;
+        }
+        @keyframes rise {
+            0% { transform: translateY(100vh); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+        .radar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid lime;
+            animation: scan 3s infinite linear;
+        }
+        @keyframes scan {
+            from { transform: rotate(0deg) translateX(-50px); }
+            to { transform: rotate(360deg) translateX(-50px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="space"></div>
+    <div class="alien"></div>
+    <div class="radar"></div>
+    <script>
+        const numStars = 200;
+        const space = document.getElementById('space');
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.top = `${Math.random() * 100}vh`;
+            space.appendChild(star);
+        }
+        for (let i = 0; i < 50; i++) {
+            const planet = document.createElement('div');
+            planet.classList.add('planet');
+            planet.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            planet.style.width = `${Math.random() * 30 + 20}px`;
+            planet.style.height = planet.style.width;
+            planet.style.left = `${Math.random() * 100}vw`;
+            planet.style.top = `${Math.random() * 100}vh`;
+            space.appendChild(planet);
+        }
+        setInterval(() => {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.left = `${Math.random() * 100}vw`;
+            space.appendChild(bubble);
+            setTimeout(() => space.removeChild(bubble), 5000);
+        }, 300);
+        document.body.addEventListener('mousemove', e => {
+            const alien = document.querySelector('.alien');
+            alien.style.left = `${e.clientX}px`;
+            alien.style.top = `${e.clientY}px`;
+        });
+    </script>
+</body>
+</html>

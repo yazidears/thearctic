@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Curious World of Whimsical Widgets</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #282828;
+            color: white;
+        }
+        #canvas {
+            display: block;
+            background: linear-gradient(145deg, #ff6f61 0%, #de6262 50%, #ffb88c 100%);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+        }
+        #strangeControl {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px;
+            background: rgba(50, 50, 50, 0.8);
+            border: 2px solid #ffcccb;
+            border-radius: 10px;
+        }
+        #strangeControl input {
+            margin: 5px 0;
+        }
+        #character {
+            font-size: 10em;
+            transition: transform 0.2s;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background: #ffcccb;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #f88a8a;
+        }
+        @keyframes animationBackground {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .animate-bg {
+            animation: animationBackground 10s ease infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="character" class="hidden">ಠ_ಠ</div>
+    <div id="strangeControl">
+        <button class="button" onclick="toggleCharacter()">Toggle Character</button><br>
+        <button class="button" onclick="changeBackground()">Animate Background</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const charElement = document.getElementById('character');
+        const colors = ['#FF4136', '#FF851B', '#FFDC00', '#2ECC40', '#0074D9']; 
+        let colorIndex = 0;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let points = [];
+        const pointCount = 100;
+        for (let i = 0; i < pointCount; i++) {
+            points.push(createPoint());
+        }
+
+        function createPoint() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: 2 + Math.random() * 3,
+                speedX: -1 + Math.random() * 2,
+                speedY: -1 + Math.random() * 2,
+                color: colors[colorIndex]
+            };
+        }
+
+        function update() {
+            for (let point of points) {
+                point.x += point.speedX;
+                point.y += point.speedY;
+                if (point.x > canvas.width || point.x < 0) {
+                    point.speedX *= -1;
+                }
+                if (point.y > canvas.height || point.y < 0) {
+                    point.speedY *= -1;
+                }
+            }
+        }
+
+        function draw() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            for (let point of points) {
+                context.beginPath();
+                context.arc(point.x, point.y, point.radius, 0, 2 * Math.PI, false);
+                context.fillStyle = point.color;
+                context.fill();
+            }
+        }
+
+        function animate() {
+            update();
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        function toggleCharacter() {
+            charElement.classList.toggle('hidden');
+        }
+
+        function changeBackground() {
+            if (canvas.classList.contains('animate-bg')) {
+                canvas.classList.remove('animate-bg');
+            } else {
+                canvas.classList.add('animate-bg');
+            }
+        }
+
+        animate();
+    </script>
+</body>
+</html>

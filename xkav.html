@@ -1,0 +1,58 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Bubble Symphony</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #1a1a2e; color: #fff; }
+        .bubble { position: absolute; border-radius: 50%; width: 40px; height: 40px; color: #fff; font-size: 20px;
+                display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #ff0099, #493240); }
+        .controls { position: fixed; top: 5px; right: 5px; z-index: 1000; }
+        #startButton, #resetButton { background: rgba(255, 255, 255, 0.8); border: none; color: #2c3e50; padding: 10px;
+                margin: 5px; border-radius: 5px; cursor: pointer; }
+        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-100px); } 100% { transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button id="startButton">Start Symphonies</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <script>
+        const symphonies = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        const colors = ['#e63946', '#f1faee', '#a8dadc', '#457b9d', '#1d3557'];
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            bubble.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+            bubble.innerText = symphonies[Math.floor(Math.random() * symphonies.length)];
+            bubble.style.animation = `float ${Math.random() * 2 + 2}s ease-in-out infinite`;
+            document.body.appendChild(bubble);
+            
+            bubble.addEventListener('mouseover', () => {
+                bubble.style.width = bubble.style.height = Math.random() * 60 + 40 + 'px';
+                bubble.innerText = symphonies[Math.floor(Math.random() * symphonies.length)];
+            });
+            
+            setTimeout(() => document.body.removeChild(bubble), 4000);
+        }
+
+        function startSymphonies() {
+            setInterval(createBubble, 800);
+        }
+
+        function resetSymphonies() {
+            document.querySelectorAll('.bubble').forEach(bubble => document.body.removeChild(bubble));
+        }
+
+        document.getElementById('startButton').onclick = startSymphonies;
+        document.getElementById('resetButton').onclick = resetSymphonies;
+    </script>
+</body>
+</html>
+```

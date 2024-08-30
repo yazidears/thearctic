@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Clockwork</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff7e79, #ffe5b4);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .gear {
+            position: absolute;
+            transform-origin: center;
+            animation: spin infinite linear;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+        #gear1 { width: 200px; height: 200px; top: 20%; left: 20%; animation-duration: 8s;}
+        #gear2 { width: 150px; height: 150px; top: 70%; left: 80%; animation-direction: reverse; animation-duration: 5s;}
+        #gear3 { width: 100px; height: 100px; top: 30%; left: 70%; animation-duration: 3s;}
+        #gear4 { width: 250px; height: 250px; top: 60%; left: 15%; animation-direction: reverse; animation-duration: 10s;}
+        canvas {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #333;
+            background-color: rgba(255,255,255,0.8);
+        }
+    </style>
+</head>
+<body>
+    <svg id="gear1" class="gear" viewBox="0 0 100 100" fill="none">
+        <path fill="#FF6347" d="M50,10L60,30L90,30L70,50L90,70L60,70L50,90L40,70L10,70L30,50L10,30L40,30Z"/>
+    </svg>
+    <svg id="gear2" class="gear" viewBox="0 0 100 100" fill="none">
+        <path fill="#4682B4" d="M50,10L57,30L75,25L65,50L75,75L57,70L50,90L43,70L25,75L35,50L25,25L43,30Z"/>
+    </svg>
+    <svg id="gear3" class="gear" viewBox="0 0 100 100" fill="none">
+        <path fill="#32CD32" d="M50,10L55,35L80,30L65,50L80,70L55,65L50,90L45,65L20,70L35,50L20,30L45,35Z"/>
+    </svg>
+    <svg id="gear4" class="gear" viewBox="0 0 100 100" fill="none">
+        <path fill="#FFD700" d="M50,10L65,30L90,30L75,50L90,70L65,70L50,90L35,70L10,70L25,50L10,30L35,30Z"/>
+    </svg>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
+        let mouse = {x: WIDTH / 2, y: HEIGHT / 2};
+
+        function drawSurrealShapes(x, y) {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            ctx.beginPath();
+            ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            ctx.arc(x, y, 40 + 20 * Math.sin(performance.now() / 500), 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            ctx.rect(x - 30 + Math.sin(performance.now() / 500) * 20, y - 30 - Math.cos(performance.now() / 500) * 20, 60, 60);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            ctx.lineWidth = 5;
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 70 * Math.cos(performance.now() / 1000), y + 70 * Math.sin(performance.now() / 1000));
+            ctx.stroke();
+
+            window.requestAnimationFrame(() => drawSurrealShapes(mouse.x, mouse.y));
+        }
+
+        canvas.addEventListener('mousemove', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = event.clientX - rect.left;
+            mouse.y = event.clientY - rect.top;
+        });
+
+        drawSurrealShapes(mouse.x, mouse.y);
+    </script>
+</body>
+</html>

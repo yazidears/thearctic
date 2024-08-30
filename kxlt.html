@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Landscape Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #282a36, #6272a4);
+            color: #f8f8f2;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 10s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(30px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        .bird {
+            position: absolute;
+            background-color: #ff79c6;
+            width: 20px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scaleX(-1);
+            animation: fly 5s linear infinite;
+        }
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0) scaleX(-1); }
+            50% { transform: translateX(200vw) translateY(-20vh) scaleX(1); }
+            100% { transform: translateX(0) translateY(0) scaleX(-1); }
+        }
+        .fish {
+            position: absolute;
+            background-color: #8be9fd;
+            width: 50px;
+            height: 20px;
+            border-radius: 50%;
+            animation: swim 7s ease-in-out infinite;
+        }
+        .fish:before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: -10px;
+            width: 20px;
+            height: 10px;
+            background-color: #8be9fd;
+            border-radius: 50%;
+            transform: rotate(-40deg);
+        }
+        .fish:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -10px;
+            width: 20px;
+            height: 10px;
+            background-color: #8be9fd;
+            border-radius: 50%;
+            transform: rotate(40deg);
+        }
+        @keyframes swim {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-10vh) translateX(-10vw); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        #interaction {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #50fa7b;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="scene"></div>
+    <div id="interaction" onclick="addElement()">Click to Add a Creature!</div>
+    <script>
+        const scene = document.getElementById('scene');
+
+        function randomSize(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function randomPosition() {
+            return {
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight
+            };
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+        
+        function createCloud() {
+            const cloud = document.createElement('div');
+            const size = randomSize(50, 150);
+            const pos = randomPosition();
+            cloud.className = 'cloud';
+            cloud.style.width = `${size}px`;
+            cloud.style.height = `${size / 2}px`;
+            cloud.style.top = `${pos.y}px`;
+            cloud.style.left = `${pos.x}px`;
+            scene.appendChild(cloud);
+            setTimeout(() => cloud.remove(), 10000);
+        }
+
+        function createBird() {
+            const bird = document.createElement('div');
+            const pos = randomPosition();
+            bird.className = 'bird';
+            bird.style.top = `${pos.y}px`;
+            bird.style.left = `${-20}px`;
+            scene.appendChild(bird);
+            setTimeout(() => bird.remove(), 5000);
+        }
+
+        function createFish() {
+            const fish = document.createElement('div');
+            const pos = randomPosition();
+            fish.className = 'fish';
+            fish.style.top = `${pos.y}px`;
+            fish.style.left = `${window.innerWidth}px`;
+            scene.appendChild(fish);
+            setTimeout(() => fish.remove(), 7000);
+        }
+
+        function addElement() {
+            const funcs = [createCloud, createBird, createFish];
+            funcs[getRandomInt(funcs.length)]();
+        }
+
+        setInterval(() => {
+            addElement();
+        }, 3000);
+    </script>
+</body>
+</html>

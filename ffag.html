@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Floating Islands</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; }
+        #sky {
+            background: linear-gradient(to bottom, #74d3ff, #dff9fb);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .island {
+            position: absolute;
+            width: 300px;
+            height: 150px;
+            background: #aade87;
+            border-radius: 100px;
+            box-shadow: inset -20px -10px 30px rgba(0,0,0,0.2);
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        .island:after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50px;
+            width: 200px;
+            height: 20px;
+            background: #964B00;
+            border-radius: 30px;
+            animation: sway 5s ease-in-out infinite alternate;
+        }
+        #sun {
+            position: absolute;
+            top: -100px;
+            right: 20%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #ffef80, #ffab00);
+            border-radius: 50%;
+            animation: sunMovement 20s linear infinite;
+        }
+        .cloud {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            animation: drift 25s linear infinite;
+        }
+        .cloud1 { top: 20%; width: 150px; height: 80px; left: -100px; }
+        .cloud2 { top: 60%; width: 200px; height: 100px; right: -150px; }
+        #island1 { left: 10%; top: 50%; }
+        #island2 { right: 20%; top: 70%; }
+        #island3 { left: 30%; top: 30%; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-20px); }
+        }
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(5deg); }
+        }
+        @keyframes drift {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(400px); }
+        }
+        @keyframes sunMovement {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(50px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="sky">
+        <div id="sun"></div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div id="island1" class="island"></div>
+        <div id="island2" class="island"></div>
+        <div id="island3" class="island"></div>
+    </div>
+    <script>
+        function createBird() {
+            var bird = document.createElement('div');
+            bird.style.position = 'absolute';
+            bird.style.width = '40px';
+            bird.style.height = '20px';
+            bird.style.background = 'brown';
+            bird.style.borderRadius = '50%';
+            bird.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.2)';
+            document.body.appendChild(bird);
+            bird.style.left = '-50px';
+            bird.style.top = Math.random() * window.innerHeight + 'px';
+            bird.style.animation = `fly ${3 + Math.random() * 5}s linear infinite`;
+            bird.style.animationDelay = Math.random() * 10 + 's';
+            bird.style.zIndex = 1000;
+
+            bird.addEventListener('mouseover', function() {
+                bird.style.background = 'gold';
+            });
+
+            bird.addEventListener('mouseout', function() {
+                bird.style.background = 'brown';
+            });
+
+            bird.addEventListener('click', function() {
+                bird.style.animation = 'none';
+                bird.style.transform = 'rotate(720deg)';
+                setTimeout(() => bird.remove(), 1000);
+            });
+        }
+
+        for(let i = 0; i < 5; i++) {
+            createBird();
+        }
+
+        function createTree() {
+            var tree = document.createElement('div');
+            tree.style.position = 'absolute';
+            tree.style.bottom = '0';
+            tree.style.width = '20px';
+            tree.style.height = '60px';
+            tree.style.background = '#964B00';
+            tree.style.left = Math.random() * window.innerWidth + 'px';
+            tree.style.borderRadius = '0 0 5px 5px';
+            tree.style.zIndex = 5;
+            document.getElementById('sky').appendChild(tree);
+
+            var foliage = document.createElement('div');
+            foliage.style.width = '70px';
+            foliage.style.height = '40px';
+            foliage.style.background = '#7bbf69';
+            foliage.style.position = 'absolute';
+            foliage.style.left = '-25px';
+            foliage.style.top = '-30px';
+            foliage.style.borderRadius = '50%';
+            tree.appendChild(foliage);
+
+            tree.addEventListener('click', function() {
+                if (foliage.style.background == 'pink') {
+                    foliage.style.background = '#7bbf69';
+                } else {
+                    foliage.style.background = 'pink';
+                }
+            });
+        }
+
+        for(let i = 0; i < 10; i++) {
+            createTree();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Abstract Feather Matrix</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #333, #222);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #feather {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            transform-origin: 10px 5px;
+            border-radius: 50%;
+            background-color: #ff4d4d;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(50px, 50px) scale(1.2) rotate(50deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+        }
+        @keyframes twirl {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #controlPanel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 5px;
+        }
+        .button {
+            padding: 5px 10px;
+            margin: 5px;
+            background-color: #555;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .button:hover {
+            background-color: #777;
+        }
+        #debug {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #222;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="feathersContainer"></div>
+    <div id="controlPanel">
+        <button class="button" onclick="addFeather()">Add Feather</button>
+        <button class="button" onclick="changeColors()">Crazy Colors</button>
+        <button class="button" onclick="changeSpeed()">Speed Shift</button>
+    </div>
+    <div id="debug">Feathers: <span id="featherCount">0</span></div>
+    <script>
+        const feathersContainer = document.getElementById('feathersContainer');
+        const featherCountDisplay = document.getElementById('featherCount');
+        let featherCount = 0;
+        let speedFactor = 1;
+
+        function createFeather() {
+            const feather = document.createElement('div');
+            feather.classList.add('feather');
+            feather.style.animation = `float ${4 / speedFactor}s infinite ease-in-out, twirl ${6 / speedFactor}s infinite linear`;
+            return feather;
+        }
+
+        function addFeather() {
+            const feather = createFeather();
+            positionFeather(feather);
+            feathersContainer.appendChild(feather);
+            updateFeatherCount(1);
+        }
+
+        function positionFeather(feather) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            feather.style.left = `${x}px`;
+            feather.style.top = `${y}px`;
+        }
+
+        function updateFeatherCount(change) {
+            featherCount += change;
+            featherCountDisplay.textContent = featherCount;
+        }
+
+        function changeColors() {
+            const feathers = document.querySelectorAll('.feather');
+            feathers.forEach(feather => {
+                feather.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+            });
+        }
+
+        function changeSpeed() {
+            speedFactor = Math.random() * 3 + 0.5;
+            const feathers = document.querySelectorAll('.feather');
+            feathers.forEach(feather => {
+                feather.style.animation = `float ${4 / speedFactor}s infinite ease-in-out, twirl ${6 / speedFactor}s infinite linear`;
+            });
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.98) addFeather();
+            if (Math.random() > 0.97) changeColors();
+        }, 1000);
+
+        // Start with a few feathers
+        for (let i = 0; i < 5; i++) {
+            addFeather();
+        }
+    </script>
+</body>
+</html>

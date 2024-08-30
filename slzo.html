@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wobble World</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; color: #00FFAA; }
+  canvas { position: absolute; top: 0; left: 0; }
+  #title { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); font-family: 'Courier New', monospace; font-size: 4em; }
+  #note { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); font-family: 'Courier New', monospace; font-size: 1.5em; background: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="title">Welcome to Wobble World</div>
+<div id="note">Hover over the shapes to interact!</div>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let mouseX = 0, mouseY = 0;
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  class Shape {
+    constructor(x, y, size, dx, dy, color) {
+      this.x = x; this.y = y; this.size = size;
+      this.dx = dx; this.dy = dy; this.color = color;
+    }
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    update() {
+      if (this.x + this.size > canvas.width || this.x - this.size < 0) this.dx *= -1;
+      if (this.y + this.size > canvas.height || this.y - this.size < 0) this.dy *= -1;
+      this.x += this.dx; this.y += this.dy;
+
+      if (Math.hypot(this.x - mouseX, this.y - mouseY) < this.size + 20) {
+        this.color = "#FF5733";
+      } else {
+        this.color = "#00FFAA";
+      }
+      this.draw();
+    }
+  }
+
+  let shapes = [];
+  for (let i = 0; i < 100; i++) {
+    const size = random(10, 30);
+    const x = random(size, canvas.width - size);
+    const y = random(size, canvas.height - size);
+    const dx = random(-2, 2);
+    const dy = random(-2, 2);
+    const color = "#00FFAA";
+    shapes.push(new Shape(x, y, size, dx, dy, color));
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    shapes.forEach(shape => shape.update());
+    requestAnimationFrame(animate);
+  }
+
+  canvas.addEventListener('mousemove', (event) => {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+  });
+
+  animate();
+</script>
+</body>
+</html>

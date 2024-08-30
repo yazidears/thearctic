@@ -1,0 +1,137 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Bizarre World of Giraffeulator</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #fffb00, #ff0000, #ff00ae, #6e00ff, #002bff, #00ffeb, #00ff74, #46ff00, #ebff00, #ff8a00, #ff007f);
+            background-size: 1800% 1800%;
+            animation: gradientAnimation 20s ease infinite;
+            font-family: 'Lucida Console', 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @keyframes gradientAnimation {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        #giraffeulator {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        #giraffe-head {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(0deg, #ffcc00 60%, #ff9900);
+            width: 120px;
+            height: 120px;
+            top: 20px;
+            left: 340px;
+            z-index: 10;
+            animation: headMove 4s infinite;
+        }
+        @keyframes headMove {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-50px);}
+            75% {transform: translateX(50px);}
+        }
+        #giraffe-neck {
+            position: absolute;
+            width: 80px;
+            background: #ffcc00;
+            height: 300px;
+            top: 140px;
+            left: 360px;
+            border-radius: 40px;
+            z-index: 1;
+        }
+        #bubble-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 760px;
+            height: 440px;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: bubbleUp 10s infinite;
+            opacity: 0;
+        }
+        @keyframes bubbleUp {
+            0% {transform: translateY(100%); opacity: 1;}
+            100% {transform: translateY(-200%); opacity: 0;}
+        }
+        #strange-controls {
+            position: absolute;
+            top: 400px;
+            left: 50px;
+            width: 700px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 20;
+        }
+        .btn {
+            padding: 10px;
+            background: #203a8b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #3451b8;
+        }
+    </style>
+</head>
+<body>
+    <div id="giraffeulator">
+        <div id="giraffe-head"></div>
+        <div id="giraffe-neck"></div>
+        <div id="bubble-container"></div>
+        <div id="strange-controls">
+            <button class="btn" onclick="createBubble()">Create Bubble</button>
+            <button class="btn" onclick="changeColors()">Change Colors</button>
+        </div>
+    </div>
+    <script>
+        const colors = ['#fffb00', '#ff0000', '#ff00ae', '#6e00ff', '#002bff', '#00ffeb', '#00ff74', '#46ff00', '#ebff00', '#ff8a00', '#ff007f'];
+        
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 50 + 10;
+            bubble.style.width = bubble.style.height = `${size}px`;
+            bubble.style.left = `${Math.random() * (document.getElementById('bubble-container').offsetWidth - size)}px`;
+            document.getElementById('bubble-container').appendChild(bubble);
+            
+            setTimeout(() => { bubble.remove(); }, 10000);
+        }
+        
+        function changeColors() {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.background = `linear-gradient(90deg, ${randomColor}, #fff)`;
+            document.documentElement.style.setProperty('--primary-color', randomColor);
+        }
+        
+        setInterval(createBubble, 2000);
+    </script>
+</body>
+</html>
+```

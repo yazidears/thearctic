@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Puzzle: The Enigma Garden</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #001f3f;
+            color: #f8f8ff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            transition: opacity 0.5s ease;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #ffffff55;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="overlay">
+    <h1>The Enigma Garden</h1>
+    <p>Navigate the surreal dreamscape</p>
+    <button onclick="beginPuzzleGame()">Begin Journey</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, animationFrame;
+
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    function drawParallelLines(number) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.lineWidth = 2;
+
+        for (let i = 0; i < number; i++) {
+            let x0 = Math.random() * width;
+            let y0 = Math.random() * height;
+            let x1 = Math.random() * width;
+            let y1 = Math.random() * height;
+
+            let x2 = x1 + (x1 - x0);
+            let y2 = y1 + (y1 - y0);
+
+            ctx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+    }
+
+    function animateLines() {
+        drawParallelLines(20);
+        animationFrame = requestAnimationFrame(animateLines);
+    }
+
+    function beginPuzzleGame() {
+        document.getElementById('overlay').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('overlay').style.display = 'none';
+            ctx.clearRect(0, 0, width, height);
+            playPuzzle();
+        }, 500);
+    }
+
+    function playPuzzle() {
+        let puzzles = ["Complete the circuit", "Find the hidden spiral", "Symmetrical reflections"];
+        let currentPuzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
+        alert(`Your task is: ${currentPuzzle}`);
+        
+        if (currentPuzzle === "Complete the circuit") {
+            // Unique logic or animation for this puzzle
+            drawCircuitPuzzle();
+        } else if (currentPuzzle === "Find the hidden spiral") {
+            // Unique logic or animation for this puzzle
+            drawSpiralPuzzle();
+        } else {
+            // Unique logic or animation for this puzzle
+            drawReflectionPuzzle();
+        }
+    }
+
+    function drawCircuitPuzzle() {
+        ctx.strokeStyle = 'cyan';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(width / 2, height / 2, 100, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    function drawSpiralPuzzle() {
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        const centerX = width / 2, centerY = height / 2;
+        let angle = 0;
+        ctx.beginPath();
+        for (let i = 0; i < 360; i++) {
+            angle = 0.1 * i;
+            let x = centerX + (angle * Math.cos(angle));
+            let y = centerY + (angle * Math.sin(angle));
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    function drawReflectionPuzzle() {
+        ctx.strokeStyle = 'lime';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let i = -width / 2; i < width / 2; i += 10) {
+            ctx.moveTo(i + width / 2, -height / 2);
+            ctx.lineTo(-i + width / 2, height / 2);
+        }
+        ctx.stroke();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animateLines();
+</script>
+
+</body>
+</html>

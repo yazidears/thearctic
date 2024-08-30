@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Enigmatic Forest</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(160deg, #2b5876, #4e4376);
+        }
+        canvas {
+            display: block;
+        }
+        #dialogue {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 400px;
+            display: none;
+            z-index: 100;
+        }
+        .character {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 5px solid white;
+            transition: transform 0.2s;
+        }
+        .character::before {
+            content: '🌟';
+            font-size: 30px;
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="forestCanvas"></canvas>
+    <div id="dialogue">Click the stars to unveil their secrets...</div>
+    <script>
+        const canvas = document.getElementById('forestCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        for (let i = 0; i < 20; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                origSize: 0.5,
+                pulse: Math.random() * 2
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const star of stars) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.closePath();
+                
+                star.size = star.origSize + Math.sin(star.pulse) * star.origSize;
+                star.pulse += 0.02;
+            }
+            requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        function createCharacter(x, y) {
+            const character = document.createElement('div');
+            character.className = 'character';
+            character.style.top = `${y - 25}px`;
+            character.style.left = `${x - 25}px`;
+            character.addEventListener('click', () => {
+                document.getElementById('dialogue').style.display = 'block';
+                character.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    character.remove();
+                    document.getElementById('dialogue').style.display = 'none';
+                }, 1000);
+            });
+            document.body.appendChild(character);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            createCharacter(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('dialogue').style.display = 'block';
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

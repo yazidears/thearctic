@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Clock Forest</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #2d2d2f;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        .clock {
+            transition: transform 0.2s ease-out;
+        }
+        .character {
+            fill: #f7d842;
+            stroke: #0e0e0e;
+            stroke-width: 2;
+        }
+        .character:hover {
+            fill: #f77157;
+            cursor: pointer;
+        }
+        #timeDisplay {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 2em;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="timeDisplay"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const timeDisplay = document.getElementById('timeDisplay');
+        let characters = [];
+
+        class WhimsyCharacter {
+            constructor(x, y, size, speed) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.speed = speed;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#f7d842';
+                ctx.fill();
+                ctx.strokeStyle = '#0e0e0e';
+                ctx.stroke();
+            }
+            float() {
+                this.y += this.speed;
+                if(this.y > canvas.height + this.size) {
+                    this.y = -this.size;
+                    this.x = Math.random() * canvas.width;
+                }
+                this.draw();
+            }
+        }
+
+        function createWhimsyCharacters(num) {
+            for(let i = 0; i < num; i++) {
+                let size = Math.random() * 30 + 10;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let speed = Math.random() * 3 + 1;
+                characters.push(new WhimsyCharacter(x, y, size, speed));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            characters.forEach(char => char.float());
+            requestAnimationFrame(animate);
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const hrs = now.getHours().toString().padStart(2, '0');
+            const mins = now.getMinutes().toString().padStart(2, '0');
+            const secs = now.getSeconds().toString().padStart(2, '0');
+            timeDisplay.innerHTML = `${hrs}:${mins}:${secs}`;
+        }
+
+        createWhimsyCharacters(100);
+        animate();
+        setInterval(updateTime, 500);
+    </script>
+</body>
+</html>

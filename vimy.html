@@ -1,0 +1,111 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Bubble Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #bbf7ea, #ff9ff3);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: floatUp 10s infinite ease-in;
+            opacity: 0;
+            box-shadow: 0 0 10px #fff;
+        }
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(0); }
+            10% { opacity: 1; bottom: 20%; }
+            90% { opacity: 1; bottom: 100%; }
+            100% { opacity: 0; transform: translateY(-50%); }
+        }
+        #controlPanel {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            z-index: 1000;
+        }
+        button, input {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 5px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        button:hover, input:hover {
+            background: white;
+            color: black;
+        }
+        span {
+            font-size: 2rem;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="controlPanel">
+    <button onclick="createBubble()">Create Bubble</button>
+    <label>Sound: <input type="checkbox" id="toggleSound" checked></label>
+</div>
+
+<script>
+    let sounds = [];
+    for (let i = 0; i < 10; i++) {
+        let audio = new Audio('https://www.soundjay.com/button/sounds/button-16.mp3');
+        audio.load();
+        sounds.push(audio);
+    }
+
+    function playSound(index) {
+        if (document.getElementById('toggleSound').checked) {
+            sounds[index].currentTime = 0;
+            sounds[index].play();
+        }
+    }
+
+    function createBubble() {
+        const size = Math.random() * 50 + 50;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}%`;
+        document.body.appendChild(bubble);
+
+        bubble.addEventListener('animationiteration', () => {
+            playSound(Math.floor(Math.random() * sounds.length));
+            document.body.removeChild(bubble);
+        });
+    }
+
+    setInterval(createBubble, 1000);
+
+    document.body.addEventListener('mousemove', (e) => {
+        const emoji = document.createElement('span');
+        emoji.textContent = String.fromCodePoint(0x1F48B + Math.floor(Math.random() * 40));
+        emoji.style.left = `${e.clientX}px`;
+        emoji.style.top = `${e.clientY - 20}px`;
+        document.body.appendChild(emoji);
+        setTimeout(() => document.body.removeChild(emoji), 1000);
+    });
+</script>
+
+</body>
+</html>
+```

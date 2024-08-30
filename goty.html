@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Music Forest</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to bottom, #040d1a, #12223d, #1c3a55);
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 300px;
+            background-color: #384e28;
+            border-radius: 0 50px 50px 0;
+            transform-origin: bottom left;
+            animation: grow 5s linear infinite alternate-reverse;
+        }
+        .leaves {
+            position: absolute;
+            top: -100px;
+            left: -75px;
+            width: 250px;
+            height: 250px;
+            background-color: #2e8b57;
+            border-radius: 50%;
+            transform: scale(0.5);
+            animation: sway 3s linear infinite alternate;
+        }
+        .note {
+            position: absolute;
+            font-size: 30px;
+            animation: floatNote 6s linear infinite alternate;
+        }
+        @keyframes grow {
+            from { transform: scale(0.5); }
+            to { transform: scale(1); }
+        }
+        @keyframes sway {
+            from { transform: rotate(-5deg) scale(0.5); }
+            to { transform: rotate(5deg) scale(0.6); }
+        }
+        @keyframes floatNote {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const colors = ['#FFD700', '#FF6347', '#ADFF2F', '#00BFFF', '#FF69B4'];
+        const notes = ['♫', '♬', '♩', '♪', '♭'];
+
+        function createTree() {
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.left = `${Math.random() * window.innerWidth}px`;
+            document.body.appendChild(tree);
+            const leaves = document.createElement('div');
+            leaves.className = 'leaves';
+            tree.appendChild(leaves);
+        }
+
+        function createMusicNotes() {
+            for(let i = 0; i < 20; i++) {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = `${Math.random() * window.innerWidth}px`;
+                note.style.top = `${Math.random() * window.innerHeight}px`;
+                note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                note.style.fontSize = `${Math.random() * 50 + 20}px`;
+                document.body.appendChild(note);
+            }
+        }
+
+        function animateTrees() {
+            const trees = document.querySelectorAll('.tree');
+            trees.forEach(tree => {
+                const animationDuration = Math.random() * 5 + 5;
+                tree.style.animationDuration = `${animationDuration}s`;
+            });
+        }
+
+        document.addEventListener('click', function () {
+            createTree();
+            animateTrees();
+        });
+
+        createMusicNotes();
+    </script>
+</body>
+</html>

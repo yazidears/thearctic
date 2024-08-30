@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Cosmic Journey</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #020024, #090979, #00d4ff);
+            height: 100vh;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #universe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .planet {
+            border-radius: 50%;
+            position: absolute;
+            animation: orbit infinite linear;
+        }
+        @keyframes orbit {
+            from {transform: rotate(0deg) translateX(200px) rotate(0deg);}
+            to {transform: rotate(360deg) translateX(200px) rotate(-360deg);}
+        }
+        .star {
+            position: fixed;
+            display: block;
+            width: 1px;
+            height: 1px;
+            background: #fff;
+            animation: twinkle 1s infinite alternate;
+        }
+        @keyframes twinkle {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .black-hole {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, black 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            position: fixed;
+            top: 60%;
+            left: 80%;
+            transform-origin: center;
+            animation: swallow 5s infinite alternate;
+        }
+        @keyframes swallow {
+            from {transform: scale(1);}
+            to {transform: scale(1.5);}
+        }
+        #spaceship {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 50px;
+            height: 20px;
+            background: silver;
+            clip-path: polygon(0% 50%, 100% 0%, 95% 50%, 100% 100%);
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: fly 10s infinite alternate;
+        }
+        @keyframes fly {
+            from {transform: translate(0, 0);}
+            to {transform: translate(80vw, -30vh);}
+        }
+        #planet1 {background-color: #f4a261; width: 50px; height: 50px; top: -150px; left: -150px;}
+        #planet2 {background-color: #e76f51; width: 30px; height: 30px; top: -75px; left: 80px;}
+        #planet3 {background-color: #ffc300; width: 70px; height: 70px; bottom: -150px; right: -120px;}
+        #space-invader {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 80px;
+            height: 80px;
+            background: lime;
+            clip-path: polygon(
+                15% 0%, 85% 0%, 85% 35%, 100% 35%, 100% 50%, 85% 50%, 85% 100%, 65% 100%, 
+                65% 65%, 35% 65%, 35% 100%, 15% 100%, 15% 50%, 0% 50%, 0% 35%, 15% 35%
+            );
+            animation: invade 3s infinite alternate;
+        }
+        @keyframes invader {
+            0% {top: 10%; left: 10%;}
+            100% {top: 75%; left: 75%;}
+        }
+    </style>
+</head>
+<body>
+    <div id="universe">
+        <div class="planet" id="planet1"></div>
+        <div class="planet" id="planet2" style="animation-duration: 8s;"></div>
+        <div class="planet" id="planet3" style="animation-duration: 12s;"></div>
+    </div>
+    <div class="star" style="top:20%;left:10%;animation-duration:2s;"></div>
+    <div class="star" style="top:40%;left:50%;animation-duration:3s;"></div>
+    <div class="star" style="top:50%;left:90%;animation-duration:1.5s;"></div>
+    <div class="star" style="top:30%;left:20%;animation-duration:3.5s;"></div>
+    <div class="star" style="top:70%;left:70%;animation-duration:2.5s;"></div>
+    <div class="black-hole"></div>
+    <div id="spaceship"></div>
+    <div id="space-invader"></div>
+    <script>
+        function createRandomStars(num) {
+            for (let i = 0; i < num; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 3 + 1}s`;
+                document.body.appendChild(star);
+            }
+        }
+        createRandomStars(30);
+
+        function launchMeteor() {
+            const meteor = document.createElement('div');
+            meteor.style.position = 'fixed';
+            meteor.style.top = `${Math.random() * 100}vh`;
+            meteor.style.left = `${Math.random() * 100}vw`;
+            meteor.style.width = '5px';
+            meteor.style.height = '1px';
+            meteor.style.background = 'orange';
+            meteor.style.boxShadow = '0 0 10px orange';
+            meteor.style.transform = 'rotate(45deg)';
+            meteor.style.transition = 'transform 2s linear';
+            document.body.appendChild(meteor);
+            setTimeout(() => {
+                meteor.style.transform = 'translateX(100vw) translateY(100vh)';
+                setTimeout(() => meteor.remove(), 2000);
+            }, 100);
+        }
+        setInterval(launchMeteor, 4000);
+
+        const invader = document.getElementById("space-invader");
+        let invaderDirection = 1;
+        setInterval(() => {
+            let currentLeft = parseInt(window.getComputedStyle(invader).left);
+            if (currentLeft > window.innerWidth - 100 || currentLeft < 0) {
+                invaderDirection *= -1;
+            }
+            invader.style.left = `${currentLeft + invaderDirection * 

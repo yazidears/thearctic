@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Clockwork Carnival</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            overflow: hidden;
+        }
+        .title {
+            position: absolute;
+            top: 5%;
+            left: 20%;
+            color: #fff;
+            font-size: 3em;
+            text-shadow: 3px 3px #000;
+        }
+        .carousel {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border: 10px solid #fff;
+            border-radius: 100%;
+            box-shadow: 0 0 20px 5px #ff6f61;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .horse {
+            position: absolute;
+            width: 15%;
+            height: auto;
+        }
+        .horse:nth-child(1) { top: 0%; left: 42%; }
+        .horse:nth-child(2) { top: 42%; left: 84%; transform: rotate(90deg); }
+        .horse:nth-child(3) { top: 84%; left: 42%; transform: rotate(180deg); }
+        .horse:nth-child(4) { top: 42%; left: 0%; transform: rotate(270deg); }
+        .interactive-wheels {
+            position: absolute;
+            top: 80%;
+            left: 20%;
+            width: 60%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .wheel {
+            background: #fff;
+            border-radius: 50%;
+            width: 10%;
+            padding-top: 10%;
+            position: relative;
+            box-shadow: 0 0 10px 2px #f7e4e4;
+            animation: wiggle 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        .eye {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            background: #ff6f61;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { height: 50%; }
+            50% { height: 0%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Whimsical Clockwork Carnival</div>
+
+    <div class="carousel">
+        <img src="https://via.placeholder.com/150x100" class="horse" alt="Horse 1">
+        <img src="https://via.placeholder.com/150x100" class="horse" alt="Horse 2">
+        <img src="https://via.placeholder.com/150x100" class="horse" alt="Horse 3">
+        <img src="https://via.placeholder.com/150x100" class="horse" alt="Horse 4">
+    </div>
+
+    <div class="interactive-wheels">
+        <div class="wheel" onclick="surprise(this)"><div class="eye"></div></div>
+        <div class="wheel" onclick="surprise(this)"><div class="eye"></div></div>
+        <div class="wheel" onclick="surprise(this)"><div class="eye"></div></div>
+        <div class="wheel" onclick="surprise(this)"><div class="eye"></div></div>
+    </div>
+
+    <script>
+        function surprise(element) {
+            const colors = ['#ff6f61', '#f7e4e4', '#ff7e5f', '#feb47b', '#000'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            element.style.backgroundColor = randomColor;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            overflow: hidden;
+            user-select: none;
+        }
+        canvas {
+            display: block;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            font-size: 2rem;
+            pointer-events: none;
+        }
+        #paragraph {
+            color: lavender;
+            text-align: center;
+            position: absolute;
+            top: 80%;
+            width: 100%;
+            max-width: 800px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 3s;
+        }
+        .balloon {
+            width: 100px;
+            height: 150px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            animation: float 5s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-800px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .twinkle {
+            background: white;
+            position: absolute;
+            border-radius: 50%;
+            box-shadow:
+                0 0 8px rgba(255,255,255,0.8),
+                0 0 30px rgba(255,255,255,0.8);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Surreal Dreamscape</h1>
+    <div id="paragraph">Float, and let your worries fly away...</div>
+    <canvas id="canvas"></canvas>
+    <div class="balloon" style="left:20%;animation-delay:-4s;"></div>
+    <div class="balloon" style="left:40%;animation-delay:-2s;"></div>
+    <div class="balloon" style="left:60%;animation-delay:-6s;"></div>
+    <div class="balloon" style="left:80%;animation-delay:-3s;"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        const stars = Array.from({ length: 100 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            r: Math.random() * 2
+        }));
+
+        function createGradient() {
+            const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width);
+            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
+            gradient.addColorStop(1, 'rgba(255, 69, 0, 0.1)');
+            return gradient;
+        }
+
+        const gradient = createGradient();
+
+        function drawStars() {
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function animateStars() {
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            stars.forEach(star => {
+                star.x += (Math.random() - 0.5) * 0.5;
+                star.y += (Math.random() - 0.5) * 0.5;
+                star.x = star.x < 0 ? width : star.x > width ? 0 : star.x;
+                star.y = star.y < 0 ? height : star.y > height ? 0 : star.y;
+            });
+            drawStars();
+            window.requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+
+        const balloons = document.getElementsByClassName('balloon');
+        const twinkles = Array.from({ length: 20 }, () => {
+            const twinkle = document.createElement('div');
+            twinkle.className = 'twinkle';
+            twinkle.style.width = `${Math.random() * 5}px`;
+            twinkle.style.height = twinkle.style.width;
+            twinkle.style.top = `${Math.random() * height}px`;
+            twinkle.style.left = `${Math.random() * width}px`;
+            document.body.appendChild(twinkle);
+            return twinkle;
+        });
+
+        function animateTwinkles() {
+            twinkles.forEach(twinkle => {
+                twinkle.style.top = `${parseFloat(twinkle.style.top) + (Math.random() * 2 - 1)}px`;
+                twinkle.style.left = `${parseFloat(twinkle.style.left) + (Math.random() * 2 - 1)}px`;
+            });
+            window.requestAnimationFrame(animateTwinkles);
+        }
+
+        animateTwinkles();
+
+        Array.from(balloons).forEach(balloon => {
+            balloon.addEventListener('animationiteration', () => {
+                balloon.style.left = `${Math.random() * 80 + 10}%`;
+            });
+        });
+
+        setTimeout(() => {
+            document.getElementById('paragraph').style.opacity = 1;
+        }, 3000);
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

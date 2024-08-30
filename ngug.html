@@ -1,0 +1,126 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Underwater Theater</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001f3f, #0074d9);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        #stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .fish {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            background: orange;
+            border-radius: 50px 50px 0 50px;
+            transition: transform 1s, left 2s;
+        }
+        .fish:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 20px solid orange;
+        }
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 6s infinite;
+            opacity: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(-5px); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translateY(-400px) translateX(5px); opacity: 1; }
+            100% { transform: translateY(-500px) translateX(0); opacity: 0; }
+        }
+        .coral {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            height: 150px;
+            background: #ff851b;
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+        @keyframes sway {
+            from { transform: rotate(2deg); }
+            to { transform: rotate(-2deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="stage"></div>
+    <script>
+        const stage = document.getElementById('stage');
+        
+        function createFish() {
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.style.left = Math.random() * window.innerWidth + 'px';
+            fish.style.top = Math.random() * window.innerHeight + 'px';
+            stage.appendChild(fish);
+            return fish;
+        }
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * window.innerWidth + 'px';
+            bubble.style.bottom = '0px';
+            stage.appendChild(bubble);
+            bubble.addEventListener('animationiteration', () => {
+                bubble.style.left = Math.random() * window.innerWidth + 'px';
+            });
+        }
+
+        function createCoral() {
+            const coral = document.createElement('div');
+            coral.className = 'coral';
+            coral.style.left = Math.random() * window.innerWidth + 'px';
+            stage.appendChild(coral);
+        }
+
+        function animateFish(fish) {
+            const maxLeft = window.innerWidth - 100;
+            const maxTop = window.innerHeight - 50;
+            setInterval(() => {
+                fish.style.left = Math.random() * maxLeft + 'px';
+                fish.style.top = Math.random() * maxTop + 'px';
+                fish.style.transform = `scaleX(${Math.random() < 0.5 ? 1 : -1})`;
+            }, 3000);
+        }
+
+        for (let i = 0; i < 5; i++) {
+            const fish = createFish();
+            animateFish(fish);
+        }
+
+        for (let i = 0; i < 30; i++) {
+            createBubble();
+        }
+
+        for (let i = 0; i < 10; i++) {
+            createCoral();
+        }
+    </script>
+</body>
+</html>
+```

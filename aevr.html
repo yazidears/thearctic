@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Dreamscape</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+            animation: background-animation 10s infinite alternate;
+        }
+        @keyframes background-animation {
+            0% {background-position: 0% 50%;}
+            100% {background-position: 100% 50%;}
+        }
+        canvas {
+            display: block;
+        }
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 3rem;
+            z-index: 10;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="spaceCanvas"></canvas>
+    <div class="message" id="message">Welcome to the Celestial Dreamscape!</div>
+    <script>
+        const canvas = document.getElementById("spaceCanvas");
+        const context = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let stars = [];
+
+        for(let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                color: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 240, 0.8)`,
+                speed: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function drawStars() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                context.beginPath();
+                context.arc(star.x, star.y, star.radius, 0, Math.PI * 2, false);
+                context.fillStyle = star.color;
+                context.fill();
+                star.x += star.speed;
+                if(star.x > canvas.width) {
+                    star.x = 0;
+                    star.y = Math.random() * canvas.height;
+                }
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        const message = document.getElementById('message');
+        setTimeout(() => {
+            message.style.opacity = 1;
+        }, 2000);
+
+        const colors = [
+            {hue: 210, saturation: '100%', lightness: '60%'},
+            {hue: 180, saturation: '70%', lightness: '60%'},
+            {hue: 150, saturation: '80%', lightness: '70%'},
+            {hue: 120, saturation: '90%', lightness: '80%'}
+        ];
+
+        setInterval(() => {
+            let color = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.color = `hsl(${color.hue}, ${color.saturation}, ${color.lightness})`;
+        }, 3000);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Adventure of Puggles</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff6b6b, #f8c630);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #control-panel {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #control-panel button {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        #control-panel button:hover {
+            background: #f8c630;
+        }
+        #message {
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="control-panel">
+        <button id="jumpButton">Jump</button>
+        <button id="changeWorldButton">Change World</button>
+    </div>
+    <div id="message">Help Puggles to jump through surreal worlds!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let worldColor = ['#4834d4', '#22a6b3', '#be2edd', '#eb4d4b', '#6ab04c'];
+        let currentColorIndex = 0;
+        let gravity = 0.5;
+        let jumpPower = -10;
+        let puggle = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 30,
+            color: "#f9ca24",
+            vy: 0,
+            inAir: true
+        };
+
+        function drawPuggle() {
+            ctx.beginPath();
+            ctx.arc(puggle.x, puggle.y, puggle.radius, 0, Math.PI * 2);
+            ctx.fillStyle = puggle.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function updatePuggle() {
+            if (puggle.inAir) {
+                puggle.vy += gravity;
+                puggle.y += puggle.vy;
+                if (puggle.y + puggle.radius > canvas.height) {
+                    puggle.y = canvas.height - puggle.radius;
+                    puggle.inAir = false;
+                    puggle.vy = 0;
+                }
+            }
+        }
+
+        function jump() {
+            if (!puggle.inAir) {
+                puggle.vy = jumpPower;
+                puggle.inAir = true;
+            }
+        }
+
+        function changeWorld() {
+            currentColorIndex = (currentColorIndex + 1) % worldColor.length;
+            document.body.style.background = worldColor[currentColorIndex];
+        }
+
+        document.getElementById('jumpButton').onclick = jump;
+        document.getElementById('changeWorldButton').onclick = changeWorld;
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPuggle();
+            updatePuggle();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+```

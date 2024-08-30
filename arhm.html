@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Jellybean Orchestra</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #001f3f, #1c5476, #4a81a2);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .jellybean {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7eb9, #ff65a3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            animation: wander 8s infinite ease-in-out;
+        }
+        @keyframes wander {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(1000px, -300px) rotate(120deg); }
+            50% { transform: translate(-500px, 100px) rotate(240deg); }
+            75% { transform: translate(300px, -200px) rotate(360deg); }
+        }
+        #orchestra {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .jelly-note {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #ffdc78;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            animation: bounceNote 3s infinite ease-in-out;
+            margin: 0 5px;
+        }
+        @keyframes bounceNote {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="orchestra">
+        <div class="jelly-note"></div>
+        <div class="jelly-note"></div>
+        <div class="jelly-note"></div>
+        <div class="jelly-note"></div>
+        <div class="jelly-note"></div>
+    </div>
+    <script>
+        const audioNotes = ['C', 'D', 'E', 'F', 'G'];
+        
+        document.querySelectorAll('.jelly-note').forEach((note, index) => {
+            note.addEventListener('click', function() {
+                const audio = new Audio(`https://freesound.org/data/previews/198/198841_2859976-lq.mp3`);
+                audio.playbackRate = (index + 1) / 5;
+                audio.play();
+            });
+
+            note.style.backgroundColor = '#' + (Math.random().toString(16) + "000000").substring(2,8);
+        });
+        
+        let jellyPool = [];
+        for (let i = 0; i < 10; i++) {
+            const jelly = document.createElement('div');
+            jelly.className = 'jellybean';
+            jelly.style.left = Math.random() * 100 + 'vw';
+            jelly.style.top = Math.random() * 100 + 'vh';
+            jelly.style.animationDelay = Math.random() * 8 + 's';
+            document.body.appendChild(jelly);
+            jellyPool.push(jelly);
+        }
+
+        setInterval(() => {
+            jellyPool.forEach(jelly => {
+                jelly.style.backgroundImage = `linear-gradient(135deg, #${Math.random().toString(16).substr(-6)}, #${Math.random().toString(16).substr(-6)})`;
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

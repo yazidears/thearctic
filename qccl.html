@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interstellar Adventure</title>
+    <style>
+        body {
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #spaceship {
+            width: 100px;
+            height: 100px;
+            background: url('https://img.icons8.com/emoji/48/000000/rocket-emoji.png') 0 0 no-repeat;
+            position: absolute;
+            top: calc(50% - 50px);
+            left: calc(50% - 50px);
+        }
+
+        #stars {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: white;
+            animation: moveStar 20s infinite;
+        }
+
+        @keyframes moveStar {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(20);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="spaceship"></div>
+    
+    <script>
+        let spaceship = document.getElementById('spaceship');
+        let starsContainer = document.getElementById('stars');
+
+        window.addEventListener('mousemove', function(e) {
+            let x = e.clientX;
+            let y = e.clientY;
+
+            spaceship.style.top = y + 'px';
+            spaceship.style.left = x + 'px';
+        });
+
+        function createStar() {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+            star.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+            starsContainer.appendChild(star);
+
+            setTimeout(() => {
+                star.remove();
+            }, 500);
+        }
+
+        setInterval(createStar, 50);
+    </script>
+</body>
+</html>

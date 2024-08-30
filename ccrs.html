@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alien Morse Decoder</title>
+  <style>
+    body {
+      background: #121212;
+      text-align: center;
+      color: #7cffcb;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    #alien {
+      width: 150px;
+      height: 150px;
+      margin: 50px auto;
+      background: url('http://clipart-library.com/data_images/8cxrjGdcE.gif');
+      background-size: cover;
+    }
+    #textBox {
+      margin: 30px;
+    }
+    #morseCode {
+      font-size: 30px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+  <div id="alien"></div>
+  <button id="talk">Talk</button>
+  <div id="textBox">
+    <h1>Alien Says:</h1>
+    <h2 id="morseCode"></h2>
+  </div>
+  <script>
+    var morse = {
+      'A': '.-', 'B': '-...', 'C': '-.-.',
+      'D': '-..', 'E': '.', 'F': '..-.',  
+      'G': '--.', 'H': '....', 'I': '..',  
+      'J': '.---', 'K': '-.-', 'L': '.-..',
+      'M': '--', 'N': '-.', 'O': '---',
+      'P': '.--.', 'Q': '--.-', 'R': '.-.',  
+      'S': '...', 'T': '-', 'U': '..-',
+      'V': '...-', 'W': '.--', 'X': '-..-',  
+      'Y': '-.--', 'Z': '--..',
+    }
+
+    function randomLetter() {
+      var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      return letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+
+    $(document).ready(function(){
+      $('#talk').click(function(){
+        var sentence = '';
+        for (var i = 0; i < 5; i++) {
+          var letter = randomLetter();
+          sentence += morse[letter] + ' ';
+        }
+        $('#morseCode').text(sentence);
+      });
+    });
+  </script>
+</body>
+</html>

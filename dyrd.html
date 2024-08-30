@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: #e6e6e6;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        canvas {
+            border: 5px solid black;
+            margin-top: 2%;
+        }
+        #red, #green, #blue {
+            width: 20%;
+            height: 20px;
+            display: inline-block;
+            background: grey;
+            border: 2px solid;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            var c=document.getElementById("myCanvas");
+            var ctx=c.getContext("2d");
+            var imgData=ctx.createImageData(800,400);
+            
+            var i;
+            for (i=0; i<imgData.data.length; i+=4)
+            {
+                imgData.data[i+0]=Math.floor(Math.random() * Math.floor(256));
+                imgData.data[i+1]=Math.floor(Math.random() * Math.floor(256));
+                imgData.data[i+2]=Math.floor(Math.random() * Math.floor(256));
+                imgData.data[i+3]=255;
+            }
+            ctx.putImageData(imgData,0,0);
+        }
+    </script>
+</head>
+<body>
+    <h2>HTML5 Canvas Random Art Generator!</h2>
+    <canvas id="myCanvas" width="800" height="400"></canvas>
+    <div id="colorSelector">
+        <div id="red"></div>
+        <div id="green"></div>
+        <div id="blue"></div>
+    </div>
+    <button onclick="window.location.reload();">Generate new art</button>
+    <script>
+        var r = document.getElementById("red");
+        var g = document.getElementById("green");
+        var b = document.getElementById("blue");
+        
+        r.style.background = "rgb("+ Math.floor(Math.random() * Math.floor(256)) +",0,0)";
+        g.style.background = "rgb(0,"+ Math.floor(Math.random() * Math.floor(256)) +",0)";
+        b.style.background = "rgb(0,0,"+ Math.floor(Math.random() * Math.floor(256)) +")";
+    </script>
+</body>
+</html>

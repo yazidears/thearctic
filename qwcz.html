@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blob Adventure: The Infinite Wobble</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #282c34;
+            color: #FFFFFF;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #dialog {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 30%;
+            background-color: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        #dialog h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        #dialog p {
+            font-size: 1em;
+            line-height: 1.5;
+        }
+        #dialog button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #61dafb;
+            color: #282c34;
+            cursor: pointer;
+        }
+        #dialog button:hover {
+            background-color: #21a1f1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <div id="dialog">
+        <h2>Welcome to the Blob Adventure!</h2>
+        <p>Control the magical blob using your arrow keys. Help it explore the wondrous and odd landscape of WobblyLand. Beware of the floating cubes of abstraction!</p>
+        <button id="start">Start Adventure</button>
+    </div>
+    <script>
+        (function(){
+            const canvas = document.getElementById('c');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let blobs = [], cubes = [], keys = {};
+            let blobImg = new Image();
+            let cubeImg = new Image();
+            let startGame = false;
+
+            blobImg.src = "https://via.placeholder.com/70";
+            cubeImg.src = "https://via.placeholder.com/50/ff00ff/ffffff";
+
+            class Blob {
+                constructor(x, y, radius, dx, dy) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = radius;
+                    this.dx = dx;
+                    this.dy = dy;
+                    this.img = blobImg;
+                }
+                draw() {
+                    ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+                }
+                move() {
+                    if (keys['ArrowUp']) this.y -= 5;
+                    if (keys['ArrowDown']) this.y += 5;
+                    if (keys['ArrowLeft']) this.x -= 5;
+                    if (keys['ArrowRight']) this.x += 5;
+                    if (this.x - this.radius < 0) this.x = this.radius;
+                    if (this.y - this.radius < 0) this.y = this.radius;
+                    if (this.x + this.radius > canvas.width) this.x = canvas.width - this.radius;
+                    if (this.y + this.radius > canvas.height) this.y = canvas.height - this.radius;
+                }
+            }
+
+            class Cube {
+                constructor(x, y, size, dx, dy) {
+                    this.x = x;
+                    this.y = y;
+                    this.size = size;
+                    this.dx = dx;
+                    this.dy = dy;
+                    this.img = cubeImg;
+                }
+                draw() {
+                    ctx.drawImage(this.img, this.x, this.y, this.size, this.size);
+                }
+                move() {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    if (this.x + this.size > canvas.width || this.x < 0) this.dx = -this.dx;
+                    if (this.y + this.size > canvas.height || this.y < 0) this.dy = -this.dy;
+                }
+            }
+
+            function init() {
+                blobs.push(new Blob(canvas.width / 2, canvas.height / 2, 35, 2, 2));
+                for (let i = 0; i < 5; i++) {
+                    cubes.push(new Cube(Math.random()*canvas.width, Math.random()*canvas.height, 50, Math.random()*2+1, Math.random()*2+1));
+                }
+            }
+
+            function animate() {
+                if (startGame) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    blobs.forEach(blob => {
+                        blob.move();
+                        blob.draw();
+                    });
+                    cubes.forEach(cube => {
+                        cube.move();
+                        cube.draw();
+                    });
+                }
+                requestAnimationFrame(animate);
+            }
+
+            document.getElementById('start').addEventListener('click', function() {
+                document.getElementById('dialog').style.display = 'none';
+                startGame = true;
+            });
+
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            window.addEventListener('keydown', function(event) {
+                keys[event.key] = true;
+            });
+
+            window.addEventListener('keyup', function(event) {
+                keys[event.key] = false;
+            });
+
+            init();
+            animate();
+        })();
+    </script>
+</body>
+</html>

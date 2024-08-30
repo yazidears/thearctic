@@ -1,0 +1,116 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Clockwork Zoo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #222;
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #container {
+            position: relative;
+            width: 90vw;
+            height: 90vh;
+            border: 3px dotted #eee;
+            overflow: hidden;
+            background: #333;
+        }
+        .animal {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.8;
+            transition: transform 0.3s;
+        }
+        .animal:hover {
+            transform: scale(1.2);
+        }
+        #controls {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .button {
+            padding: 10px;
+            background: #444;
+            color: #eee;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="controls">
+            <button class="button" onclick="createAnimal()">Create Animal</button>
+            <button class="button" onclick="changeBackground()">Change Background</button>
+            <button class="button" onclick="chaos()">Chaos</button>
+        </div>
+    </div>
+    <script>
+        const container = document.getElementById('container');
+        const animalTypes = ['🐉', '🦄', '🐙', '🦋', '🐲', '🦓', '🐘', '🦚', '🐢', '🦜'];
+        let chaosMode = false;
+
+        function createAnimal() {
+            const animal = document.createElement('div');
+            animal.classList.add('animal');
+            animal.textContent = animalTypes[Math.floor(Math.random() * animalTypes.length)];
+            positionAnimal(animal);
+            container.appendChild(animal);
+        }
+
+        function positionAnimal(animal) {
+            animal.style.top = Math.random() * (container.offsetHeight - 100) + 'px';
+            animal.style.left = Math.random() * (container.offsetWidth - 100) + 'px';
+            if (chaosMode) {
+                animal.style.transform = `rotate(${Math.random() * 360}deg)`;
+            }
+        }
+
+        function changeBackground() {
+            document.body.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+        }
+
+        function chaos() {
+            chaosMode = !chaosMode;
+            const animals = document.querySelectorAll('.animal');
+            animals.forEach(animal => positionAnimal(animal));
+        }
+
+        // Initial chaos ru5les
+        setInterval(() => {
+            const animals = document.querySelectorAll('.animal');
+            animals.forEach(animal => {
+                animal.style.transform = animal.style.transform.includes('rotate') 
+                    ? '' : `rotate(${Math.random() * 360}deg)`;
+            });
+        }, 2000);
+
+        container.addEventListener('click', e => {
+            if (e.target.classList.contains('animal')) {
+                container.removeChild(e.target);
+            }
+        });
+    </script>
+</body>
+</html>
+```

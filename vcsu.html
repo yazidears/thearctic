@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Aquarium</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001d3d;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            cursor: url('https://www.w3schools.com/css/handwritingcur.gif'), auto;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .bubble {
+            font-size: 50px;
+            position: absolute;
+            z-index: 2;
+            animation: floatUp 8s infinite ease-in-out;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); }
+            50% { transform: translateY(50vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(0); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">Hover over the bubbles!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const stars = Array(100).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2
+        }));
+
+        function drawUnderwaterScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw stars
+            for (let star of stars) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+                star.x = (star.x + 0.5) % canvas.width;
+                star.y = (star.y + 0.5) % canvas.height;
+            }
+
+            requestAnimationFrame(drawUnderwaterScene);
+        }
+
+        // Create bubbles
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.textContent = '🐠';
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * window.innerWidth + 'px';
+            bubble.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(bubble);
+
+            bubble.addEventListener('mouseover', () => {
+                bubble.textContent = ['🐟', '🐡', '🦐', '🦑', '🐙', '🦞'][Math.floor(Math.random() * 6)];
+            });
+
+            bubble.addEventListener('animationiteration', () => {
+                bubble.style.left = (Math.random() * window.innerWidth) + 'px';
+                bubble.textContent = '🐠';
+            });
+        }
+
+        drawUnderwaterScene();
+
+        setInterval(createBubble, 1000);
+    </script>
+</body>
+</html>

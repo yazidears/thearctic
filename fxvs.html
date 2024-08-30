@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Bizarre Orb</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            margin: 0px;
+            overflow: hidden;
+            font-family: Verdana, Geneva, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            padding-top: 50px;
+        }
+        #orb {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: lime;
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+            transition: background-color 0.5s, transform 0.5s;
+        }
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg) translate(250px) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translate(250px) rotate(-360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Hover Over the Orb for a Surprise!</h1>
+    <div id="orb"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var orb = document.getElementById('orb');
+            orb.addEventListener('mouseover', function () {
+                orb.style.backgroundColor = '#' + (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1,6);
+                orb.style.transform = 'scale('+ ((Math.random() * 3) + 1)+')';
+            });
+            orb.addEventListener('mouseout', function () {
+                orb.style.backgroundColor = 'lime';
+                orb.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

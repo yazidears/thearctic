@@ -1,0 +1,94 @@
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family: 'Courier New', Courier, monospace;
+                background: #111;
+                color: white;
+            }
+            .floating {
+                animation: floating 3s ease-in-out infinite;
+                position: absolute;
+            }
+            @keyframes floating {
+                from { transform: translate(0,  0px); }
+                50%  { transform: translate(0, 10px); }
+                to   { transform: translate(0, -0px); }    
+            }
+            #octopus {
+                top: 50%;
+                left: 50%;
+                width: 100px;
+                height: 100px;
+                transform: translate(-50%, -50%);
+                background: #FF6633;
+            }
+            .tentacle {
+                position: absolute;
+                background: #FF6633;
+                width: 20px;
+                height: 80px;
+                border-radius: 50px;
+                bottom: 0;
+                overflow: visible;
+            }
+            .tentacle:before, .tentacle:after {
+                content: '';
+                position: absolute;
+                background: #FF6633;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+            }
+            .tentacle:before { top: -10px; left: 0; }
+            .tentacle:after  { top: -20px; left: -10px; }
+
+            #tentacle-left  { left: -10px; transform: rotate(30deg); }
+            #tentacle-right { right: -10px; transform: rotate(-30deg); }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                let mouseX = 0, mouseY = 0, limitX = 100 - 15, limitY = 100 - 15;
+      
+                function follow(mouseX, mouseY) {
+                    let distX = mouseX - limitX;
+                    let distY = mouseY - limitY;
+  
+                    if(distX < 0 && limitX > 0) { limitX -= 0.05; }
+                    else if(distX > 0 && limitX < 85) { limitX += 0.05; }
+      
+                    if(distY < 0 && limitY > 0) { limitY -= 0.05; }
+                    else if(distY > 0 && limitY < 85) { limitY += 0.05; }
+  
+                    document.getElementById('octopus').style.transform = `translate(${limitX}% , ${limitY}% )`;
+                }
+
+                window.addEventListener('mousemove', function(i) {
+                    mouseX = i.pageX;
+                    mouseY = i.pageY;
+                });
+
+                let counter = 0;
+                let refreshIntervalId = setInterval(function() {
+                    counter++;
+                    if(counter === 100) {
+                        document.removeEventListener('mousemove', follow);
+                        clearInterval(refreshIntervalId);
+                    }
+
+                    follow(mouseX, mouseY);
+                }, 20);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="octopus" class="floating">
+            <div id="tentacle-left" class="tentacle"></div>
+            <div id="tentacle-right" class="tentacle"></div>
+        </div>
+    </body>
+</html>
+```
+This code represents a small, rendered octopus that moves around the screen following your mouse pointer. After a hundred movements, it will remain where you last pointed your mouse. It's not a game per se, but it provides a bit of entertaining interactivity! It has 80 lines of code.

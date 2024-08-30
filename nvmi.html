@@ -1,0 +1,92 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background: #eee;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  margin: 0 auto;
+  width: 80%;
+}
+header {
+  background: #333;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+}
+#canvas {
+  border: 1px solid #000;
+  display: block;
+  margin: 20px auto;
+}
+button {
+  display: block;
+  margin: 20px auto;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Random Art Generator</h1>
+  </header>
+  <canvas id="canvas" width="600" height="600"></canvas>
+  <button id="btn-generate">Generate New Pattern</button>
+</div>
+<script>
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+context.lineWidth = 2;
+
+function randomColor() {
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function drawPattern() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (var x = 0; x <= canvas.width; x += 20) {
+    for (var y = 0; y <= canvas.height; y += 20) {
+        context.beginPath();
+
+        var moveToX = x;
+        var moveToY = y;
+        if (Math.random() > 0.5) {
+            moveToX += 20;
+        } else {
+            moveToY += 20;
+        }
+
+        var lineToX = x;
+        var lineToY = y;
+        if (Math.random() > 0.5) {
+            lineToX += 20;
+        } else {
+            lineToY += 20;
+        }
+
+        context.moveTo(moveToX, moveToY);
+        context.lineTo(lineToX, lineToY);
+        context.strokeStyle = randomColor();
+        context.stroke();
+    }
+  }
+}
+
+drawPattern();
+
+document.getElementById('btn-generate').addEventListener('click', function() {
+  drawPattern();
+});
+</script>
+</body>
+</html>
+```

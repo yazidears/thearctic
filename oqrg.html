@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Maze of Dancing Doodles</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #fc466b, #3f5efb);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            color: white;
+            z-index: 10;
+        }
+        .panel h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+        .panel p {
+            margin: 0;
+        }
+        #clue {
+            margin-top: 15px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #clue:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h1>The Whimsical Maze of Dancing Doodles</h1>
+        <p>Navigate through the doodle maze!</p>
+        <div id="clue">Need a hint?</div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const doodles = [];
+        const colors = ['#00f', '#0f0', '#f00', '#ff0', '#0ff', '#f0f'];
+        const hints = [
+            "Follow the path less travelled.",
+            "Colors can be deceiving.",
+            "Sometimes the exit is where you started.",
+            "What goes up must come down.",
+            "Opposites attract."
+        ];
+
+        class Doodle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 20 + 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.offset = Math.random() * 1000;
+            }
+            update() {
+                const time = Date.now() / 1000;
+                this.x += Math.sin(time + this.offset) * 2;
+                this.y += Math.cos(time + this.offset) * 2;
+
+                if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 100; i++) {
+            doodles.push(new Doodle(Math.random() * width, Math.random() * height));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            doodles.forEach(doodle => {
+                doodle.update();
+                doodle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        document.getElementById('clue').addEventListener('click', () => {
+            alert(hints[Math.floor(Math.random() * hints.length)]);
+        });
+
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        });
+    </script>
+</body>
+</html>

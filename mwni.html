@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surrealessence</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(130deg, #ff7a18, #af002d 41.07%, #319197 72.19%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+            perspective: 1000px;
+        }
+
+        #weirdCube {
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: spin 10s infinite linear, bounce 5s infinite ease-in-out alternate;
+        }
+
+        .face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #front  { transform: rotateY(  0deg) translateZ(75px); }
+        #back   { transform: rotateY(180deg) translateZ(75px); }
+        #right  { transform: rotateY( 90deg) translateZ(75px); }
+        #left   { transform: rotateY(-90deg) translateZ(75px); }
+        #top    { transform: rotateX( 90deg) translateZ(75px); }
+        #bottom { transform: rotateX(-90deg) translateZ(75px); }
+
+        @keyframes spin {
+            from { transform: rotateX(0) rotateY(0); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        @keyframes bounce {
+            from { top: 20vh; }
+            to { top: 70vh; }
+        }
+
+        #message {
+            position: absolute;
+            top: 80vh;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            animation: fadein 2s ease-in-out forwards;
+        }
+        
+        @keyframes fadein {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        #maze {
+            display: none;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: #333;
+            overflow: hidden;
+        }
+
+        .maze-cell {
+            width: 20px;
+            height: 20px;
+            float: left;
+            background-color: #444;
+            border: 1px solid #555;
+        }
+        
+        #exit {
+            background-color: #1abc9c !important;
+        }
+
+        #player {
+            background-color: #e74c3c !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="weirdCube">
+        <div class="face" id="front"></div>
+        <div class="face" id="back"></div>
+        <div class="face" id="right"></div>
+        <div class="face" id="left"></div>
+        <div class="face" id="top"></div>
+        <div class="face" id="bottom"></div>
+    </div>
+    <div id="message">Find your way in the surreal landscape</div>
+
+    <div id="maze"></div>
+    
+    <script>
+        let cube = document.getElementById('weirdCube');
+        cube.addEventListener('click', showMaze);
+
+        function generateMaze() {
+            const mazeContainer = document.getElementById('maze');
+            for (let i = 0; i < 400; i++) {
+                let cell = document.createElement('div');
+                cell.classList.add('maze-cell');
+                if (i === 399) cell.id = 'exit';
+                mazeContainer.appendChild(cell);
+            }
+            addPlayer();
+        }
+
+        function showMaze() {
+            document.getElementById('maze').style.display = 'block';
+            generateMaze();
+            cube.style.display = 'none';
+            document.getElementById('message').textContent = 'Escape the maze!';
+        }
+
+        function addPlayer() {
+            document.querySelectorAll('.maze-cell')[0].id = 'player';
+        }
+
+        window.addEventListener('keydown', movePlayer, false);
+
+        function movePlayer(e) {
+            const player = document.getElementById('player');
+            if (!player) return;
+
+            let position = Array.from(document.querySelectorAll('.maze-cell')).indexOf(player);
+            let newPosition = position;
+
+            switch(e.code) {
+                case 'ArrowUp':    newPosition -= 20; break;
+                case 'ArrowDown':  newPosition += 20; break;
+                case 'ArrowLeft':  newPosition -= 1;  break;
+                case 'ArrowRight': newPosition += 1;  break;
+            }
+
+            if (newPosition < 0 || newPosition >= 400 || (e.code === 'ArrowLeft' && position % 20 === 0) || (e.code === 'ArrowRight' && (position+1) % 20 === 0)) return;
+            
+            const nextCell = document.querySelectorAll('.maze-cell')[newPosition];
+            if (nextCell && nextCell.id !== 'exit') {
+                player.removeAttribute('id');
+                nextCell.id = 'player';
+            } else if (nextCell.id === 'exit') {
+                alert('You escaped the maze!');
+                document.getElementById('maze').innerHTML = '';
+                document.getElementById('maze').style.display = 'none';
+                cube.style.display = 'block';
+                document.getElementById('message').textContent = 'Find your way in the surreal landscape';
+            }
+        }
+    </script>
+</body>
+</html>

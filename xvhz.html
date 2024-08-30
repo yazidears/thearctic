@@ -1,0 +1,155 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Landscape Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #080808;
+            color: white;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        #alert {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #00FFAA;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="alert">Click anywhere to shift the landscape.</div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function drawCircle(x, y) {
+        context.fillStyle = getRandomColor();
+        context.beginPath();
+        context.arc(x, y, Math.random() * 100, 0, Math.PI * 2);
+        context.fill();
+    }
+
+    function drawTriangle(x, y) {
+        context.fillStyle = getRandomColor();
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x + Math.random() * 100, y + Math.random() * 100);
+        context.lineTo(x + Math.random() * -100, y + Math.random() * 100);
+        context.closePath();
+        context.fill();
+    }
+
+    function drawSquare(x, y) {
+        context.fillStyle = getRandomColor();
+        context.fillRect(x, y, Math.random() * 100, Math.random() * 100);
+    }
+
+    function drawStar(x, y) {
+        context.fillStyle = getRandomColor();
+        context.beginPath();
+        for (let i = 0; i < 5; i++) {
+            context.lineTo(Math.cos((18 + i * 72) / 180 * Math.PI) * 100 + x,
+                -Math.sin((18 + i * 72) / 180 * Math.PI) * 100 + y);
+            context.lineTo(Math.cos((54 + i * 72) / 180 * Math.PI) * 40 + x,
+                -Math.sin((54 + i * 72) / 180 * Math.PI) * 40 + y);
+        }
+        context.closePath();
+        context.fill();
+    }
+
+    function clearCanvas() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawRandomShape(x, y) {
+        const shapes = [drawCircle, drawTriangle, drawSquare, drawStar];
+        const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+        randomShape(x, y);
+    }
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    canvas.addEventListener('click', (e) => {
+        clearCanvas();
+        for (let i = 0; i < 50; i++) {
+            drawRandomShape(Math.random() * canvas.width, Math.random() * canvas.height);
+        }
+    });
+
+    // Initial draw
+    canvas.dispatchEvent(new Event('click'));
+
+    class FloatingText {
+        constructor(text, x, y, angle) {
+            this.text = text;
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
+            this.speed = Math.random() * 2 + 0.5;
+        }
+        draw() {
+            context.save();
+            context.translate(this.x, this.y);
+            context.rotate(this.angle);
+            context.fillStyle = getRandomColor();
+            context.fillText(this.text, 0, 0);
+            context.restore();
+        }
+        update() {
+            this.y += this.speed;
+            if (this.y > canvas.height) this.y = -50;
+            this.angle += 0.01;
+        }
+    }
+
+    const floatingTexts = [];
+    const words = ["Wander", "Dream", "Explore", "Create"];
+    for (let i = 0; i < words.length; i++) {
+        floatingTexts.push(new FloatingText(words[i], Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * Math.PI));
+    }
+
+    function animate() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        for (let shape of floatingTexts) {
+            shape.update();
+            shape.draw();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
+```

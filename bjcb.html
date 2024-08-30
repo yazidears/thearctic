@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quirky Interactive Jellyfish</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(#003973, #E5E5BE);
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .button {
+            z-index: 10;
+            position: absolute;
+            border: none;
+            padding: 10px 20px;
+            background-color: #ff3e96;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out;
+        }
+        .button:active {
+            transform: scale(0.9);
+        }
+        #message {
+            z-index: 10;
+            position: absolute;
+            bottom: 10%;
+            color: #fff5ee;
+            font-size: 24px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="button" style="right: 20px; top: 20px;" onclick="wiggleJellyfish()">Wiggle Jellyfish</button>
+    <button class="button" style="left: 20px; top: 20px;" onclick="changeColors()">Change Colors</button>
+    <div id="message">Click the buttons to interact with the jellyfish!</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let jellyfish = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: 150,
+            color: '#ff3e96',
+            tentacles: []
+        };
+
+        function createTentacle(x, y) {
+            return {
+                x,
+                y,
+                dx: Math.random() * 2 - 1,
+                dy: Math.random() * 2 - 1,
+                length: Math.random() * 20 + 80,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`
+            };
+        }
+
+        for (let i = 0; i < 8; i++) {
+            jellyfish.tentacles.push(createTentacle(jellyfish.x, jellyfish.y));
+        }
+
+        function drawJellyfish() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = jellyfish.color;
+            ctx.beginPath();
+            ctx.arc(jellyfish.x, jellyfish.y, jellyfish.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            jellyfish.tentacles.forEach(t => {
+                ctx.strokeStyle = t.color;
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(jellyfish.x, jellyfish.y);
+                ctx.lineTo(t.x, t.y);
+                ctx.stroke();
+
+                t.x += t.dx;
+                t.y += t.dy;
+
+                if (Math.abs(t.x - jellyfish.x) > t.length || Math.abs(t.y - jellyfish.y) > t.length) {
+                    t.dx = -t.dx;
+                    t.dy = -t.dy;
+                }
+            });
+        }
+
+        function wiggleJellyfish() {
+            jellyfish.tentacles.forEach(t => {
+                t.dx = Math.random() * 4 - 2;
+                t.dy = Math.random() * 4 - 2;
+            });
+        }
+
+        function changeColors() {
+            jellyfish.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            jellyfish.tentacles.forEach(t => t.color = `hsl(${Math.random() * 360}, 100%, 50%)`);
+        }
+
+        function animate() {
+            drawJellyfish();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

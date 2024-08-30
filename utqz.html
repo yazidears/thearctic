@@ -1,0 +1,107 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Gloop: Cosmic Blob Interaction</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .blob {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(150deg, #ff69b4, #8a2be2);
+            animation-duration: 5s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            filter: blur(3px);
+        }
+        @keyframes moveBlob {
+            from { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(200px) translateY(200px); }
+            50% { transform: translateX(100px) translateY(300px); }
+            75% { transform: translateX(-200px) translateY(200px); }
+            to { transform: translateX(0) translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Galaxy Gloop</h1>
+        <p>Interact with the cosmic blobs and see what happens!</p>
+    </div>
+    <script>
+        const numBlobs = 10;
+        for (let i = 0; i < numBlobs; i++) {
+            let blob = document.createElement('div');
+            blob.className = 'blob';
+            blob.style.animationName = 'moveBlob';
+            blob.style.animationDelay = `${Math.random() * 2}s`;
+            blob.style.animationDirection = Math.random() >= 0.5 ? 'normal' : 'reverse';
+            blob.style.left = `${Math.random() * window.innerWidth}px`;
+            blob.style.top = `${Math.random() * window.innerHeight}px`;
+            document.body.appendChild(blob);
+        }
+        
+        document.addEventListener('click', (event) => {
+            let ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.width = '20px';
+            ripple.style.height = '20px';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = '#fff';
+            ripple.style.left = `${event.clientX}px`;
+            ripple.style.top = `${event.clientY}px`;
+            ripple.style.animation = 'rippleEffect 1s ease-out forwards';
+            document.body.appendChild(ripple);
+            
+            blobEffect(event.clientX, event.clientY);
+
+            setTimeout(() => ripple.remove(), 1000);
+        });
+        
+        function blobEffect(x, y) {
+            document.querySelectorAll('.blob').forEach(blob => {
+                const dx = x - blob.offsetLeft;
+                const dy = y - blob.offsetTop;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    blob.style.transition = '0.5s';
+                    blob.style.transform = `scale(${1 + Math.random()}) rotate(${Math.random() * 360}deg)`;
+                    setTimeout(() => {
+                        blob.style.transform = 'scale(1) rotate(0deg)';
+                    }, 500);
+                }
+            });
+        }
+
+        @keyframes rippleEffect {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(6);
+                opacity: 0;
+            }
+        }
+    </script>
+</body>
+</html>
+```

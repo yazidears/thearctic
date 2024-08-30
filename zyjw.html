@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Fortune Teller</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #212121;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            user-select: none;
+            cursor: pointer;
+        }
+        #crystal-ball {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 60%, rgba(0,0,0,0) 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.5s;
+        }
+        #eye {
+            width: 60px;
+            height: 20px;
+            background: #6699ff;
+            border-radius: 50%;
+            position: absolute;
+            top: 80px;
+            left: 70px;
+            box-shadow: 0 0 8px rgba(102,153,255,0.5);
+            overflow: hidden;
+        }
+        #pupil {
+            width: 15px;
+            height: 15px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            left: 22.5px;
+            top: 2.5px;
+            transition: 0.2s;
+        }
+        #message {
+            font-size: 1.2em;
+            text-align: center;
+            position: absolute;
+            top: 220px;
+            color: #fff;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="crystal-ball">
+        <div id="eye">
+            <div id="pupil"></div>
+        </div>
+    </div>
+    <div id="message">Click the crystal ball to reveal your fortune...</div>
+    <script>
+        const fortunes = [
+            "A thrilling time is in your near future.",
+            "Your ability to juggle many tasks will take you far.",
+            "A distant relative will contact you soon.",
+            "You will find a four-leaf clover today.",
+            "An unexpected windfall is headed your way.",
+            "Now is the time to try something new."
+        ];
+
+        const crystalBall = document.getElementById('crystal-ball');
+        const message = document.getElementById('message');
+        const pupil = document.getElementById('pupil');
+        
+        crystalBall.addEventListener('click', function() {
+            crystalBall.style.animation = 'shake 0.5s';
+            setTimeout(() => { 
+                crystalBall.style.animation = ''; 
+                setTimeout(() => message.innerHTML = fortunes[Math.floor(Math.random() * fortunes.length)], 500);
+            }, 500);
+        });
+
+        document.body.addEventListener('mousemove', function(event) {
+            const x = (event.clientX / window.innerWidth - 0.5) * 20;
+            const y = (event.clientY / window.innerHeight - 0.5) * 20;
+            pupil.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>

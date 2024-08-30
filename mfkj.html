@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Quest: The Dreamscape Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(45deg, #36096d, #37d5d6);
+            color: #FFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #ui {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #FFF;
+            color: #FFF;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="ui">
+        <h1>Dreamscape Explorer</h1>
+        <button onclick="explore()">Explore the Dream</button>
+        <div id="output">Find something strange...</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const shapes = [];
+        const discoveries = ["a dancing llama", "a floating clock", "a whispering tree", "a luminous cat", "an infinite staircase", "a talking fish"];
+        
+        class Shape {
+            constructor(x, y, size, color) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.dx = Math.random() * 4 - 2;
+                this.dy = Math.random() * 4 - 2;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            update() {
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.dx *= -1;
+                }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.dy *= -1;
+                }
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        function init() {
+            shapes.length = 0;
+            for (let i = 0; i < 50; i++) {
+                const size = Math.random() * 30 + 20;
+                const x = Math.random() * (canvas.width - size * 2) + size;
+                const y = Math.random() * (canvas.height - size * 2) + size;
+                const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                shapes.push(new Shape(x, y, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => shape.update());
+        }
+
+        function explore() {
+            const discovery = discoveries[Math.floor(Math.random() * discoveries.length)];
+            document.getElementById('output').innerText = `You discovered ${discovery}!`;
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

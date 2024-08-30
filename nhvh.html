@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jelly Wave Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #eeeeff, #e0f7fa);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #jellyCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px dashed pink;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .control-panel {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        button {
+            background-color: #ffc0cb;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #ff80ab;
+        }
+        .info {
+            font-size: 12px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<canvas id="jellyCanvas" width="600" height="400"></canvas>
+<div class="control-panel">
+    <button id="spawnJelly">Spawn Jelly</button>
+    <button id="changeColor">Change Color</button>
+    <div class="info">Mess around with the jelly blobs!</div>
+</div>
+<script>
+    const jellyCanvas = document.getElementById('jellyCanvas');
+    const ctx = jellyCanvas.getContext('2d');
+    const jellies = [];
+    const colors = ['rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)', 'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)', 'rgba(255, 159, 64, 0.7)'];
+
+    class Jelly {
+        constructor(x, y, radius) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.dx = (Math.random() - 0.5) * 3;
+            this.dy = (Math.random() - 0.5) * 3;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        update() {
+            this.x += this.dx;
+            this.y += this.dy;
+
+            if (this.x + this.radius > jellyCanvas.width || this.x - this.radius < 0) {
+                this.dx = -this.dx;
+            }
+
+            if (this.y + this.radius > jellyCanvas.height || this.y - this.radius < 0) {
+                this.dy = -this.dy;
+            }
+
+            this.draw();
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, jellyCanvas.width, jellyCanvas.height);
+        jellies.forEach(jelly => jelly.update());
+    }
+
+    animate();
+
+    document.getElementById('spawnJelly').addEventListener('click', () => {
+        const radius = 20 + Math.random() * 30;
+        const x = radius + (Math.random() * (jellyCanvas.width - radius * 2));
+        const y = radius + (Math.random() * (jellyCanvas.height - radius * 2));
+        jellies.push(new Jelly(x, y, radius));
+    });
+
+    document.getElementById('changeColor').addEventListener('click', () => {
+        jellies.forEach(jelly => {
+            jelly.color = colors[Math.floor(Math.random() * colors.length)];
+        });
+    });
+</script>
+</body>
+</html>

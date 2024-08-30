@@ -1,0 +1,126 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Clockwork Garden</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #101820;
+            color: #F5F5F5;
+            overflow: hidden;
+        }
+        #garden {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .plant {
+            position: absolute;
+            background: radial-gradient(circle, #58A4B0 10%, transparent 50%);
+            border-radius: 50%;
+            animation: growPlant 5s infinite alternate, swayPlant 3s infinite ease-in-out;
+        }
+        @keyframes growPlant {
+            from { transform: scale(0.8); }
+            to { transform: scale(1.5); }
+        }
+        @keyframes swayPlant {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        .clock {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border: 10px solid #F9F871;
+            border-radius: 50%;
+            margin: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 15px #F9F871;
+        }
+        .hand {
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            transform-origin: 100%;
+            transform: translateX(-50%);
+        }
+        .hand::after {
+            content: '';
+            display: block;
+            width: 2px;
+            height: 60%;
+            margin-left: -1px;
+            background: #F9F871;
+            border-radius: 2px;
+        }
+        #hour { height: 50px; }
+        #minute { height: 70px; }
+        #second { height: 90px; }
+        .secondExplosion {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(249, 248, 113, 0.7);
+            transform: scale(1);
+            animation: explode 1s forwards ease-out;
+        }
+        @keyframes explode {
+            to { width: 30px; height: 30px; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="garden"></div>
+    <div class="clock">
+        <div id="hour" class="hand"></div>
+        <div id="minute" class="hand"></div>
+        <div id="second" class="hand"></div>
+    </div>
+    <script>
+        const garden = document.getElementById('garden');
+
+        for (let i = 0; i < 20; i++) {
+            const plant = document.createElement('div');
+            plant.className = 'plant';
+            plant.style.width = Math.random() * 50 + 30 + 'px';
+            plant.style.height = plant.style.width;
+            plant.style.top = Math.random() * 100 + '%';
+            plant.style.left = Math.random() * 100 + '%';
+            garden.appendChild(plant);
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const sec = now.getSeconds() + now.getMilliseconds() / 1000;
+            const min = now.getMinutes() + sec / 60;
+            const hr = now.getHours() % 12 + min / 60;
+
+            document.getElementById('hour').style.transform = `rotate(${hr * 30}deg)`;
+            document.getElementById('minute').style.transform = `rotate(${min * 6}deg)`;
+            document.getElementById('second').style.transform = `rotate(${sec * 6}deg)`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        document.getElementById('second').addEventListener('transitionend', () => {
+            const explosion = document.createElement('div');
+            explosion.className = 'secondExplosion';
+            explosion.style.top = 'calc(50% - 15px)';
+            explosion.style.left = 'calc(50% - 15px)';
+            garden.appendChild(explosion);
+            setTimeout(() => garden.removeChild(explosion), 1000);
+        });
+    </script>
+</body>
+</html>
+```

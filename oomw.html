@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Popup Island</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001f3f;
+        }
+        #island {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(160deg, #70c1b3 0%, #b2dbbf 50%, #f3ffbd 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        #moon {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            border-radius: 50%;
+            top: 10%;
+            left: 80%;
+            animation: spin 20s linear infinite;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+        .cloud {
+            position: absolute;
+            width: 150px;
+            height: 50px;
+            background: #ffffff;
+            background: radial-gradient(circle at 110px 25px, #fff, #fff, rgba(255, 255, 255, 0) 60%);
+            border-radius: 50%;
+            animation: drift 15s infinite;
+        }
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100px;
+            height: 50px;
+            background: #ffffff;
+            background: radial-gradient(circle at 70px 15px, #fff, #fff, rgba(255, 255, 255, 0) 60%);
+            border-radius: 50%;
+        }
+        .cloud:before {
+            top: -25px;
+            left: 10px;
+        }
+        .cloud:after {
+            top: -15px;
+            right: 15px;
+        }
+        @keyframes drift {
+            0% {transform: translateX(-300px);}
+            50% {transform: translateX(calc(100vw + 300px));}
+            100% {transform: translateX(-300px);}
+        }
+        .fish {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff5722;
+            border-radius: 50%;
+            top: calc(60% + 50px * var(--i));
+            left: -30px;
+            animation: swim 18s linear infinite;
+        }
+        .fish:before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 15px;
+            height: 15px;
+            background-color: #d32f2f;
+            border-radius: 50%;
+            transform: rotate(45deg);
+            top: -5px;
+            left: 20px;
+        }
+        @keyframes swim {
+            from {transform: translateX(-100px);}
+            to {transform: translateX(calc(100vw + 100px));}
+        }
+        #popup {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            text-align: center;
+        }
+        button {
+            border: none;
+            padding: 10px;
+            background-color: #0074D9;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #island:hover #popup {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="island">
+        <div id="moon"></div>
+        <div class="cloud" style="top: 20%; left: -150px;"></div>
+        <div class="cloud" style="top: 30%; left: -250px;"></div>
+        <div class="cloud" style="top: 40%; left: -350px;"></div>
+
+        <div class="fish" style="--i: 0;"></div>
+        <div class="fish" style="--i: 1;"></div>
+        <div class="fish" style="--i: 2;"></div>
+        <div class="fish" style="--i: 3;"></div>
+        <div class="fish" style="--i: 4;"></div>
+        
+        <div id="popup">
+            <p>Welcome to the Island of Surreal!</p>
+            <button onclick="makeMagic()">Make Magic!</button>
+        </div>
+    </div>
+    <script>
+        const colors = ['#ff00ff', '#ff0066', '#66ff00', '#00ffff', '#6600ff', '#ff3300'];
+        function makeMagic() {
+            const island = document.getElementById('island');
+            if (!island.style.transition) {
+                island.style.transition = "background-color 1s";
+            }
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            island.style.backgroundColor = randomColor;
+        }
+    </script>
+</body>
+</html>

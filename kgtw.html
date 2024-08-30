@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Spinner Safari</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3ec78, #af4261);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .spinners-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .spinner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 5px dotted purple;
+            border-radius: 50%;
+            animation: spin linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .orbit {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: absolute;
+        }
+        .creature {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: repeating-linear-gradient(45deg, #8e44ad, #c0392b, #8e44ad 20px);
+            border-radius: 50%;
+            border: 3px solid rgba(236, 240, 241, 0.5);
+            animation: juggle 4s ease-in-out infinite;
+        }
+        @keyframes juggle {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.2) translateY(-50px); }
+        }
+        .interactive {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-family: "Comic Sans MS", sans-serif;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="spinners-wrapper">
+        <div class="spinner"></div>
+        <div class="spinner" style="animation-duration: 5s; top: 20%; left: 10%;"></div>
+        <div class="spinner" style="animation-duration: 7s; top: 50%; left: 60%;"></div>
+        <div class="creature" style="top: 60%; left: 30%;"></div>
+        <div class="creature" style="top: 10%; left: 70%; animation-duration: 2s;"></div>
+        <div class="orbit" style="width: 200px; height: 200px; left: 30%; top: 50%; animation: lovelyOrbit 10s linear infinite reverse;"></div>
+        <div class="orbit" style="width: 300px; height: 300px; left: 60%; top: 10%;"></div>
+        <div class="interactive" onclick="toggleChaos()">
+            Click Me for Chaos!
+        </div>
+    </div>
+    <script>
+        const spinners = document.querySelectorAll('.spinner');
+        const creatures = document.querySelectorAll('.creature');
+        const body = document.body;
+        let chaosMode = false;
+
+        function toggleChaos() {
+            chaosMode = !chaosMode;
+            spinners.forEach(spinner => {
+                spinner.style.border = chaosMode ? '5px solid yellow' : '5px dotted purple';
+                spinner.style.animationDuration = chaosMode ? '1s' : '3s';
+            });
+            creatures.forEach(creature => {
+                creature.style.background = chaosMode ? 'repeating-radial-gradient(circle, #2980b9, #16a085 10px)' : 'repeating-linear-gradient(45deg, #8e44ad, #c0392b, #8e44ad 20px)';
+                creature.style.border = chaosMode ? '3px dashed white' : '3px solid rgba(236, 240, 241, 0.5)';
+            });
+            body.style.background = chaosMode ? 'linear-gradient(135deg, #3498db, #e74c3c)' : 'linear-gradient(135deg, #f3ec78, #af4261)';
+        }
+    </script>
+</body>
+</html>

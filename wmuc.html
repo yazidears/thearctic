@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surrealist Soup: Interactive Art & Sound</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        font-family: 'Courier New', Courier, monospace;
+    }
+    #canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .note {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .note:hover {
+        transform: scale(1.1);
+    }
+    .note:after {
+        content: attr(data-text);
+        font-size: 10px;
+        color: #666;
+        display: block;
+        text-align: center;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const colors = ['#FF6F61', '#6B5B95', '#88B04B', '#F7CAC9', '#92A8D1'];
+        const sounds = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        const notes = [];
+        
+        function createNote() {
+            const note = document.createElement('div');
+            note.classList.add('note');
+            note.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            note.style.left = `${Math.random() * 90}vw`;
+            note.style.top = `${Math.random() * 80}vh`;
+            const sound = new Audio(`https://www.soundjay.com/button/sounds/button-${sounds[Math.floor(Math.random() * sounds.length)]}.mp3`);
+            notes.push({note, sound});
+            note.onclick = function() {
+                sound.play();
+                this.remove();
+            };
+            document.body.appendChild(note);
+        }
+        
+        for (let i = 0; i < 20; i++) {
+            createNote();
+        }
+        
+        const canvas = document.createElement('canvas');
+        canvas.id = 'canvas';
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let x = 0;
+        let y = 0;
+        let mouseMove = false;
+        
+        document.onmousemove = function(e) {
+            mouseMove = true;
+            x = e.clientX;
+            y = e.clientY;
+        };
+        
+        function draw() {
+            if (mouseMove) {
+                ctx.fillStyle = `rgba(${Math.floor(255 * Math.random())},${Math.floor(255 * Math.random())},${Math.floor(255 * Math.random())},0.5)`;
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, Math.PI * 2, true);
+                ctx.fill();
+                mouseMove = false;
+            }
+            requestAnimationFrame(draw);
+        }
+        
+        draw();
+        
+        setInterval(() => {
+            if (notes.length < 20) {
+                createNote();
+            }
+        }, 3000);
+    });
+</script>
+</head>
+<body>
+</body>
+</html>

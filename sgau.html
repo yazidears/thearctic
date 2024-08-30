@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Flower Art</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2E2E2E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #canvas {
+            border: 5px solid #FFD700;
+            box-shadow: 0 0 10px #FFF;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawPetal(x, y, cx, cy, color) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.quadraticCurveTo(cx, cy, x + 20, y + 20);
+            ctx.quadraticCurveTo(cx, cy, x, y);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function drawFlower(x, y, numPetals, petalColors) {
+            const angle = 2 * Math.PI / numPetals;
+            ctx.save();
+            ctx.translate(x, y);
+            for (let i = 0; i < numPetals; i++) {
+                ctx.rotate(angle);
+                drawPetal(0, 0, 40, 40, petalColors[i % petalColors.length]);
+            }
+            ctx.restore();
+
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fillStyle = 'yellow';
+            ctx.fill();
+        }
+
+        function randomIntFromInterval(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function drawArt() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const colors = ['#FF6F61', '#6B5B95', '#ffcc00', '#88B04B', '#F7CAC9'];
+            for (let i = 0; i < 10; i++) {
+                const x = randomIntFromInterval(50, canvas.width - 50);
+                const y = randomIntFromInterval(50, canvas.height - 50);
+                const numPetals = randomIntFromInterval(5, 10);
+                drawFlower(x, y, numPetals, colors);
+            }
+        }
+
+        setInterval(drawArt, 3000);
+        drawArt();
+    </script>
+</body>
+</html>

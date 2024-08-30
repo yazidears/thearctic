@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mysterious Cosmic Jellybean Adventure</title>
+    <style>
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #030026;
+            color: #E6E1F5;
+        }
+        #space {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #282751, #0d0d26 70%);
+            overflow: hidden;
+        }
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffde59, #ffa500);
+            box-shadow: 0 0 30px #fedc62;
+            animation: animatePlanet 20s linear infinite;
+        }
+        @keyframes animatePlanet {
+            0% {transform: translate3d(0, 100vh, 0) scale(0.5);}
+            100% {transform: translate3d(100vw, -100vh, 0) scale(2); direction: rtl;}
+        }
+        .jellybean {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background: linear-gradient(160deg, #FF007F, #FF54A2);
+            border-radius: 20px / 10px;
+            animation: floatJelly 4s ease-in-out infinite;
+            box-shadow: 0 0 10px #ff4fa2;
+        }
+        @keyframes floatJelly {
+            0%, 100% {transform: translateY(0) rotate(0deg);}
+            50% {transform: translateY(-20px) rotate(20deg);}
+        }
+        .astro {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #FFFFFF, #B0C4DE);
+            border-radius: 50%;
+            bottom: 20%;
+            left: 40%;
+            animation: driftAstro 5s linear infinite;
+        }
+        @keyframes driftAstro {
+            0%, 100% {transform: translateX(0);}
+            50% {transform: translateX(10px);}
+        }
+        .interaction {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 200px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        .interaction button {
+            background: #6C63FF;
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .interaction button:focus, .interaction button:hover {
+            background: #8376FF;
+        }
+        #puzzle {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="space"></div>
+    <div class="interaction">
+        <p>The Enigmatic Cosmic Jellybean</p>
+        <button onclick="showPuzzle()">Use Quantum Telescope</button>
+        <button onclick="addPlanet()">Summon Planet</button>
+    </div>
+    <div id="puzzle">
+        <p>Help the Cosmic Jellybean find its way through the stars!</p>
+        <div class="astro"></div>
+    </div>
+
+    <script>
+        let space = document.getElementById('space');
+        let puzzleShow = false;
+
+        function addPlanet() {
+            let planet = document.createElement('div');
+            planet.className = 'planet';
+            planet.style.width = (Math.random() * 100) + 20 + 'px';
+            planet.style.height = planet.style.width;
+            planet.style.top = Math.random() * 100 + '%';
+            planet.style.left = Math.random() * 100 + '%';
+            space.appendChild(planet);
+
+            setTimeout(() => {
+                planet.remove();
+            }, 20000);
+        }
+
+        function showPuzzle() {
+            let puzzle = document.getElementById('puzzle');
+            if (!puzzleShow) {
+                puzzle.style.display = 'block';
+                let astro = document.querySelector('.astro');
+                let jellybean = createJellybean(astro.style.left, astro.style.bottom);
+                space.appendChild(jellybean);
+                puzzleShow = true;
+            }
+        }
+
+        function createJellybean(left, bottom) {
+            let jellybean = document.createElement('div');
+            jellybean.className = 'jellybean';
+            jellybean.style.left = left;
+            jellybean.style.bottom = bottom;
+            return jellybean;
+        }
+
+        for (let i = 0; i < 10; i++) {
+            setTimeout(addPlanet, i * 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quantum Circus</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: black; color: white; }
+        .tent { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+        .clown { position: absolute; width: 50px; height: 50px; background: conic-gradient(pink, yellow, cyan); border-radius: 50%; }
+        .trapeze { position: absolute; bottom: 20%; left: 50%; width: 30px; height: 200px; background: linear-gradient(to bottom, purple, transparent); animation: swing 4s infinite ease-in-out; transform-origin: top; }
+        @keyframes swing { 0%, 100% { transform: rotate(-30deg); } 50% { transform: rotate(30deg); } }
+        .spotlight { position: absolute; width: 60px; height: 60px; background: radial-gradient(circle at 10px 10px, rgba(255,255,255,.8), transparent); animation: move 15s infinite alternate ease-in-out; }
+        @keyframes move { 0% { top: 0; left: 0; } 100% { top: 80%; left: 90%; } }
+        .ringmaster { position: absolute; bottom: 10px; left: 50vw; transform: translateX(-50%); font-size: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="tent">
+        <div class="clown" id="clown1"></div>
+        <div class="clown" id="clown2"></div>
+        <div class="trapeze"></div>
+        <div class="spotlight"></div>
+        <div class="ringmaster">Welcome to the Quantum Circus!</div>
+    </div>
+    <script>
+        const clowns = document.querySelectorAll('.clown');
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        let scale = 1;
+
+        function randomPosition(el) {
+            el.style.top = Math.random() * 100 + 'vh';
+            el.style.left = Math.random() * 100 + 'vw';
+        }
+
+        function cycleColors() {
+            clowns.forEach(clown => {
+                clown.style.background = colors[Math.floor(Math.random() * colors.length)];
+                randomPosition(clown);
+            });
+            document.querySelector('.spotlight').style.boxShadow = `0 0 20px 10px ${colors[Math.floor(Math.random() * colors.length)]}`;
+            scale = scale === 1 ? 1.5 : 1;
+            clowns.forEach(clown => clown.style.transform = `scale(${scale})`);
+        }
+
+        function createBalloon(x, y) {
+            const balloon = document.createElement('div');
+            balloon.style.position = 'absolute';
+            balloon.style.width = '15px';
+            balloon.style.height = '20px';
+            balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.borderRadius = '50%';
+            balloon.style.top = y + 'px';
+            balloon.style.left = x + 'px';
+            balloon.style.transition = 'all 5s ease-out';
+            document.body.appendChild(balloon);
+
+            setTimeout(() => {
+                balloon.style.transform = 'translateY(-100vh)';
+                balloon.style.opacity = 0;
+                balloon.style.transition = 'all 5s ease-out, opacity 4s';
+            }, 100);
+
+            setTimeout(() => {
+                document.body.removeChild(balloon);
+            }, 6000);
+        }
+
+        setInterval(cycleColors, 2000);
+
+        document.body.addEventListener('click', (event) => {
+            createBalloon(event.clientX, event.clientY);
+        });
+
+    </script>
+</body>
+</html>
+```

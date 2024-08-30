@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Echoing Abyss</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #0d0d0d, #1a1a1a, #262626, #333333, #404040);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #echoes {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            animation: fadeInOut 4s infinite;
+        }
+
+        @keyframes warp {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        #wormhole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(from 180deg, #03a9f4, #e91e63, #ffc107, #03a9f4);
+            animation: warp 5s infinite;
+            filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="wormhole"></div>
+    <div id="echoes">The Abyss Whispers...</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#e91e63', '#03a9f4', '#4caf50', '#ffeb3b', '#ff5722'];
+        const pointCount = 800;
+        const points = Array.from({ length: pointCount }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 1.5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vel: Math.random() * 0.5 + 0.1
+        }));
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let point of points) {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, point.size, 0, 2 * Math.PI);
+                ctx.fillStyle = point.color;
+                ctx.fill();
+                point.x += Math.cos(point.y * point.vel) * point.vel;
+                point.y += Math.sin(point.x * point.vel) * point.vel;
+                if (point.x > canvas.width || point.x < 0 || point.y > canvas.height || point.y < 0) {
+                    point.x = Math.random() * canvas.width;
+                    point.y = Math.random() * canvas.height;
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+
+        function randomEcho() {
+            const phrases = ['Welcome to nowhere', 'Listen to silence', 'See the unseen', 'Feel the void', 'Step into chaos'];
+            document.getElementById('echoes').innerText = phrases[Math.floor(Math.random() * phrases.length)];
+        }
+
+        setInterval(randomEcho, 4000);
+        draw();
+    </script>
+</body>
+
+</html>

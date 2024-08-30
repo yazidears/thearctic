@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #79d9f2, #f596ef);
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .control-panel {
+            position: absolute;
+            top: 10%;
+            right: -200px;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            transition: right 0.5s;
+            border-radius: 10px;
+        }
+        .control-panel:hover {
+            right: 0;
+        }
+        .control-panel h3 {
+            margin: 0 0 10px 0;
+        }
+        .control-panel button {
+            padding: 10px;
+            background-color: #f64c72;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .control-panel button:hover {
+            background-color: #c73b52;
+        }
+        .bizarre-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 26px;
+            animation: float 4s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -60%); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="bizarre-text" style="color: rgba(255, 255, 255, 0.8);">Welcome to a Surreal Dreamscape</div>
+    <div class="control-panel">
+        <h3>Random Actions</h3>
+        <button onclick="changeColors()">Change Colors</button>
+        <button onclick="toggleText()">Toggle Text</button>
+        <button onclick="drawMoreShapes()">More Shapes</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let shapesCount = 5;
+        let isTextVisible = true;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawShapes();
+        }
+        
+        function drawShapes() {
+            for (let i = 0; i < shapesCount; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 80 + 20;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                ctx.fill();
+            }
+        }
+        
+        function changeColors() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawShapes();
+        }
+        
+        function toggleText() {
+            isTextVisible = !isTextVisible;
+            document.querySelector('.bizarre-text').style.display = isTextVisible ? 'block' : 'none';
+        }
+        
+        function drawMoreShapes() {
+            shapesCount += 5;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawShapes();
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    </script>
+</body>
+</html>

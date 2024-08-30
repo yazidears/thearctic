@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #050f2c, #3b4368);
+            font-family: 'Courier New', Courier, monospace;
+            color: #cdd3e0;
+        }
+        .fish {
+            position: absolute;
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+            background: radial-gradient(circle at 20px 20px, #89cff0, #050f2c);
+            border-radius: 50%;
+            transform-origin: center;
+            animation: swim 10s infinite;
+        }
+        .bubble {
+            position: absolute;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #cdd3e0;
+            border-radius: 50%;
+            animation: rise 5s infinite ease-in-out;
+        }
+        @keyframes swim {
+            from { transform: translateY(0px) rotate(0); }
+            25% { transform: translateY(10px) rotate(10deg); }
+            50% { transform: translateY(0px) rotate(0); }
+            75% { transform: translateY(-10px) rotate(-10deg); }
+            to { transform: translateY(0px) rotate(0); }
+        }
+        @keyframes rise {
+            from { transform: translateY(100vh) scale(1); }
+            to { transform: translateY(-10vh) scale(0.5); opacity: 0; }
+        }
+        .island {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 200px;
+            background: radial-gradient(circle at 400px 150px, #8b6b43, #5e4331);
+            border-radius: 40%;
+        }
+        #tree {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 140px;
+            background: linear-gradient(to bottom, #5e4331, #3d2c1d);
+            border-radius: 0 0 20px 20px;
+        }
+        #foliage {
+            position: absolute;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100px;
+            background: radial-gradient(circle, #51c54a, #3b8a30);
+            border-radius: 50%;
+        }
+        #elephant {
+            position: absolute;
+            display: inline-block;
+            width: 100px;
+            height: 60px;
+            background: radial-gradient(circle, #8892b0, #5d6488);
+            border-radius: 50% 30%;
+            transform-origin: center;
+            animation: elephant-wobble 8s infinite alternate;
+            left: 20%;
+            bottom: 30px;
+        }
+        @keyframes elephant-wobble {
+            from { transform: translateX(-10px) scale(1); }
+            to { transform: translateX(10px) scale(0.95); }
+        }
+    </style>
+</head>
+<body>
+    <div class="island" id="landscape"></div>
+    <div id="tree"></div>
+    <div id="foliage"></div>
+    <div id="elephant"></div>
+    <script>
+        const NUM_FISH = 10;
+        const NUM_BUBBLES = 30;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        
+        function createFish() {
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.style.left = random(0, window.innerWidth) + 'px';
+            fish.style.bottom = random(50, 500) + 'px';
+            fish.style.animationDuration = random(5, 15) + 's';
+            body.appendChild(fish);
+        }
+        
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = random(0, window.innerWidth) + 'px';
+            bubble.style.bottom = '0px';
+            bubble.style.animationDuration = random(3, 9) + 's';
+            body.appendChild(bubble);
+        }
+        
+        const body = document.body;
+        for (let i = 0; i < NUM_FISH; i++) createFish();
+        for (let i = 0; i < NUM_BUBBLES; i++) createBubble();
+    </script>
+</body>
+</html>

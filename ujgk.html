@@ -1,0 +1,137 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Wizardry</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            background: linear-gradient(135deg, #ff75a0, #2e2ca5);
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+        }
+        #wizard {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/oNZEMnR.png') no-repeat center center;
+            background-size: cover;
+            animation: spin 10s infinite linear;
+        }
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        #arcaneCircle {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0) 20%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0.7;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #ffffff;
+            animation: circleGrow 4s infinite;
+        }
+        @keyframes circleGrow {
+            0%, 100% { width: 300px; height: 300px; }
+            50% { width: 450px; height: 450px; }
+        }
+        .arcaneSymbol {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffffff;
+            animation: float 3s infinite alternate;
+        }
+        @keyframes float {
+            to { transform: translateY(-10px); }
+        }
+        #puzzleButton {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            padding: 10px 20px;
+            border: none;
+            background: #5e2ca5;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        #puzzleButton:hover {
+            background: #2ca55e;
+        }
+        #puzzleContainer {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            padding: 20px;
+            background: rgba(46, 44, 165, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 20px #000;
+            transform: translate(-50%, -50%);
+        }
+        #result {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #ffdb4d;
+        }
+    </style>
+</head>
+<body>
+    <div id="wizard"></div>
+    <div id="arcaneCircle"></div>
+    <div class="arcaneSymbol" style="top: 30%; left: 50%;"></div>
+    <div class="arcaneSymbol" style="top: 60%; left: 70%;"></div>
+    <div class="arcaneSymbol" style="top: 40%; left: 20%;"></div>
+    <div class="arcaneSymbol" style="top: 75%; left: 40%;"></div>
+
+    <button id="puzzleButton">Reveal Puzzle</button>
+    <div id="puzzleContainer">
+        <label for="spellInput">Enter the magic word:</label>
+        <input type="text" id="spellInput" placeholder="Abracadabra" style="width: 100%; padding: 8px; margin-top: 10px; font-size: 16px;">
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('puzzleButton').addEventListener('click', function() {
+            var container = document.getElementById('puzzleContainer');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('spellInput').addEventListener('input', function() {
+            var input = this.value.toLowerCase();
+            var resultDiv = document.getElementById('result');
+            if (input === 'open sesame') {
+                resultDiv.innerHTML = '🎉 Alakazam! The secret is revealed!';
+                resultDiv.style.color = '#8aff7e';
+            } else if (input === 'hocus pocus') {
+                resultDiv.innerHTML = '✨ A sprinkle of magic appears...';
+                resultDiv.style.color = '#ffa37e';
+            } else {
+                resultDiv.innerHTML = '🔮 Keep trying different words...';
+                resultDiv.style.color = '#ffdb4d';
+            }
+        });
+    </script>
+</body>
+</html>
+```

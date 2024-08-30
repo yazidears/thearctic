@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Jelly Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffccff, #66ccff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .jelly {
+            position: absolute;
+            width: 100px;
+            height: 80px;
+            background-color: #ffe4e1;
+            border-radius: 50% / 40% 40% 60% 60%;
+            animation: wobble 2s infinite ease-in-out;
+            filter: drop-shadow(2px 4px 6px black);
+        }
+        @keyframes wobble {
+            0% { transform: rotate(-5deg) }
+            25% { transform: rotate(5deg) }
+            50% { transform: rotate(-5deg) }
+            75% { transform: rotate(5deg) }
+            100% { transform: rotate(-5deg) }
+        }
+        #score {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .gameover {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Score: <span id="score-value">0</span></div>
+    <div id="gameover" class="gameover">Game Over! Click to restart.</div>
+    <script>
+        const jellies = [];
+        let score = 0;
+        const scoreText = document.getElementById('score-value');
+        const gameoverText = document.getElementById('gameover');
+        
+        function createJelly() {
+            const jelly = document.createElement('div');
+            jelly.className = 'jelly';
+            resetJelly(jelly);
+            document.body.appendChild(jelly);
+            return jelly;
+        }
+
+        function resetJelly(jelly) {
+            jelly.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            jelly.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+        }
+
+        function moveJellies() {
+            jellies.forEach(jelly => {
+                const top = parseFloat(jelly.style.top);
+                const direction = Math.random() > 0.5 ? 1 : -1;
+                jelly.style.top = Math.max(0, Math.min(window.innerHeight - 80, top + direction * Math.random() * 10)) + 'px';
+            });
+        }
+
+        function checkCollision(x, y) {
+            return jellies.some(jelly => {
+                const rect = jelly.getBoundingClientRect();
+                return x > rect.left && x < rect.right && y > rect.top && y < rect.bottom;
+            });
+        }
+
+        function endGame() {
+            gameoverText.style.display = 'block';
+        }
+
+        function resetGame() {
+            score = 0;
+            scoreText.innerText = score;
+            gameoverText.style.display = 'none';
+        }
+
+        document.body.addEventListener('click', (e) => {
+            if (gameoverText.style.display === 'none') {
+                if (checkCollision(e.clientX, e.clientY)) {
+                    score++;
+                    scoreText.innerText = score;
+                } else {
+                    endGame();
+                }
+            } else {
+                resetGame();
+            }
+        });
+
+        for (let i = 0; i < 10; i++) {
+            jellies.push(createJelly());
+        }
+
+        setInterval(moveJellies, 100);
+    </script>
+</body>
+</html>

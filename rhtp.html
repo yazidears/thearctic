@@ -1,0 +1,96 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Creatures of the Pond</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #001F3F; }
+        #pond { position: relative; width: 100vw; height: 100vh; }
+        .creature { position: absolute; transition: transform 1s; }
+        .fish { width: 50px; height: 20px; background: orange; border-radius: 10px; }
+        .frog { width: 30px; height: 30px; background: green; border-radius: 50%; }
+        @keyframes wiggle { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+        .wiggle { animation: wiggle 1s infinite; }
+        .lily { position: absolute; background: #76B041; border-radius: 50%; }
+        .water-drop { position: absolute; background: rgba(255, 255, 255, 0.3); border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <div id="pond"></div>
+    <script>
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function makeCreature(type) {
+            const creature = document.createElement('div');
+            const size = random(20, 50);
+            creature.className = `creature ${type}`;
+            creature.style.width = size + 'px';
+            creature.style.height = size + 'px';
+            creature.style.left = random(0, window.innerWidth - size) + 'px';
+            creature.style.top = random(0, window.innerHeight - size) + 'px';
+            return creature;
+        }
+
+        function makeLily() {
+            const lily = document.createElement('div');
+            const size = random(80, 150);
+            lily.className = 'lily';
+            lily.style.width = size + 'px';
+            lily.style.height = size / 2 + 'px';
+            lily.style.left = random(0, window.innerWidth - size) + 'px';
+            lily.style.top = random(0, window.innerHeight - size / 2) + 'px';
+            return lily;
+        }
+
+        function makeWaterDrop() {
+            const drop = document.createElement('div');
+            const size = random(5, 15);
+            drop.className = 'water-drop';
+            drop.style.width = size + 'px';
+            drop.style.height = size + 'px';
+            drop.style.left = random(0, window.innerWidth - size) + 'px';
+            drop.style.top = random(0, window.innerHeight - size) + 'px';
+            return drop;
+        }
+
+        function generatePond() {
+            const pond = document.getElementById('pond');
+            for (let i = 0; i < 5; i++) {
+                pond.appendChild(makeCreature('fish'));
+                pond.appendChild(makeCreature('frog'));
+            }
+            for (let i = 0; i < 3; i++) {
+                pond.appendChild(makeLily());
+            }
+            for (let i = 0; i < 30; i++) {
+                pond.appendChild(makeWaterDrop());
+            }
+        }
+
+        function animateCreatures() {
+            const creatures = document.querySelectorAll('.creature');
+            creatures.forEach(creature => {
+                creature.style.transform = `translate(${random(-30, 30)}px, ${random(-30, 30)}px)`;
+                setTimeout(() => creature.classList.toggle('wiggle'), random(1000, 3000));
+            });
+        }
+
+        function onClickAnimate(e) {
+            const creature = document.elementFromPoint(e.clientX, e.clientY);
+            if (creature.classList.contains('creature')) {
+                creature.style.transform = 'scale(1.5) rotate(360deg)';
+                setTimeout(() => creature.style.transform = '', 1000);
+            }
+        }
+
+        generatePond();
+        setInterval(animateCreatures, 2000);
+        window.addEventListener('click', onClickAnimate);
+    </script>
+</body>
+</html>
+```

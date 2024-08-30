@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Clockwork Jungle</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #111;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .jungle {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(180deg, #003300, #111);
+        }
+        .vine {
+            width: 6px;
+            position: absolute;
+            background-color: #007700;
+            animation: sway 4s infinite ease-in-out;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+        .clock {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 6px solid #cccccc;
+            border-radius: 50%;
+            background-color: #333333;
+            top: 50px;
+            left: 50%;
+            margin-left: -50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .hand {
+            position: absolute;
+            width: 4px;
+            height: 40px;
+            background-color: #cccccc;
+            top: 20px;
+            left: 48px;
+            transform-origin: bottom center;
+            transition: transform 0.5s ease-in-out;
+        }
+        .hour { 
+            height: 30px;
+            top: 30px;
+            transition: transform 0.6s ease-in-out;
+        }
+        .leaf {
+            background-color: #009900;
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            border-radius: 20px 20px 0 0;
+            animation: fly 12s ease-in-out infinite;
+        }
+        @keyframes fly {
+            0%, 100% { transform: translate(-200px, 0) }
+            50% { transform: translate(200px, -500px); }
+        }
+        .creature {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            height: 80px;
+            background-color: #bb5500;
+            border-radius: 40px;
+            animation: jump 3s infinite ease-in-out;
+        }
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+        .speech {
+            position: absolute;
+            bottom: 50px;
+            left: 90px;
+            width: 160px;
+            height: 40px;
+            background-color: #222;
+            color: #fff;
+            padding: 5px;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="jungle" id="jungle">
+        <div class="vine" style="left: 5%; height: 70px;"></div>
+        <div class="vine" style="left: 20%; height: 90px;"></div>
+        <div class="vine" style="left: 40%; height: 110px;"></div>
+        <div class="vine" style="left: 60%; height: 60px;"></div>
+        <div class="vine" style="left: 80%; height: 120px;"></div>
+        
+        <div class="clock">
+            <div class="hand hour" id="hour-hand"></div>
+            <div class="hand minute" id="minute-hand"></div>
+        </div>
+
+        <div class="leaf" id="leaf" style="left: 10%; top: 300px;"></div>
+        <div class="leaf" id="leaf2" style="left: 80%; top: 500px; animation-delay: -1s;"></div>
+        
+        <div class="creature" id="creature">
+            <div class="speech" id="speech">Tick-tock, the jungle whispers secrets.</div>
+        </div>
+    </div>
+    
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            const hourHand = document.getElementById('hour-hand');
+            const minuteHand = document.getElementById('minute-hand');
+
+            hourHand.style.transform = `rotate(${(hours % 12) * 30 + minutes / 2}deg)`;
+            minuteHand.style.transform = `rotate(${minutes * 6}deg)`;
+        }
+
+        function init() {
+            const creature = document.getElementById('creature');
+            const speech = document.getElementById('speech');
+
+            creature.addEventListener('mouseover', function() {
+                speech.style.opacity = 1;
+            });
+
+            creature.addEventListener('mouseout', function() {
+                speech.style.opacity = 0;
+            });
+
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

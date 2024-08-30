@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Bubble Simulator</title>
+</head>
+<body style="margin:0;overflow:hidden;background-color:#282c34;color:white;font-family:'Courier New', Courier, monospace;">
+    <div id="content" style="position:absolute;width:100%;height:100vh;">
+        <canvas id="canvas" style="display:block;width:100%;height:100vh;"></canvas>
+        <div id="interface" style="position:absolute;top:10px;left:10px;">
+            <h1 style="margin:0;padding:0;font-size:24px;">Quantum Bubble Simulator</h1>
+            <p style="margin:0;padding:5px 0;">Press <strong>Space</strong> to release a wave of chaos.</p>
+            <p id="infoLine" style="margin:0;padding:5px 0;">Click a bubble to change its fate.</p>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const bubbles = [];
+        const colors = ['#61dafb', '#ccff66', '#ff66cc', '#6effdb', '#c7ff66'];
+        let gravity = 0.05;
+
+        class Bubble {
+            constructor(x, y, radius, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.color = color;
+                this.dx = (Math.random() - 0.5) * 2;
+                this.dy = (Math.random() - 0.5) * 2;
+                this.friction = 0.95;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+            }
+            update() {
+                if (this.y + this.radius + this.dy > canvas.height || this.y - this.radius <= 0) {
+                    this.dy = -this.dy * this.friction;
+                } else {
+                    this.dy += gravity;
+                }
+                if (this.x + this.radius + this.dx > canvas.width || this.x - this.radius <= 0) {
+                    this.dx = -this.dx * this.friction;
+                }
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        function init() {
+            bubbles.length = 0;
+            for (let i = 0; i < 50; i++) {
+                const radius = Math.random() * 30 + 10;
+                const x = Math.random() * (canvas.width - radius * 2) + radius;
+                const y = Math.random() * (canvas.height - radius * 2) + radius;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                bubbles.push(new Bubble(x, y, radius, color));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(bubble => bubble.update());
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            bubbles.forEach(bubble => {
+                const dist = Math.hypot(mouseX - bubble.x, mouseY - bubble.y);
+                if (dist - bubble.radius < 1) {
+                    bubble.dy -= 2; // push the bubble upwards
+                    bubble.dx += (Math.random() - 0.5) * 5; // randomize x direction
+                }
+            });
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                gravity = -gravity;
+                setTimeout(() => {
+                    gravity = -gravity;
+                }, 1000);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

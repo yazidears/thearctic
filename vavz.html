@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Dreamscape Explorer</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background-color: #001d3d; color: white; font-family: 'Courier New', Courier, monospace;}
+  canvas { display: block; }
+  #interface { position: absolute; top: 20px; left: 20px; z-index: 10; }
+  #button { background-color: #00f7ff; border: none; padding: 10px; font-size: 16px; cursor: pointer; }
+  #button:hover { background-color: #00e5e5; }
+  #message { position: absolute; bottom: 20px; left: 20px; font-size: 20px; }
+</style>
+</head>
+<body>
+<div id="interface">
+  <button id="button">Explore</button>
+</div>
+<canvas id="scene"></canvas>
+<div id="message">Click the button to start your journey...</div>
+<script>
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  const stars = [];
+  for (let i = 0; i < 100; i++) {
+    stars.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 3,
+      speed: Math.random() * 0.5
+    });
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, width, height);
+    stars.forEach(star => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+      star.y -= star.speed;
+      if (star.y < 0) star.y = height;
+    });
+  }
+
+  function surrealScene() {
+    drawStars();
+    ctx.font = '48px serif';
+    ctx.fillStyle = 'rgba(255, 255, 0, 0.7)';
+    ctx.fillText('Welcome to the Dreamscape', width / 2 - 300, height / 2);
+    ctx.fillStyle = 'rgba(0, 200, 255, 0.5)';
+    ctx.fillText('Explore the nebula of thoughts...', width / 2 - 330, height / 2 + 60);
+  }
+
+  setInterval(surrealScene, 1000 / 60);
+
+  document.getElementById('button').onclick = function() {
+    const xShift = Math.random() * 50 - 25;
+    const yShift = Math.random() * 25 - 12.5;
+    const scale = 1 + Math.random() * 0.3;
+    ctx.setTransform(scale, 0, 0, scale, width / 2 + xShift, height / 2 + yShift);
+
+    ctx.clearRect(-width / 2, -height / 2, width * 3, height * 3);
+    ctx.fillStyle = `hsl(${Math.random() * 360}, 80%, 50%)`;
+
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const radius = Math.random() * 50 + 10;
+      ctx.arc(Math.random() * width - width / 2, Math.random() * height - height / 2, radius, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  };
+</script>
+</body>
+</html>

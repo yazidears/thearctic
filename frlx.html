@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Kaleidoscope Journey</title>
+    <style>
+        body, html {
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden;
+            height: 100vh; 
+            background: black; 
+            color: white; 
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: absolute; 
+            top: 0; 
+            left: 0;
+        }
+        .control-panel {
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.5); 
+            padding: 10px; 
+            border-radius: 5px;
+        }
+        .control-panel input {
+            display: block; 
+            margin: 10px 0; 
+            width: 100%;
+        }
+        #info {
+            position: absolute; 
+            bottom: 10px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            font-size: 12px; 
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="control-panel">
+    <label for="spiral">Spiral Speed</label>
+    <input type="range" id="spiral" min="1" max="10" value="5">
+    <label for="kaleidoscope">Kaleidoscope Spin</label>
+    <input type="range" id="kaleidoscope" min="0" max="5" value="2">
+</div>
+<canvas id="canvas"></canvas>
+
+<div id="info">
+    <p>✨ Welcome to the Quantum Kaleidoscope Journey ✨</p>
+    <p>Adjust the sliders and explore the galaxy of colors!</p>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth, H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+
+    const particles = [];
+    const numParticles = 500;
+    let spiralSpeed = 5;
+    let spin = 2;
+
+    document.getElementById('spiral').addEventListener('input', function() {
+        spiralSpeed = this.value;
+    });
+
+    document.getElementById('kaleidoscope').addEventListener('input', function() {
+        spin = this.value;
+    });
+
+    class Particle {
+        constructor() {
+            this.angle = Math.random() * Math.PI * 2;
+            this.radius = Math.random() * (W / 4) + 10;
+            this.speed = Math.random() * 0.05 + 0.02;
+            this.alpha = Math.random() * 0.5 + 0.5;
+            this.color = `hsla(${Math.random() * 360}, 100%, 50%, ${this.alpha})`;
+            
+            this.initX = Math.ceil(W / 2 + this.radius * Math.cos(this.angle));
+            this.initY = Math.ceil(H / 2 + this.radius * Math.sin(this.angle));
+        }
+
+        update() {
+            this.angle += this.speed * Math.ADMIN(spiralSpeed);
+            this.radius += Math.sin(this.angle / 3) * spin;
+        }
+
+        draw() {
+            const x = W / 2 + this.radius * Math.cos(this.angle),
+                  y = H / 2 + this.radius * Math.sin(this.angle);
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.moveTo(this.initX, this.initY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            this.initX = x;
+            this.initY = y;
+        }
+    }
+
+    for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+    }
+
+    const draw = () => {
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, W, H);
+
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+
+        requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    window.onresize = () => {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+    };
+</script>
+
+</body>
+</html>

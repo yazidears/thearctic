@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bouncing Blob Forest</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffda77, #ff77a9);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #forest {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-between;
+        }
+        .tree {
+            width: 10vw;
+            height: 10vh;
+            background: #228B22;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            position: relative;
+            animation: sway 3s ease-in-out infinite;
+            margin: 1vw;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        .blob {
+            position: absolute;
+            width: 20vw;
+            height: 20vh;
+            background: rgba(75, 0, 130, 0.8);
+            border-radius: 50%;
+            animation: bounce 4s infinite ease-in-out;
+            animation-direction: alternate;
+            top: 0;
+            left: 0;
+        }
+        @keyframes bounce {
+            0% {
+                top: 5%;
+                background: rgba(75, 0, 130, 0.8);
+            }
+            100% {
+                top: 75%;
+                background: rgba(138, 43, 226, 0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="forest">
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="blob" onclick="splitBlob(this)"></div>
+    </div>
+    <script>
+        function splitBlob(blob) {
+            for (let i = 0; i < 2; i++) {
+                let newBlob = blob.cloneNode(true);
+                newBlob.style.width = parseFloat(blob.style.width) / 1.5 + 'vw';
+                newBlob.style.height = parseFloat(blob.style.height) / 1.5 + 'vh';
+                newBlob.style.left = parseFloat(blob.style.left) + (Math.random() * 20 - 10) + 'vw';
+                newBlob.style.top = parseFloat(blob.style.top) + (Math.random() * 20 - 10) + 'vh';
+                document.getElementById('forest').appendChild(newBlob);
+                newBlob.onclick = function() { splitBlob(newBlob); };
+                // remove old blob if size is too small
+                if (parseFloat(newBlob.style.width) < 5) {
+                    blob.parentNode.removeChild(blob);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

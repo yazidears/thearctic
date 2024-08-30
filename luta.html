@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intergalactic Jelly Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #001f3f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+            color: #ffce00;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        .jellyfish {
+            position: absolute;
+            bottom: 40px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background: radial-gradient(circle at 30% 30%, #f32cff, #0a0c59);
+            animation: floaty 4s infinite ease-in-out;
+        }
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(15px); }
+        }
+        .tentacles {
+            position: absolute;
+            bottom: -30px;
+            width: 10px;
+            height: 70px;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, #52307c, #150137);
+            animation: sway 2s infinite ease-in-out;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Intergalactic Jelly Symphony</h1>
+    <div class="jellyfish" style="left: 20%; animation-duration: 5s;">
+        <div class="tentacles" style="left: 15px; animation-delay: 0s;"></div>
+        <div class="tentacles" style="left: 30px; animation-delay: 0.2s;"></div>
+        <div class="tentacles" style="left: 45px; animation-delay: 0.4s;"></div>
+        <div class="tentacles" style="left: 60px; animation-delay: 0.6s;"></div>
+        <div class="tentacles" style="left: 75px; animation-delay: 0.8s;"></div>
+    </div>
+    <div class="jellyfish" style="left: 70%; animation-duration: 6s;">
+        <div class="tentacles" style="left: 15px; animation-delay: 0.1s;"></div>
+        <div class="tentacles" style="left: 30px; animation-delay: 0.3s;"></div>
+        <div class="tentacles" style="left: 45px; animation-delay: 0.5s;"></div>
+        <div class="tentacles" style="left: 60px; animation-delay: 0.7s;"></div>
+        <div class="tentacles" style="left: 75px; animation-delay: 0.9s;"></div>
+    </div>
+    <canvas id="space"></canvas>
+    <script>
+        const canvas = document.getElementById('space');
+        const ctx = canvas.getContext('2d');
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+        let stars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = generateStars(100);
+            draw();
+        }
+
+        function generateStars(count) {
+            const starsArray = [];
+            for (let i = 0; i < count; i++) {
+                starsArray.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    alpha: Math.random() * 0.6 + 0.4
+                });
+            }
+            return starsArray;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2, true);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+    </script>
+</body>
+</html>

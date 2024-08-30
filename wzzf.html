@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FA8BFF 10%, #2BD2FF 40%, #2BFF88 100%);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        .character {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="characters"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        resizeCanvas();
+
+        const colors = ['#FF5733', '#33FF57', '#5733FF', '#FF33A1', '#33FFF2'];
+        let shapes = [];
+
+        for (let i = 0; i < 100; i++) {
+            shapes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 20 + 10,
+                dx: Math.random() * 4 - 2,
+                dy: Math.random() * 4 - 2,
+                angle: Math.random() * 360,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            });
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let s of shapes) {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = s.color;
+                ctx.fill();
+                ctx.closePath();
+
+                s.x += s.dx;
+                s.y += s.dy;
+
+                if (s.x + s.size > canvas.width || s.x - s.size < 0) s.dx = -s.dx;
+                if (s.y + s.size > canvas.height || s.y - s.size < 0) s.dy = -s.dy;
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        function createCharacter() {
+            let charSpan = document.createElement('div');
+            let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let char = letters.charAt(Math.floor(Math.random() * letters.length));
+
+            charSpan.className = 'character';
+            charSpan.innerText = char;
+            charSpan.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            charSpan.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+
+            document.getElementById('characters').appendChild(charSpan);
+
+            charSpan.addEventListener('click', function () {
+                alert(char);
+                charSpan.remove();
+            });
+        }
+
+        for (let i = 0; i < 10; i++) {
+            createCharacter();
+        }
+
+        setInterval(createCharacter, 5000);
+    </script>
+</body>
+</html>

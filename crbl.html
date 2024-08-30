@@ -1,0 +1,117 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Jellyfish Chronicles</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1c1c3c, #3d3d5c);
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #message {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 2em;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px #ff00cc;
+            animation: floatingMessage 3s infinite;
+        }
+        @keyframes floatingMessage {
+            0% {transform: translate(-50%, 0);}
+            50% {transform: translate(-50%, -10px);}
+            100% {transform: translate(-50%, 0);}
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">Welcome to the Cosmic Jellyfish Chronicles!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const jellyfishCount = 7;
+        const jellyfishes = [];
+
+        class Jellyfish {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = Math.random() * 10 + 40;
+                this.opacity = Math.random() * 0.5 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1;
+                this.color = `rgba(211, 119, 224, ${this.opacity})`;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y - this.radius > canvas.height) {
+                    this.y = 0 - this.radius;
+                    this.x = Math.random() * canvas.width;
+                }
+                this.draw();
+            }
+        }
+
+        function initJellyfishes() {
+            for (let i = 0; i < jellyfishCount; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                jellyfishes.push(new Jellyfish(x, y));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            jellyfishes.forEach(jellyfish => jellyfish.update());
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function randomColor() {
+            return `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.random()})`;
+        }
+
+        document.addEventListener('click', (e) => {
+            const splash = new Jellyfish(e.clientX, e.clientY);
+            splash.color = randomColor();
+            jellyfishes.push(splash);
+        });
+
+        initJellyfishes();
+        animate();
+    </script>
+</body>
+</html>
+```

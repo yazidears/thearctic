@@ -1,0 +1,224 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Island Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: skyblue;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+        }
+        
+        #island {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 200px;
+            background: #2E8B57;
+            border-radius: 50% 50% 30% 30%;
+            box-shadow: 0 50px 60px rgba(0, 0, 0, 0.5);
+            animation: float 5s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%,
+            100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-30px); }
+        }
+        
+        #trees {
+            position: absolute;
+            width: 100%;
+            height: 40%;
+            top: 30%;
+        }
+        
+        .tree {
+            position: absolute;
+            bottom: 0;
+            background: #8B4513;
+            width: 20px;
+            height: 80px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border-radius: 5px;
+        }
+        
+        .tree-1 .leaves, .tree-2 .leaves {
+            position: absolute;
+            bottom: 55px;
+            width: 80px;
+            height: 80px;
+            background: green;
+            border-radius: 50%;
+        }
+        
+        .tree-1 .leaves { right: -30px; }
+        .tree-2 .leaves { left: -30px; }
+
+        #sun {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 60px;
+            height: 60px;
+            background: yellow;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #clouds {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            top: 20px;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            width: 100px;
+            height: 60px;
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: moveClouds 20s linear infinite;
+        }
+
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            width: 75px;
+            height: 50px;
+            border-radius: 50px;
+        }
+
+        .cloud:before {
+            top: -20px;
+            left: 10px;
+        }
+
+        .cloud:after {
+            top: 10px;
+            right: -20px;
+        }
+
+        @keyframes moveClouds {
+            from { transform: translateX(-150%); }
+            to { transform: translateX(100%); }
+        }
+
+        #dodo {
+            position: absolute;
+            bottom: 170px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: orange;
+            border-radius: 50%;
+            animation: flyDodo 6s infinite linear;
+        }
+
+        #dodo::before {
+            content: '';
+            position: absolute;
+            bottom: 45px;
+            left: 15px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes flyDodo {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+        
+        #message {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: navy;
+            font-size: 24px;
+            animation: appear 3s infinite alternate;
+        }
+
+        @keyframes appear {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        #lake {
+            position: absolute;
+            bottom: 60px;
+            left: 35%;
+            width: 170px;
+            height: 40px;
+            background: #4682B4;
+            border-radius: 50%;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+            animation: ripple 4s infinite ease-out;
+        }
+
+        @keyframes ripple {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.1); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sun"></div>
+    <div id="clouds">
+        <div class="cloud" style="left: -150px; top: 30px;"></div>
+        <div class="cloud" style="left: 80%; top: 70px;"></div>
+    </div>
+    <div id="island">
+        <div id="trees">
+            <div class="tree tree-1">
+                <div class="leaves"></div>
+            </div>
+            <div class="tree tree-2">
+                <div class="leaves"></div>
+            </div>
+        </div>
+    </div>
+    <div id="dodo"></div>
+    <div id="lake"></div>
+    <div id="message">Welcome to the Floating Island</div>
+    <script>
+        const messages = [
+            "Enjoy the surreal view!",
+            "Floating into dreams...",
+            "Watch the dodo fly!",
+            "Feel the breeze of imagination.",
+            "Welcome to tranquility."
+        ];
+       
+        setInterval(() => {
+            document.getElementById('message').textContent = messages[Math.floor(Math.random() * messages.length)];
+        }, 3000);
+    </script>
+</body>
+
+</html>
+```

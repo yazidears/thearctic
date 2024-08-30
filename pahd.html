@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Candyland Adventure</title>
+<style>
+  body { margin: 0; overflow: hidden; font-family: 'Comic Sans MS', cursive; background-color: #212121; }
+  #canvas { display: block; }
+  #instructions {
+    position: absolute; top: 10px; left: 10px; color: #fff; background: rgba(0, 0, 0, 0.5); padding: 10px;
+    border-radius: 10px; z-index: 100; font-size: 14px; line-height: 1.5;
+  }
+  #instructions h1 { margin: 0 0 10px; font-size: 20px; }
+  .object { transition: transform 0.5s ease; }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+<div id="instructions">
+  <h1>Welcome to Surreal Candyland!</h1>
+  <p>Click on floating candies to make them spin and play music!</p>
+  <p>Find the hidden key to unlock a mystery!</p>
+</div>
+<canvas id="canvas"></canvas>
+<audio id="sound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#FF69B4", "#FFD700", "#8A2BE2", "#00FFFF", "#FF4500", "#ADFF2F"];
+  const candies = [];
+  const music = document.getElementById('sound');
+
+  function Candy(x, y, size, color) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.color = color;
+    this.rotation = 0;
+    this.element = createCandyElement(this.x, this.y, this.size, this.color);
+    document.body.appendChild(this.element);
+  }
+  
+  Candy.prototype.draw = function () {
+    this.element.style.transform = `translate(${this.x}px, ${this.y}px) rotate(${this.rotation}deg)`;
+  };
+
+  function createCandyElement(x, y, size, color) {
+    const div = document.createElement('div');
+    div.style.width = size + 'px';
+    div.style.height = size + 'px';
+    div.style.backgroundColor = color;
+    div.style.borderRadius = '50%';
+    div.style.position = 'absolute';
+    div.style.transition = 'transform 0.2s';
+    div.style.cursor = 'pointer';
+    div.className = 'object';
+    
+    div.onclick = function() {
+      div.classList.add('spinning');
+      music.play();
+      setTimeout(() => div.classList.remove('spinning'), 1000);
+    };
+    return div;
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const size = Math.random() * 50 + 50;
+    const x = Math.random() * (canvas.width - size);
+    const y = Math.random() * (canvas.height - size);
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    candies.push(new Candy(x, y, size, color));
+  }
+
+  function update() {
+    candies.forEach(candy => {
+      candy.rotation += Math.random() * 2;
+      candy.draw();
+    });
+    requestAnimationFrame(update);
+  }
+  
+  update();
+
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  
+  let secretKey = {
+    x: getRandomArbitrary(0, canvas.width),
+    y: getRandomArbitrary(0, canvas.height)
+  };
+
+  function drawKey() {
+    ctx.beginPath();
+    ctx.arc(secretKey.x, secretKey.y, 10, 0, Math.PI * 2, false);
+    ctx.fillStyle = '#FFD700';
+    ctx.fill();
+  }
+  
+  function checkCollision(userX, userY, targetX, targetY, size) {
+    return (userX > targetX - size && userX < targetX + size &&
+            userY > targetY - size && userY < targetY + size);
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    if (checkCollision(e.clientX, e.clientY, secretKey.x, secretKey.y, 10)) {
+      alert('You found the hidden key! Congratulations!');
+      secretKey.x = getRandomArbitrary(0, canvas.width);
+      secretKey.y = getRandomArbitrary(0, canvas.height);
+    }
+  });
+
+  function animateBackground() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawKey();
+    requestAnimationFrame(animateBackground);
+  }
+  
+  animateBackground();
+</script>
+</body>
+</html>

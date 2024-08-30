@@ -1,0 +1,146 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal World of Animated Dreams</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3ec78, #af4261, #1e3c72);
+        }
+        #sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        #ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background: #2d3436;
+            overflow: hidden;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 10px;
+            background-color: #8e943b;
+            border-radius: 10px;
+        }
+        .tree:before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            background-color: #8e943b;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div id="sky"></div>
+    <div id="ground"></div>
+    <script>
+        // Create clouds
+        const sky = document.getElementById('sky');
+        for (let i = 0; i < 30; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.style.width = `${Math.random() * 100 + 50}px`;
+            cloud.style.height = `${Math.random() * 30 + 10}px`;
+            cloud.style.top = `${Math.random() * 50}vh`;
+            cloud.style.left = `${Math.random() * 100}vw`;
+            cloud.style.animation = `moveClouds ${Math.random() * 20 + 10}s linear infinite`;
+            sky.appendChild(cloud);
+        }
+
+        // Create trees
+        const ground = document.getElementById('ground');
+        for (let i = 0; i < 50; i++) {
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.height = `${Math.random() * 40 + 60}px`;
+            tree.style.left = `${Math.random() * 100}vw`;
+            ground.appendChild(tree);
+        }
+
+        // Animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes moveClouds {
+                to { transform: translateX(100vw); }
+            }
+            #sky .cloud {
+                animation-duration: 30s;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Interaction logic
+        document.addEventListener("click", function(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            const ripple = document.createElement("div");
+            ripple.style.position = "absolute";
+            ripple.style.borderRadius = "50%";
+            ripple.style.background = "rgba(255, 255, 255, 0.7)";
+            ripple.style.width = ripple.style.height = "100px";
+            ripple.style.left = x + "px";
+            ripple.style.top = y + "px";
+            ripple.style.transition = "0.5s ease-out";
+            document.body.appendChild(ripple);
+            setTimeout(() => {
+                ripple.style.transform = "scale(3)";
+                ripple.style.opacity = "0";
+            }, 0);
+            setTimeout(() => ripple.remove(), 500);
+        });
+
+        // Surreal object floating
+        function createSurrealObjects() {
+            for (let i = 0; i < 10; i++) {
+                const obj = document.createElement("div");
+                obj.style.position = "absolute";
+                obj.style.width = obj.style.height = `${Math.random() * 50 + 10}px`;
+                obj.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                obj.style.borderRadius = "50%";
+                obj.style.left = `${Math.random() * 100}vw`;
+                obj.style.top = `${Math.random() * 100}vh`;
+                obj.style.animation = `float ${Math.random() * 10 + 5}s ease-in-out infinite alternate, rotate ${Math.random() * 5 + 3}s infinite`;
+                document.body.appendChild(obj);
+            }
+        }
+
+        createSurrealObjects();
+
+        const floatStyle = document.createElement('style');
+        floatStyle.textContent = `
+            @keyframes float {
+                to { transform: translateY(-30px) scale(1.2); }
+            }
+            @keyframes rotate {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(floatStyle);
+    </script>
+</body>
+</html>
+```

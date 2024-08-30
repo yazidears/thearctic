@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Sound Odyssey</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #2E002E, #000);
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  #control-panel {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  button {
+    background: #4A004A;
+    color: white;
+    border: 1px solid #fff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #660066;
+  }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+  }
+  .floating {
+    animation: float 6s infinite;
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="control-panel">
+  <button onclick="toggleSound()">Toggle Background Sound</button>
+  <button onclick="changeBackground()">Change Background</button>
+  <button onclick="drawRandom()">Draw Random Shape</button>
+</div>
+<audio id="background-audio" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+</audio>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const audio = document.getElementById('background-audio');
+  let isPlaying = false;
+
+  function toggleSound() {
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    isPlaying = !isPlaying;
+  }
+
+  function changeBackground() {
+    const colors = ['#1a0026', '#330033', '#660066', '#990099', '#cc00cc'];
+    document.body.style.background = colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  function drawRandom() {
+    const shapes = [drawCircle, drawRectangle, drawArc];
+    const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+    randomShape();
+  }
+
+  function drawCircle() {
+    ctx.beginPath();
+    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, 0, Math.PI * 2);
+    ctx.fillStyle = randomColor();
+    ctx.fill();
+  }
+
+  function drawRectangle() {
+    ctx.fillStyle = randomColor();
+    ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 150, Math.random() * 80);
+  }
+
+  function drawArc() {
+    ctx.beginPath();
+    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, Math.PI * Math.random(), Math.PI * Math.random());
+    ctx.strokeStyle = randomColor();
+    ctx.lineWidth = 5;
+    ctx.stroke();
+  }
+
+  function randomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  function animate() {
+    drawRandom();
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+</body>
+</html>

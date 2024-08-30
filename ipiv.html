@@ -1,0 +1,126 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whistling Forest</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #f0f0f0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #forest {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            background-color: #2f4f4f;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+            border-radius: 0 0 10px 10px;
+        }
+        .leaves {
+            position: absolute;
+            bottom: 100%;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 30px solid #228b22;
+            filter: blur(1px);
+            animation: sway 4s infinite alternate ease-in-out;
+        }
+        @keyframes sway {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(5deg); }
+        }
+        #owl {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            margin-left: -25px;
+            width: 50px;
+            height: 50px;
+            background-color: #8b4513;
+            border-radius: 15px 15px 35px 35px;
+            z-index: 100;
+        }
+        .eye {
+            position: absolute;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 5s infinite;
+        }
+        .eye.left {
+            left: 10px;
+        }
+        .eye.right {
+            right: 10px;
+        }
+        @keyframes blink {
+            0%, 80%, 100% { height: 10px; }
+            90% { height: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="forest"></div>
+    <div id="owl">
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+    </div>
+    <script>
+        const forest = document.getElementById('forest');
+        const treeCount = 50;
+        
+        function createTree() {
+            const tree = document.createElement('div');
+            const size = Math.random() * 30 + 20;
+            tree.className = 'tree';
+            tree.style.width = `${size}px`;
+            tree.style.height = `${size * 1.5}px`;
+            tree.style.left = `${Math.random() * 100}vw`;
+            tree.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            
+            const leaves = document.createElement('div');
+            leaves.className = 'leaves';
+            leaves.style.left = `${size / 4}px`;
+            leaves.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            
+            tree.appendChild(leaves);
+            forest.appendChild(tree);
+        }
+        
+        for (let i = 0; i < treeCount; i++) {
+            createTree();
+        }
+
+        let owlPosition = { x: window.innerWidth / 2, y: window.innerHeight * 0.8 };
+        const owl = document.getElementById('owl');
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.9) {
+                const dx = (e.clientX - owlPosition.x) / window.innerWidth;
+                const dy = (e.clientY - owlPosition.y) / window.innerHeight;
+                owl.style.transform = `translate(${dx * 10}px, ${dy * 10}px)`;
+            }
+        });
+
+        let hootSound = new Audio('https://www.soundjay.com/nature/owl-hoot-01.mp3');
+        owl.addEventListener('click', () => {
+            hootSound.play();
+        });
+    </script>
+</body>
+</html>
+```

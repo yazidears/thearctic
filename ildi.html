@@ -1,0 +1,119 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Wandering Widgets</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%);
+            font-family: 'Comic Sans MS', cursive;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        #message {
+            position: absolute;
+            color: #fff;
+            font-size: 24px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+        @keyframes wiggle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(2deg); }
+            50% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .wiggling {
+            animation: wiggle 0.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message" class="wiggling">Welcome to the Whimsical World!</div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = window.innerWidth;
+            const height = canvas.height = window.innerHeight;
+
+            class Widget {
+                constructor(x, y, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = Math.random() * 2 - 1;
+                    this.vy = Math.random() * 2 - 1;
+                    this.size = Math.random() * 15 + 10;
+                    this.color = color;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x + this.size > width || this.x - this.size < 0) {
+                        this.vx = -this.vx;
+                    }
+
+                    if (this.y + this.size > height || this.y - this.size < 0) {
+                        this.vy = -this.vy;
+                    }
+                }
+            }
+
+            const colors = ['#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF'];
+            const widgets = Array.from({ length: 100 }, () => {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                return new Widget(x, y, color);
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                widgets.forEach(widget => {
+                    widget.update();
+                    widget.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            let messageElement = document.getElementById('message');
+            setInterval(() => {
+                messageElement.classList.toggle('wiggling');
+            }, 1000);
+
+        })();
+    </script>
+</body>
+</html>
+```

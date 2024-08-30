@@ -1,0 +1,198 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dancing Potatoes of Nowhere</title>
+    <style>
+        body, html {
+            margin: 0;
+            overflow: hidden;
+            height: 100%;
+            background-color: #222;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #sky {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(#023, #0af);
+            overflow: hidden;
+        }
+        .potato {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: linear-gradient(to right, #e2a43c, #c68e30);
+            border-radius: 40px;
+            overflow: hidden;
+            transform-origin: center;
+        }
+        .eyes {
+            position: absolute;
+            width: 50%;
+            height: 20%;
+            top: 10%;
+            left: 25%;
+            display: flex;
+            justify-content: space-around;
+        }
+        .eye {
+            width: 10px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+        .pupil {
+            height: 10px;
+            width: 10px;
+            background: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            transition: all 0.1s;
+        }
+        .arms {
+            display: flex;
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            width: calc(100% + 40px);
+            justify-content: space-between;
+        }
+        .arm {
+            width: 12px;
+            height: 12px;
+            background: #ebc18d;
+            border-radius: 50%;
+        }
+        .mouth {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            background: #f00;
+            border-radius: 5px 5px 0 0;
+            bottom: 10px;
+            left: calc(50% - 10px);
+        }
+        #bizarre-button, #reset-button {
+            position: absolute;
+            bottom: 10px;
+            left: calc(50% - 60px);
+            width: 120px;
+            height: 40px;
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="sky"></div>
+    <button id="bizarre-button">Do the Unexpected</button>
+    <button id="reset-button">Reset World</button>
+    <script>
+        const sky = document.getElementById('sky');
+        const potatoCount = 20;
+        let dancing = false;
+
+        function createPotato() {
+            const potato = document.createElement('div');
+            potato.classList.add('potato');
+            potato.style.top = Math.random() * innerHeight + 'px';
+            potato.style.left = Math.random() * innerWidth + 'px';
+
+            const eyes = document.createElement('div');
+            eyes.classList.add('eyes');
+            const leftEye = createEye();
+            const rightEye = createEye();
+            eyes.appendChild(leftEye);
+            eyes.appendChild(rightEye);
+            potato.appendChild(eyes);
+
+            const arms = document.createElement('div');
+            arms.classList.add('arms');
+            arms.appendChild(createArm());
+            arms.appendChild(createArm());
+            potato.appendChild(arms);
+
+            const mouth = document.createElement('div');
+            mouth.classList.add('mouth');
+            potato.appendChild(mouth);
+
+            sky.appendChild(potato);
+
+            setTimeout(() => {
+                potato.style.transform = `rotate(${Math.random() * 180 - 90}deg)`;
+                if (dancing) {
+                    potato.style.top = Math.random() * (innerHeight - 100) + 50 + 'px';
+                    potato.style.left = Math.random() * (innerWidth - 100) + 50 + 'px';
+                }
+                setTimeout(() => {
+                    leftEye.children[0].style.top = Math.random() * 5 + "px";
+                    rightEye.children[0].style.top = Math.random() * 5 + "px";
+                }, 500);
+            }, Math.random() * 3000);
+        }
+
+        function createEye() {
+            const eye = document.createElement('div');
+            eye.classList.add('eye');
+            const pupil = document.createElement('div');
+            pupil.classList.add('pupil');
+            eye.appendChild(pupil);
+            return eye;
+        }
+
+        function createArm() {
+            const arm = document.createElement('div');
+            arm.classList.add('arm');
+            setInterval(() => {
+                arm.style.transform = `rotate(${Math.random() * 180 - 90}deg)`;
+            }, 700);
+            return arm;
+        }
+
+        for (let i = 0; i < potatoCount; i++) {
+            createPotato();
+        }
+
+        const button = document.getElementById('bizarre-button');
+        const resetButton = document.getElementById('reset-button');
+
+        button.addEventListener('click', () => {
+            dancing = true;
+            sky.childNodes.forEach(potato => {
+                potato.style.transition = 'top 2s, left 2s, transform 1s';
+                potato.style.background = 
+                `linear-gradient(to right, #${((1<<24)*Math.random()|0).toString(16)}, #${((1<<24)*Math.random()|0).toString(16)})`;
+            });
+            button.style.display = 'none';
+            resetButton.style.display = 'block';
+
+            let audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+            audio.loop = true;
+            document.body.appendChild(audio);
+            audio.play();
+        });
+
+        resetButton.addEventListener('click', () => {
+            location.reload();
+        });
+
+        window.addEventListener('load', () => {
+            document.body.querySelector('audio')?.remove();
+            button.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+```

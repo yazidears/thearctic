@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Kaleidoscope</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .kaleidoscope {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            animation: move 10s infinite linear;
+        }
+        @keyframes move {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-100vh) rotate(90deg); }
+            50% { transform: translateY(0) rotate(180deg); }
+            75% { transform: translateY(100vh) rotate(270deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        .message {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: fadeIn 5s infinite alternate;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .puzzle-piece {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 50px;
+            height: 50px;
+            transition: transform 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="kaleidoscope" id="kaleidoscope"></div>
+    <div class="message">Solve the Puzzle!</div>
+    <script>
+        const colors = ['#ff004d', '#00e756', '#29adff', '#ff77a8', '#ffa300'];
+        const kaleidoscope = document.getElementById('kaleidoscope');
+        const message = document.querySelector('.message');
+        
+        function createCircle(x, y) {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.style.width = `${Math.random() * 200 + 50}px`;
+            circle.style.height = circle.style.width;
+            circle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            circle.style.left = `${x}px`;
+            circle.style.top = `${y}px`;
+            kaleidoscope.appendChild(circle);
+        }
+
+        for (let i = 0; i < 50; i++) {
+            createCircle(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+        }
+
+        let pieces = [];
+        for (let i = 0; i < 5; i++) {
+            let x = Math.random() * (window.innerWidth - 50);
+            let y = Math.random() * (window.innerHeight - 50);
+            let piece = document.createElement('div');
+            piece.classList.add('puzzle-piece');
+            piece.style.left = `${x}px`;
+            piece.style.top = `${y}px`;
+            piece.addEventListener('click', () => {
+                piece.style.transform = 'scale(0.1)';
+                setTimeout(() => piece.remove(), 500);
+                pieces = pieces.filter(p => p !== piece);
+                if(pieces.length === 0) {
+                    message.innerHTML = "You've Solved the Puzzle!";
+                }
+            });
+            kaleidoscope.appendChild(piece);
+            pieces.push(piece);
+        }
+    </script>
+</body>
+</html>

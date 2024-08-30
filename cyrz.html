@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Blob Interactive Playground</title>
+    <style>
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(145deg, #e0eafc, #cfdef3);
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .info-box {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-family: 'Comic Sans MS', cursive;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .info-box h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #555;
+            text-shadow: 2px 2px 4px rgba(150, 150, 150, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="info-box">
+        <h1>Bounce with the Blobs!</h1>
+        <p>Click to spawn interactive blobs. Follow their dance as they bounce around the screen!</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let blobs = [];
+        
+        function randomColor() {
+            return 'rgba(' + Math.floor(Math.random() * 255) + ',' +
+                          Math.floor(Math.random() * 255) + ',' +
+                          Math.floor(Math.random() * 255) + ', 0.6)';
+        }
+        
+        function createBlob(x, y) {
+            return {
+                x: x,
+                y: y,
+                radius: 30 + Math.random() * 20,
+                color: randomColor(),
+                dx: (Math.random() - 0.5) * 4,
+                dy: (Math.random() - 0.5) * 4
+            };
+        }
+        
+        canvas.addEventListener('click', (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+            blobs.push(createBlob(x, y));
+        });
+        
+        function drawBlob(blob) {
+            ctx.beginPath();
+            ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
+            ctx.fillStyle = blob.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        
+        function updateBlob(blob) {
+            blob.x += blob.dx;
+            blob.y += blob.dy;
+            
+            if (blob.x + blob.radius > canvas.width || blob.x - blob.radius < 0) {
+                blob.dx *= -1;
+            }
+            
+            if (blob.y + blob.radius > canvas.height || blob.y - blob.radius < 0) {
+                blob.dy *= -1;
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            blobs.forEach((blob, index) => {
+                drawBlob(blob);
+                updateBlob(blob);
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>

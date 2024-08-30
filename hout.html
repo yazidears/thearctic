@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Kaleidoscope World</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #ff007c, #240b36);
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .controls button {
+            padding: 5px;
+            background: #ff008c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .character {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: no-repeat center/cover url('https://i.imgur.com/WxrKqRV.png');
+            animation: floaty 5s ease-in-out infinite;
+        }
+        @keyframes floaty {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="rotateColors()">Rotate Colors</button>
+        <button onclick="addCharacter()">Add Character</button>
+        <button onclick="toggleAnimation()">Toggle Animation</button>
+    </div>
+    <canvas id="kaleidoscope"></canvas>
+    <div class="character" style="left: 30%; top: 40%;"></div>
+    <script>
+        const canvas = document.getElementById('kaleidoscope');
+        const ctx = canvas.getContext('2d');
+        let WIDTH, HEIGHT, animationOn = true;
+        const colors = ['#ff007c', '#ff7700', '#68ff00', '#00ffeb', '#007bff'];
+        let currentColorIndex = 0;
+
+        function resizeCanvas() {
+            WIDTH = canvas.width = window.innerWidth;
+            HEIGHT = canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawKaleidoscope() {
+            if (!animationOn) return;
+            const sectorAngle = Math.PI / 6;
+            const radius = Math.min(WIDTH, HEIGHT) / 2;
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            ctx.translate(WIDTH / 2, HEIGHT / 2);
+            for (let i = 0; i < 12; i++) {
+                ctx.rotate(sectorAngle);
+                drawSector(radius, colors[currentColorIndex]);
+                drawSector(radius, colors[(currentColorIndex + 1) % colors.length]);
+            }
+            ctx.resetTransform();
+            requestAnimationFrame(drawKaleidoscope);
+        }
+
+        function drawSector(radius, color) {
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, 0, Math.PI / 6);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        function rotateColors() {
+            currentColorIndex = (currentColorIndex + 1) % colors.length;
+        }
+        
+        function addCharacter() {
+            const newChar = document.createElement('div');
+            newChar.className = 'character';
+            newChar.style.left = `${Math.random() * 100}%`;
+            newChar.style.top = `${Math.random() * 100}%`;
+            document.body.appendChild(newChar);
+        }
+
+        function toggleAnimation() {
+            animationOn = !animationOn;
+            if(animationOn) drawKaleidoscope();
+        }
+
+        drawKaleidoscope();
+
+        function randomizeCharacterPosition(character) {
+            character.style.left = `${Math.random() * 100}%`;
+            character.style.top = `${Math.random() * 100}%`;
+        }
+
+        setInterval(() => {
+            const characters = document.querySelectorAll('.character');
+            characters.forEach(randomizeCharacterPosition);
+        }, 2000);
+    </script>
+</body>
+</html>

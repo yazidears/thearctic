@@ -1,0 +1,115 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Surreal Insect Orchestra</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(120deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            overflow: hidden;
+        }
+        .insect {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+        .antenna {
+            position: absolute;
+            width: 5px;
+            height: 50px;
+            background-color: black;
+            border-radius: 5px;
+            animation: wave 1s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(-20px); }
+            50% { transform: translateY(20px); }
+        }
+        .note {
+            position: absolute;
+            font-size: 2rem;
+            color: white;
+            opacity: 0.8;
+            animation: rise 3s ease-in-out infinite;
+        }
+        @keyframes rise {
+            0% { transform: translateY(40px); opacity: 0;}
+            100% { transform: translateY(0); opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    const insectColors = ['#FF6B6B', '#FFA500', '#FFD700', '#98FB98', '#AFEEEE', '#BA55D3'];
+    const notes = ['♩', '♪', '♫', '♬', '♭', '♮', '♯'];
+    const numInsects = 25;
+
+    for (let i = 0; i < numInsects; i++) {
+        let insect = document.createElement('div');
+        insect.classList.add('insect');
+        insect.style.top = `${Math.random() * window.innerHeight}px`;
+        insect.style.left = `${Math.random() * window.innerWidth}px`;
+        insect.style.backgroundColor = insectColors[Math.floor(Math.random() * insectColors.length)];
+        
+        let antennaLeft = document.createElement('div');
+        antennaLeft.classList.add('antenna');
+        antennaLeft.style.left = '-5px';
+        antennaLeft.style.transformOrigin = 'center top';
+        insect.appendChild(antennaLeft);
+
+        let antennaRight = document.createElement('div');
+        antennaRight.classList.add('antenna');
+        antennaRight.style.right = '-5px';
+        antennaRight.style.transformOrigin = 'center top';
+        insect.appendChild(antennaRight);
+        
+        document.body.appendChild(insect);
+    }
+
+    function createNoteElement(note, x, y) {
+        let noteElement = document.createElement('div');
+        noteElement.classList.add('note');
+        noteElement.innerHTML = note;
+        noteElement.style.left = `${x}px`;
+        noteElement.style.top = `${y}px`;
+        document.body.appendChild(noteElement);
+        setTimeout(() => noteElement.remove(), 3000);
+    }
+
+    document.addEventListener('mousemove', (event) => {
+        if (Math.random() < 0.1) {
+            let note = notes[Math.floor(Math.random() * notes.length)];
+            createNoteElement(note, event.clientX, event.clientY);
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        let audio = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillator = audio.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(Math.random() * 1500 + 200, audio.currentTime);
+        oscillator.start();
+
+        let gainNode = audio.createGain();
+        gainNode.gain.setValueAtTime(0.005, audio.currentTime);
+        oscillator.connect(gainNode);
+        gainNode.connect(audio.destination);
+
+        oscillator.stop(audio.currentTime + 0.5);
+    });
+</script>
+
+</body>
+</html>
+```

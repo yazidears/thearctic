@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Kaleidoscope Experience</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
+        #canvas { display: block; position: absolute; top: 0; left: 0; }
+        .control-panel { position: absolute; top: 10px; left: 10px; z-index: 10; }
+        .control-panel input { background: #fff; padding: 5px; border: 1px solid #ccc; margin: 5px; }
+        .control-panel label { color: #fff; font-family: Arial, sans-serif; }
+        #message { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; font-family: 'Comic Sans MS', cursive, sans-serif; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="control-panel">
+        <label>
+            <input type="range" id="speed" min="1" max="10" value="5">
+            Speed
+        </label>
+        <label>
+            <input type="color" id="color" value="#ff0000">
+            Color
+        </label>
+    </div>
+    <div id="message">Welcome to the Surreal Kaleidoscope Experience!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let speed = document.getElementById('speed');
+        let color = document.getElementById('color');
+        let message = document.getElementById('message');
+
+        const createTriangle = (x, y, size, rotation, fill) => {
+            ctx.beginPath();
+            ctx.moveTo(x + size * Math.cos(rotation), y + size * Math.sin(rotation));
+            for (let i = 1; i < 3; i++) {
+                ctx.lineTo(
+                    x + size * Math.cos(rotation + i * (2 * Math.PI) / 3), 
+                    y + size * Math.sin(rotation + i * (2 * Math.PI) / 3)
+                );
+            }
+            ctx.closePath();
+            ctx.fillStyle = fill;
+            ctx.fill();
+        };
+
+        let triangles = Array.from({ length: 100 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: 30 + Math.random() * 40,
+            rotation: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.01 + 0.01,
+            fill: color.value
+        }));
+
+        const animate = () => {
+            ctx.clearRect(0, 0, width, height);
+            triangles.forEach(tri => {
+                tri.rotation += tri.speed * parseInt(speed.value);
+                tri.fill = color.value;
+                createTriangle(tri.x, tri.y, tri.size, tri.rotation, tri.fill);
+            });
+            message.style.color = color.value;
+            requestAnimationFrame(animate);
+        };
+
+        window.onresize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            triangles = Array.from({ length: 100 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: 30 + Math.random() * 40,
+                rotation: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.01 + 0.01,
+                fill: color.value
+            }));
+        };
+
+        animate();
+    </script>
+</body>
+</html>

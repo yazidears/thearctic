@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Jungle Adventure</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2e2b5f, #163d30);
+  }
+  #jungleCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    cursor: crosshair;
+  }
+  @keyframes swim {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+    100% { transform: translateY(0) rotate(0); }
+  }
+  .parrot {
+    position: absolute;
+    background-image: url('https://i.imgur.com/Fq6ZBAc.png');
+    width: 60px;
+    height: 50px;
+    animation: swim 2s infinite ease-in-out;
+  }
+  .message {
+    position: absolute;
+    color: white;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px #000000;
+  }
+</style>
+</head>
+<body>
+<canvas id="jungleCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('jungleCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const colors = ['#ffde59', '#ff914d', '#db4dff', '#4dff91'];
+let parrots = [];
+
+function addParrot(x, y) {
+  const parrot = document.createElement('div');
+  parrot.className = 'parrot';
+  parrot.style.left = x - 30 + 'px';
+  parrot.style.top = y - 25 + 'px';
+  document.body.appendChild(parrot);
+  parrots.push(parrot);
+}
+
+function drawBackground() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < 150; i++) {
+    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+    ctx.beginPath();
+    ctx.arc(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height,
+      Math.random() * 5,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+  }
+}
+
+function showMessage(x, y, message) {
+  const msg = document.createElement('div');
+  msg.className = 'message';
+  msg.innerText = message;
+  msg.style.left = x + 'px';
+  msg.style.top = y + 'px';
+  document.body.appendChild(msg);
+  setTimeout(() => document.body.removeChild(msg), 3000);
+}
+
+canvas.addEventListener('click', function(event) {
+  const x = event.clientX;
+  const y = event.clientY;
+  if (Math.random() > 0.5) {
+    addParrot(x, y);
+  } else {
+    showMessage(x, y, 'You found a rare flower!');
+  }
+});
+
+function moveParrots() {
+  parrots.forEach(parrot => {
+    const dx = (Math.random() - 0.5) * 4;
+    const dy = (Math.random() - 0.5) * 4;
+    parrot.style.left = parseInt(parrot.style.left) + dx + 'px';
+    parrot.style.top = parseInt(parrot.style.top) + dy + 'px';
+  });
+  requestAnimationFrame(moveParrots);
+}
+
+setInterval(drawBackground, 1000);
+moveParrots();
+drawBackground();
+</script>
+
+</body>
+</html>

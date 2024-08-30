@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Chaos - A Surreal Adventure</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background: linear-gradient(135deg, #6e0dd0, #ff0080);
+            color: #fff;
+            text-align: center;
+        }
+        #dynamicCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+        #content {
+            position: relative;
+            z-index: 10;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+        }
+        .button {
+            background-color: #ff0080;
+            border: none;
+            padding: 15px 32px;
+            font-size: 16px;
+            transition: background-color 0.5s;
+            cursor: pointer;
+            line-height: 30px;
+            display: inline-block;
+            margin: 1% auto;
+            color: #fff;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #f56bd4;
+        }
+        #characterSeal {
+            --speed: 1;
+            position: relative;
+            width: 100px;
+            margin: 20px auto;
+            transition: transform var(--speed)s ease-in-out;
+        }
+        @keyframes dance {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-20px); }
+            75% { transform: translateX(20px); }
+        }
+        .eye {
+            background: #fff;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .eye::before {
+            content: "";
+            display: block;
+            height: 10px;
+            width: 10px;
+            background: #000;
+            border-radius: 50%;
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="dynamicCanvas"></canvas>
+
+<div id="content">
+    <h1>Color Chaos</h1>
+    <h2>A Surreal Adventure Awaits</h2>
+    <p>Click the buttons, watch the magic, and embrace the chaos!</p>
+    <img id="characterSeal" src="https://via.placeholder.com/100" alt="Surreal Character">
+
+    <button class="button" onclick="changeBackground()">Flip Colors!</button>
+    <button class="button" onclick="changeCharacterMood()">Surreal Transformation!</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('dynamicCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function Particle() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = 'rgba(' + (Math.floor(Math.random() * 255) + 1) + ',' +
+                             (Math.floor(Math.random() * 255) + 1) + ',' +
+                             (Math.floor(Math.random() * 255) + 1) + ',0.5)';
+    }
+
+    Particle.prototype.update = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.1;
+    };
+
+    Particle.prototype.draw = function() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    };
+
+    function init() {
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function handleParticles() {
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].size <= 0.2) {
+                particles.splice(i, 1);
+                i--;
+                particles.push(new Particle());
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        handleParticles();
+        requestAnimationFrame(animate);
+    }
+    init();
+    animate();
+
+    function changeBackground() {
+        document.body.style.background = 'linear-gradient(135deg, ' +
+            'rgb(' + Math.floor(Math.random() * 255) + ',' + 
+                      Math.floor(Math.random() * 255) + ',' + 
+                      Math.floor(Math.random() * 255) + '),' +
+            'rgb(' + Math.floor(Math.random() * 255) + ',' + 
+                      Math.floor(Math.random() * 255) + ',' + 
+                      Math.floor(Math.random() * 255) + '))';
+    }
+
+    const characterSeal = document.getElementById('characterSeal');
+    function changeCharacterMood() {
+        const moods = [
+            "https://via.placeholder.com/100",
+            "https://via.placeholder.com/100/fff0ff/000000?text=Happy",
+            "https://via.placeholder.com/100/f0f0f0/000000?text=Sad",
+            "https://via.placeholder.com/100/d0f0c0/000000?text=Angry",
+            "https://via.placeholder.com/100/ffd700/000000?text=Surprised"
+        ];
+        const randomMood = moods[Math.floor(Math.random() * moods.length)];
+        characterSeal.src = randomMood;
+        characterSeal.style.setProperty('--speed', Math.random() * 3 + 1);
+        characterSeal.style.animation = 'dance 2s infinite';
+    }
+</script>
+
+</body>
+</html>

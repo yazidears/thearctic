@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Surreal Journey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #003366, #660033);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            position: absolute;
+        }
+        .title {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .interact {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            opacity: 0.6;
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        #bizarre-button {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            border: none;
+            background: #ffcc00;
+            color: #003366;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Abstract Surreal Journey</div>
+    <div class="interact">Click to create chaos</div>
+    <button id="bizarre-button">Transform Reality</button>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const shapes = [];
+        const colors = ['#ff6600', '#ccff00', '#00ccff', '#ff6699', '#6666ff'];
+
+        function createShape(x, y) {
+            return {
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 0.5) * 10,
+                size: Math.random() * 25 + 10,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            };
+        }
+
+        function updateShapes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = shapes.length - 1; i >= 0; i--) {
+                const shape = shapes[i];
+                ctx.beginPath();
+                ctx.arc(shape.x, shape.y, shape.size, 0, 2 * Math.PI);
+                ctx.fillStyle = shape.color;
+                ctx.fill();
+                shape.x += shape.vx;
+                shape.y += shape.vy;
+                shape.vy += 0.5; // gravity
+                if (shape.x - shape.size > canvas.width || shape.x + shape.size < 0 || shape.y - shape.size > canvas.height) {
+                    shapes.splice(i, 1);
+                }
+            }
+        }
+
+        function animate() {
+            updateShapes();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        canvas.addEventListener('click', (e) => {
+            for (let i = 0; i < 3; i++) {
+                shapes.push(createShape(e.clientX, e.clientY));
+            }
+        });
+
+        const button = document.getElementById('bizarre-button');
+        button.addEventListener('click', () => {
+            transformReality();
+        });
+
+        function transformReality() {
+            let r = Math.floor(Math.random() * 256);
+            let g = Math.floor(Math.random() * 256);
+            let b = Math.floor(Math.random() * 256);
+            document.body.style.background = `rgb(${r}, ${g}, ${b})`;
+            shapes.push(createShape(Math.random() * canvas.width, Math.random() * canvas.height));
+        }
+    </script>
+</body>
+</html>

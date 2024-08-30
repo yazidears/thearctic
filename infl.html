@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Kaleidoscope</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; position: absolute; top: 0; left: 0; }
+        #controls { position: fixed; bottom: 10px; left: 10px; color: white; font-family: sans-serif; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px; }
+        #controls button { background: none; color: white; border: 2px solid white; padding: 5px 10px; cursor: pointer; margin-right: 5px; }
+        #controls button:focus { outline: none; }
+    </style>
+</head>
+<body>
+    <canvas id="kaleidoscopeCanvas"></canvas>
+    <div id="controls">
+        <button onclick="randomizeColors()">Randomize Colors</button>
+        <button onclick="toggleAnimation()"><span id="toggleText">Pause</span> Animation</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('kaleidoscopeCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, animationId;
+        let hue = 0, isAnimating = true, segments = 6;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function drawKaleidoscope(x, y) {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < segments; i++) {
+                const angleSegment = (Math.PI * 2) / segments;
+                ctx.save();
+                ctx.translate(width / 2, height / 2);
+                ctx.rotate(angleSegment * i);
+                ctx.scale(i % 2 === 0 ? 1 : -1, 1);
+                drawTriangle(x - width / 2, y - height / 2);
+                ctx.restore();
+            }
+        }
+
+        function drawTriangle(x, y) {
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(x, y);
+            ctx.lineTo(-x, y);
+            ctx.closePath();
+            ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+            ctx.fill();
+        }
+
+        function animate() {
+            if (!isAnimating) return;
+            hue = (hue + 1) % 360;
+            drawKaleidoscope(Math.random() * width, Math.random() * height);
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animate();
+
+        function toggleAnimation() {
+            if (isAnimating) {
+                cancelAnimationFrame(animationId);
+                document.getElementById('toggleText').textContent = 'Resume';
+            } else {
+                animate();
+                document.getElementById('toggleText').textContent = 'Pause';
+            }
+            isAnimating = !isAnimating;
+        }
+
+        function randomizeColors() {
+            hue = Math.random() * 360;
+        }
+    </script>
+</body>
+</html>

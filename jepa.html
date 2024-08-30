@@ -1,0 +1,117 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Safari</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle, #001f3f 0%, #001426 50%, #000814 100%);
+            overflow: hidden;
+            color: #ffffff;
+        }
+        .sky {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .jellyfish {
+            position: absolute;
+            width: 100px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            animation: float 5s infinite ease-in-out;
+        }
+        .tentacle {
+            position: absolute;
+            width: 6px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            animation: sway 3s infinite ease-in-out alternate;
+        }
+        .tentacle:nth-child(1) { left: 10px; }
+        .tentacle:nth-child(2) { left: 30px; animation-delay: 0.2s; }
+        .tentacle:nth-child(3) { left: 50px; animation-delay: 0.4s; }
+        .tentacle:nth-child(4) { left: 70px; animation-delay: 0.6s; }
+        .message {
+            font-size: 24px;
+            text-align: center;
+            position: absolute;
+            top: 10%;
+            width: 100%;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(10deg); }
+        }
+        #console {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 50, 0.8);
+            color: #00ffb6;
+            height: 200px;
+            overflow-y: scroll;
+            font-size: 14px;
+            box-sizing: border-box;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="sky" id="sky">
+        <div class="message">Welcome to the Quantum Jellyfish Safari! Click around to spot jellyfish in the cosmic sea...</div>
+    </div>
+    <div id="console"></div>
+    <script>
+        function spawnJellyfish() {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            const jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            jellyfish.style.left = x + 'px';
+            jellyfish.style.top = y + 'px';
+            const tentacleCount = 4 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < tentacleCount; i++) {
+                const tentacle = document.createElement('div');
+                tentacle.className = 'tentacle';
+                jellyfish.appendChild(tentacle);
+            }
+            document.body.appendChild(jellyfish);
+            setTimeout(() => jellyfish.remove(), 15000);
+            logEvent(`Jellyfish spotted at (${Math.round(x)}, ${Math.round(y)})`);
+        }
+
+        function logEvent(text) {
+            const consoleEl = document.getElementById('console');
+            consoleEl.textContent += `[${new Date().toLocaleTimeString()}] ${text}\n`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function randomEvent() {
+            if (Math.random() < 0.5) {
+                spawnJellyfish();
+            }
+        }
+
+        document.body.addEventListener('click', spawnJellyfish);
+        setInterval(randomEvent, 3000);
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Imaginary Instruments</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            perspective: 800px;
+        }
+        #scene {
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            animation: spin 10s infinite linear;
+        }
+        .instrument {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(0, 150, 150, 0.7);
+            border: 2px dashed cyan;
+            transform-origin: center center;
+            transform-style: preserve-3d;
+        }
+        #flibetron { transform: translateZ(-150px) rotateY(0deg); }
+        #zorbark { transform: translateZ(-150px) rotateY(120deg); }
+        #fandril { transform: translateZ(-150px) rotateY(240deg); }
+        #flibetron:hover {
+            animation: shake 1s infinite;
+        }
+        #zorbark:hover {
+            animation: pulse 1s infinite;
+        }
+        #fandril:hover {
+            animation: flip 1s infinite;
+        }
+        @keyframes spin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        @keyframes shake {
+            0% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(-5px); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes flip {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="scene">
+        <div class="instrument" id="flibetron"></div>
+        <div class="instrument" id="zorbark"></div>
+        <div class="instrument" id="fandril"></div>
+    </div>
+    <script>
+        const sounds = {
+            flibetron: new Audio('https://freesound.org/data/previews/156/156835_2634866-lq.mp3'),
+            zorbark: new Audio('https://freesound.org/data/previews/231/231061_3765046-lq.mp3'),
+            fandril: new Audio('https://freesound.org/data/previews/202/202881_3263906-lq.mp3')
+        };
+        document.querySelectorAll('.instrument').forEach(item => {
+            item.addEventListener('click', function() {
+                const instrumentId = this.id;
+                sounds[instrumentId].play();
+            });
+        });
+        document.addEventListener('keydown', event => {
+            if(event.key === '1') sounds.flibetron.play();
+            if(event.key === '2') sounds.zorbark.play();
+            if(event.key === '3') sounds.fandril.play();
+        });
+    </script>
+</body>
+</html>

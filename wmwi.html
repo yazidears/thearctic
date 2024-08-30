@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to bottom right, #03045e, #0077b6, #00b4d8, #90e0ef);
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .moon {
+            position: absolute;
+            left: 75%;
+            top: 20%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f3e9dc, #e5c889, #bf9416);
+            width: 150px;
+            height: 150px;
+            box-shadow: 0 0 50px #f3e9dc;
+        }
+        .floating-planet {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #84fab0, #8fd3f4);
+            width: 100px;
+            height: 100px;
+        }
+        .planet-one { top: 10%; left: 10%; animation: float 4s ease-in-out infinite; }
+        .planet-two { top: 70%; left: 60%; animation: float 5s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        canvas { display: block; position: absolute; top: 0; left: 0; z-index: -1; }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(to top, #5a9e4a, transparent);
+            width: 20px;
+            height: 200px;
+            border-radius: 50% 50% 0 0;
+            left: 25%;
+            animation: sway 3s infinite;
+        }
+        .leaf {
+            width: 60px;
+            height: 20px;
+            background: #5a9e4a;
+            position: absolute;
+            border-radius: 50%;
+            animation: leafFall 10s linear infinite;
+            opacity: 0.7;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes leafFall {
+            0% { top: 0; opacity: 1; transform: rotate(0); }
+            100% { top: 100vh; opacity: 0; transform: rotate(360deg); }
+        }
+        .leaf:nth-of-type(1) { left: 10%; animation-delay: 0s; }
+        .leaf:nth-of-type(2) { left: 30%; animation-delay: 2s; }
+        .leaf:nth-of-type(3) { left: 50%; animation-delay: 4s; }
+        .leaf:nth-of-type(4) { left: 80%; animation-delay: 6s; }
+        .crystal {
+            position: absolute;
+            width: 0;
+            border-style: solid;
+            transform: rotateX(55deg);
+        }
+        .crystal-1 {
+            border-width: 0 20px 120px 20px;
+            border-color: transparent transparent #82f7ff transparent;
+            top: 50%; left: 70%;
+        }
+        .crystal-2 {
+            border-width: 0 25px 180px 25px;
+            border-color: transparent transparent #00ffc8 transparent;
+            top: 60%; left: 80%;
+        }
+    </style>
+</head>
+<body onload="setupCanvas()">
+
+<div class="moon"></div>
+<div class="floating-planet planet-one"></div>
+<div class="floating-planet planet-two"></div>
+<div class="tree"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="crystal crystal-1"></div>
+<div class="crystal crystal-2"></div>
+
+<script>
+    function setupCanvas() {
+        const canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 100; i++) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            drawStars();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    }
+</script>
+
+</body>
+</html>

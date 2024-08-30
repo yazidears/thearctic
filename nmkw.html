@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Galaxy Explorer</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #starField {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0) 20%, black 80%);
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  #console {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 300px;
+    background: rgba(0,0,0,0.8);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+  }
+  #console input {
+    width: 100%;
+    padding: 5px;
+    background: black;
+    border: none;
+    color: #00ff00;
+  }
+  #console-log {
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  #spaceship {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 60px;
+    background: gray;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transform-origin: 50% 75%;
+    animation: spaceship-float 2s infinite;
+  }
+  @keyframes spaceship-float {
+    0%, 100% { transform: translate(-50%, -50%) rotate(5deg); }
+    50% { transform: translate(-50%, -53%) rotate(-5deg); }
+  }
+</style>
+</head>
+<body>
+<div id="starField"></div>
+<div id="spaceship"></div>
+<div id="console">
+  <div id="console-log"></div>
+  <input type="text" id="console-input" placeholder="Enter Command...">
+</div>
+<script>
+  const logElement = document.getElementById('console-log');
+  const inputElement = document.getElementById('console-input');
+  const spaceship = document.getElementById('spaceship');
+  const starField = document.getElementById('starField');
+
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.left = Math.random() * 100 + '%';
+    starField.appendChild(star);
+  }
+
+  const commands = {
+    help: "Available commands: help, left, right, fly, stop",
+    left: function() {
+      spaceship.style.transform += 'rotate(-15deg)';
+      log('Spaceship rotates left');
+    },
+    right: function() {
+      spaceship.style.transform += 'rotate(15deg)';
+      log('Spaceship rotates right');
+    },
+    fly: function() {
+      spaceship.style.animationPlayState = 'running';
+      log('Spaceship flying resumed');
+    },
+    stop: function() {
+      spaceship.style.animationPlayState = 'paused';
+      log('Spaceship movement stopped');
+    }
+  };
+
+  function log(message) {
+    const logEntry = document.createElement('div');
+    logEntry.textContent = message;
+    logElement.appendChild(logEntry);
+    logElement.scrollTop = logElement.scrollHeight;
+  }
+
+  inputElement.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      const command = inputElement.value.toLowerCase();
+      inputElement.value = '';
+      if (commands[command]) {
+        if (typeof commands[command] === 'function') commands[command]();
+        else log(commands[command]);
+      } else {
+        log(`Unknown command: ${command}`);
+      }
+    }
+  });
+</script>
+</body>
+</html>

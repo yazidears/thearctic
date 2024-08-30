@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wacky Whirlwind</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffec61, #f321d7);
+            font-family: 'Comic Sans MS', cursive;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #message {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        button {
+            font-size: 20px;
+            padding: 5px 10px;
+            margin-top: 5px;
+        }
+        .wacky-wrap {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        .wacky-char {
+            display: inline-block;
+            margin: 0 3px;
+            font-size: 40px;
+            transition: transform 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">
+        <span id="info">Welcome to the Wacky Whirlwind!</span>
+        <button onclick="toggleColorEffect()">🌈 Toggle Madness</button>
+    </div>
+    <div class="wacky-wrap" id="wackyWrap"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let rainbows = [];
+        let colorEffect = false;
+        let messageChars = ['W', 'h', 'i', 'r', 'l', 'w', 'i', 'n', 'd', 'y', '!', '!', '.'];
+
+        for (let i = 0; i < 20; i++) {
+            rainbows.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 20 + 5,
+                dx: (Math.random() - 0.5) * 4,
+                dy: (Math.random() - 0.5) * 4,
+                startAngle: 0,
+                endAngle: Math.PI * 2 * Math.random(),
+                hue: Math.random() * 360
+            });
+        }
+
+        const wackyWrap = document.getElementById('wackyWrap');
+        messageChars.forEach(char => {
+            const span = document.createElement('span');
+            span.className = 'wacky-char';
+            span.innerText = char;
+            span.style.transform = `rotate(${Math.random() * 360}deg)`;
+            wackyWrap.appendChild(span);
+        });
+
+        function drawRainbows() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            rainbows.forEach(rainbow => {
+                if (colorEffect) {
+                    ctx.fillStyle = `hsl(${(rainbow.hue += 1) % 360}, 100%, 50%)`;
+                } else {
+                    ctx.fillStyle = `hsl(${rainbow.hue}, 100%, 50%)`;
+                }
+                ctx.beginPath();
+                ctx.arc(rainbow.x, rainbow.y, rainbow.radius, rainbow.startAngle, rainbow.endAngle);
+                ctx.fill();
+
+                rainbow.x += rainbow.dx;
+                rainbow.y += rainbow.dy;
+
+                if (rainbow.x + rainbow.radius > canvas.width || rainbow.x - rainbow.radius < 0) {
+                    rainbow.dx *= -1;
+                }
+                if (rainbow.y + rainbow.radius > canvas.height || rainbow.y - rainbow.radius < 0) {
+                    rainbow.dy *= -1;
+                }
+            });
+
+            requestAnimationFrame(drawRainbows);
+        }
+
+        let bumpInterval;
+        function bumpText() {
+            const chars = document.querySelectorAll('.wacky-char');
+            chars.forEach(char => {
+                char.style.transform = `rotate(${Math.random() * 360}deg) scale(${Math.random() * 1.5 + 0.5})`;
+            });
+        }
+
+        function startTextMadness() {
+            if (!bumpInterval) {
+                bumpInterval = setInterval(bumpText, 200);
+            }
+        }
+
+        function toggleColorEffect() {
+            colorEffect = !colorEffect;
+            const button = document.querySelector('button');
+            button.innerText = colorEffect ? '🌀 Calm Down' : '🌈 Toggle Madness';
+        }
+
+        startTextMadness();
+        drawRainbows();
+
+    </script>
+</body>
+</html>

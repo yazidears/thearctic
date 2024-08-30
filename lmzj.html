@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Quantum Forest: Adventure of Quarks</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
+        color: #fff;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    #gameCanvas {
+        border: 2px solid #fff;
+        background: rgba(0, 0, 0, 0.3);
+    }
+    #info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 1.2em;
+    }
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+    }
+    #neutron {
+        background: lightgray;
+    }
+    #proton {
+        background: red;
+    }
+    #quark {
+        background: yellow;
+    }
+    .message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3em;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<div id="info">Collect Quarks before time runs out!</div>
+<div id="endMessage" class="message" style="display: none;"></div>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const particleTypes = ['neutron', 'proton', 'quark'];
+    let score = 0;
+    let gameTime = 30; // 30 seconds
+    let gameInterval, particleInterval;
+
+    const createParticle = () => {
+        const size = Math.random() * 20 + 10;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+        const particle = { x, y, size, type };
+        particles.push(particle);
+    }
+
+    const drawParticle = (particle) => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = (particle.type === 'neutron') ? 'lightgray' : particle.type === 'proton' ? 'red' : 'yellow';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(drawParticle);
+        ctx.font = "20px Courier New";
+        ctx.fillStyle = "white";
+        ctx.fillText(`Time: ${gameTime}s`, 10, 20);
+        ctx.fillText(`Score: ${score}`, 10, 50);
+    }
+
+    const update = () => {
+        particles.forEach((particle, index) => {
+            if (particle.type === 'quark') {
+                particle.x += (Math.random() - 0.5) * 2;
+                particle.y += (Math.random() - 0.5) * 2;
+            }
+            if (Math.hypot(particle.x - mouseX, particle.y - mouseY) < particle.size) {
+                if (particle.type === 'quark') score++;
+                particles.splice(index, 1);
+            }
+        });
+    }
+
+    const gameLoop = () => {
+        if (gameTime <= 0) {
+            clearInterval(gameInterval);
+            clearInterval(particleInterval);
+            document.getElementById('endMessage').style.display = 'block';
+            document.getElementById('endMessage').innerText = `Time's Up! Final Score: ${score}`;
+        } else {
+            update();
+            draw();
+            gameTime--;
+        }
+    }
+
+    let mouseX = 0, mouseY = 0;
+    canvas.addEventListener('mousemove', (event) => {
+        mouseX = event.offsetX;
+        mouseY = event.offsetY;
+    });
+
+    particleInterval = setInterval(createParticle, 500);
+    gameInterval = setInterval(gameLoop, 1000);
+</script>
+</body>
+</html>

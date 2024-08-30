@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Symphony</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #001f33;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .controls button {
+            cursor: pointer;
+            background-color: #004d66;
+            border: none;
+            padding: 5px 15px;
+            margin: 5px;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .controls button:hover {
+            background-color: #008fb3;
+        }
+        .floatingButton {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            background: #ff3399;
+            padding: 15px 20px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff80bf;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform: scale(1);
+        }
+        .floatingButton:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px #ffb3d9;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="jellyCanvas"></canvas>
+    <div class="controls">
+        <button onclick="resetJellyfish()">Reset Jellyfish</button>
+    </div>
+    <div class="floatingButton" onclick="quantumEffect()">Q</div>
+    <script>
+        const canvas = document.getElementById('jellyCanvas');
+        const ctx = canvas.getContext('2d');
+        let jellyfish = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function randomColor() {
+            return `rgba(${Math.floor(Math.random() * 255)}, 
+                        ${Math.floor(Math.random() * 255)}, 
+                        ${Math.floor(Math.random() * 255)}, 
+                        ${Math.random().toFixed(1)})`;
+        }
+
+        class Jellyfish {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = Math.random() * 30 + 10;
+                this.color = randomColor();
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 2,
+                    y: (Math.random() - 0.5) * 2
+                };
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.velocity.x = -this.velocity.x;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.velocity.y = -this.velocity.y;
+                }
+                this.draw();
+            }
+        }
+
+        function initializeJellyfish() {
+            jellyfish = [];
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                jellyfish.push(new Jellyfish(x, y));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            jellyfish.forEach(jelly => jelly.update());
+        }
+
+        function resetJellyfish() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            initializeJellyfish();
+        }
+
+        function quantumEffect() {
+            jellyfish.forEach(jelly => {
+                jelly.color = randomColor();
+                jelly.velocity.x *= 1.1;
+                jelly.velocity.y *= 1.1;
+            });
+        }
+
+        initializeJellyfish();
+        animate();
+    </script>
+</body>
+</html>

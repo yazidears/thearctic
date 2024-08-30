@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Jellyfish Dimension</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #020024, #090979, #00d4ff);
+        }
+        .jellyfish {
+            position: absolute;
+            width: 30px;
+            height: 60px;
+            background: #ff4aad;
+            border-radius: 15px;
+            animation: floaty 5s ease-in-out infinite;
+        }
+        .tentacle {
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background: #ff4aad;
+            animation: wavy 3s ease-in-out infinite;
+        }
+        @keyframes floaty {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        @keyframes wavy {
+            0%, 100% {
+                transform: rotate(0);
+            }
+            50% {
+                transform: rotate(15deg);
+            }
+        }
+        #control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
+        #control-panel button {
+            margin: 5px;
+        }
+        #abstract-art {
+            position: absolute;
+            bottom: 10%;
+            left: 40%;
+            animation: rotate 15s infinite linear;
+            animation-direction: alternate;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #ff0;
+            border-radius: 50%;
+            position: absolute;
+            animation: dot-pulse 1s infinite alternate;
+        }
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes dot-pulse {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="control-panel">
+        <button onclick="addJellyfish()">Add Jellyfish</button>
+        <button onclick="changeColors()">Change Colors</button>
+    </div>
+    <div id="abstract-art">
+        <div class="dot" style="left: 0; top: 0;"></div>
+        <div class="dot" style="right: 0; top: 0;"></div>
+        <div class="dot" style="right: 0; bottom: 0;"></div>
+        <div class="dot" style="left: 0; bottom: 0;"></div>
+        <div class="dot" style="left: 50%; top: 50%; transform: translate(-50%, -50%);"></div>
+    </div>
+    <script>
+        function addJellyfish() {
+            let container = document.createElement('div');
+            container.classList.add('jellyfish');
+            container.style.left = Math.random() * window.innerWidth + 'px';
+            container.style.top = Math.random() * window.innerHeight + 'px';
+            
+            for(let i = 0; i < 8; i++) {
+                let tentacle = document.createElement('div');
+                tentacle.classList.add('tentacle');
+                tentacle.style.left = 15 - 1.5*i + 'px';
+                tentacle.style.bottom = '-20px';
+                container.appendChild(tentacle);
+            }
+            
+            document.body.appendChild(container);
+            
+            container.onclick = function() {
+                container.remove();
+            };
+        }
+
+        function changeColors() {
+            let colors = ['#ff4aad', '#ff4a83', '#964aff', '#4a79ff', '#4affb9'];
+            let index = 0;
+            document.querySelectorAll('.jellyfish, .tentacle').forEach(elem => {
+                elem.style.background = colors[index % colors.length];
+                index++;
+            });
+        }
+        
+        window.onload = () => {
+            for (let i = 0; i < 10; i++) {
+                addJellyfish();
+            }
+        };
+    </script>
+</body>
+</html>

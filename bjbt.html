@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parallel Dimension Fractal Exploration</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Courier New', monospace;
+  }
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  #info {
+    z-index: 1;
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #fff;
+  }
+  #info h1 {
+    margin: 0;
+    font-size: 30px;
+    color: #ff00ff;
+  }
+  #info p {
+    font-size: 14px;
+    color: #ff8c00;
+  }
+  #info button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #ff00ff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+  }
+  #info button:hover {
+    background: #ff8c00;
+  }
+</style>
+</head>
+<body>
+<canvas id="fractalCanvas"></canvas>
+<div id="info">
+  <h1>Parallel Dimension Fractal</h1>
+  <p>Traverse through a boundless expanse of recursive art.</p>
+  <button onclick="generateRandomFractal()">Generate New Fractal</button>
+</div>
+<script>
+  const canvas = document.getElementById('fractalCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  function drawFractal(x, y, size, depth, angle) {
+    if (depth === 0) return;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    const x1 = x + Math.cos(angle) * size;
+    const y1 = y + Math.sin(angle) * size;
+    ctx.lineTo(x1, y1);
+    ctx.strokeStyle = `hsl(${depth * 30}, 100%, 50%)`;
+    ctx.lineWidth = depth / 2;
+    ctx.stroke();
+    drawFractal(x1, y1, size * 0.7, depth - 1, angle - Math.PI / 4);
+    drawFractal(x1, y1, size * 0.7, depth - 1, angle + Math.PI / 4);
+    drawFractal(x1, y1, size * 0.5, depth - 1, angle + Math.PI / 2);
+  }
+  
+  function generateRandomFractal() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const depth = Math.floor(Math.random() * 8 + 3);
+    const size = Math.random() * 100 + 100;
+    const angle = Math.random() * Math.PI * 2;
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    drawFractal(x, y, size, depth, angle);
+  }
+  
+  generateRandomFractal();
+</script>
+</body>
+</html>

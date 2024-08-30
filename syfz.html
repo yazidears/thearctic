@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Whimsy: The Potato Tron</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #232526;
+            color: white;
+            overflow: hidden;
+        }
+        #potato-tron {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            animation: spin infinite 20s linear;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+        .potato {
+            width: 60px;
+            height: 100px;
+            background-color: #d3a967;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #9a7d17;
+            animation: float infinite 2s ease-in-out alternate-reverse;
+            position: absolute;
+        }
+        .potato:nth-child(even) {
+            background-color: #b78c44;
+        }
+        @keyframes float {
+            from {transform: translateY(-10px);}
+            to {transform: translateY(10px);}
+        }
+        .fork {
+            width: 5px;
+            height: 30px;
+            background-color: silver;
+            position: absolute;
+            border-radius: 5px;
+            top: 0;
+            animation: fork-spin infinite 15s linear reverse;
+        }
+        @keyframes fork-spin {
+            from {transform: rotate(0deg) translateY(200px);}
+            to {transform: rotate(360deg) translateY(200px);}
+        }
+        .sky {
+            position: absolute;
+            width: 100vw;
+            height: 100px;
+            background: linear-gradient(to bottom, #5d54a4, transparent);
+            top: 0;
+            animation: move-sky infinite 10s linear alternate;
+        }
+        @keyframes move-sky {
+            from {background-position: 0 0;}
+            to {background-position: 100% 0;}
+        }
+        .toast {
+            position: absolute;
+            background: #e7dfc3;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px #5c3c13;
+            animation: toast-fly infinite 5s linear;
+            transform-origin: center;
+        }
+        @keyframes toast-fly {
+            0% {transform: translate(-200px, 0) rotate(0);}
+            100% {transform: translate(120vw, 0) rotate(365deg);}
+        }
+        #control-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        h1 {
+            font-family: 'Comic Sans MS', cursive;
+        }
+    </style>
+</head>
+<body>
+    <div id="sky-tron">
+        <div class="sky"></div>
+    </div>
+    <div id="potato-tron">
+        <div class="potato" style="left:10%;"></div>
+        <div class="toast" style="left:80%;top:20%;"></div>
+        <div class="potato" style="left:30%;"></div>
+        <div class="toast" style="left:30%;top:50%;"></div>
+        <div class="potato" style="left:50%;"></div>
+        <div class="toast" style="left:40%;top:80%;"></div>
+        <div class="fork" style="left:60%;"></div>
+        <div class="fork" style="left:20%;"></div>
+    </div>
+    <div id="control-panel">
+        <h1>😵</h1>
+        <p>Click me for Potato Wisdom!</p>
+    </div>
+    <script>
+        const wisdom = [
+            "The potato: more than just a starch.",
+            "Forks were created by the Potato Gods.",
+            "Toast is just a flying bread!",
+            "Spinach never floated as gracefully as a potato.",
+            "Embrace the potato, become the potato."
+        ];
+        document.getElementById('control-panel').onclick = function() {
+            alert(wisdom[Math.floor(Math.random() * wisdom.length)]);
+        };
+    </script>
+</body>
+</html>
+```

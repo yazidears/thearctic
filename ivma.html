@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Jellybean Garden</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #282c34;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #gardenCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 10px;
+        }
+        .jellybean {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            border-radius: 50px;
+            animation: wiggle linear infinite;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gardenCanvas"></canvas>
+<div id="info">
+    <h1>The Surreal Jellybean Garden</h1>
+    <p>Click anywhere to plant more jellybeans!</p>
+</div>
+
+<script>
+    const colors = ['#FF6347', '#FF4500', '#32CD32', '#1E90FF', '#FFD700', '#FF69B4', '#800080'];
+    const canvas = document.getElementById('gardenCanvas');
+    const context = canvas.getContext('2d');
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    document.addEventListener('click', function(e) {
+        let jellybean = document.createElement('div');
+        jellybean.className = 'jellybean';
+        jellybean.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        jellybean.style.left = (e.pageX - 25) + 'px';
+        jellybean.style.top = (e.pageY - 15) + 'px';
+        document.body.appendChild(jellybean);
+        moveJellybean(jellybean);
+    });
+
+    function moveJellybean(jellybean) {
+        const speed = 0.5 + Math.random();
+        const direction = Math.random() * 2 * Math.PI;
+        const xMove = Math.cos(direction) * speed;
+        const yMove = Math.sin(direction) * speed;
+        function animate() {
+            let x = parseFloat(jellybean.style.left);
+            let y = parseFloat(jellybean.style.top);
+            if (x + xMove < 0 || x + xMove > window.innerWidth - 50) xMove = -xMove;
+            if (y + yMove < 0 || y + yMove > window.innerHeight - 30) yMove = -yMove;
+            jellybean.style.left = (x + xMove) + 'px';
+            jellybean.style.top = (y + yMove) + 'px';
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawBackground();
+    }
+
+    function drawBackground() {
+        const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, '#ff9a9e');
+        gradient.addColorStop(0.5, '#fad0c4');
+        gradient.addColorStop(1, '#fad0c4');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Creature Parade</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #creature-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .creature {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(75, 0, 130, 0.8);
+            border-radius: 50%;
+            animation: float 12s infinite;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20vh) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        #message {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px #000;
+            animation: fadeInOut 4s infinite;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        #control-panel {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        #control-panel button {
+            background: none;
+            border: 2px solid #fff;
+            padding: 10px;
+            margin: 0 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #control-panel button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .sky {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: calc(100vw + 200px);
+            height: calc(100vh + 200px);
+            background: radial-gradient(circle at top left, #ffe0e0, transparent);
+            z-index: 0;
+            animation: rotateSky 60s infinite linear;
+        }
+        @keyframes rotateSky {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="sky"></div>
+    <div id="creature-container"></div>
+    <div id="message">Welcome to the Mystical Creature Parade!</div>
+    <div id="control-panel">
+        <button onclick="addCreature()">Summon Creature</button>
+        <button onclick="changeColors()">Change Colors</button>
+    </div>
+    <script>
+        const creatureContainer = document.getElementById('creature-container');
+        let colors = ['#4B0082', '#9400D3', '#FF4500', '#FFD700', '#32CD32', '#00FFFF'];
+        
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+        
+        function addCreature() {
+            const creature = document.createElement('div');
+            creature.className = 'creature';
+            creature.style.left = getRandomInt(window.innerWidth - 50) + 'px';
+            creature.style.bottom = getRandomInt(window.innerHeight - 50) + 'px';
+            creature.style.animationDelay = getRandomInt(10000) + 'ms';
+            creature.style.backgroundColor = colors[getRandomInt(colors.length)];
+            creatureContainer.appendChild(creature);
+        }
+        
+        function changeColors() {
+            document.body.style.background = `linear-gradient(135deg, ${randomColor()}, ${randomColor()})`;
+        }
+        
+        function randomColor() {
+            return '#' + Math.floor(Math.random()*16777215).toString(16);
+        }
+        
+        for (let i = 0; i < 10; i++) {
+            addCreature();
+        }
+    </script>
+</body>
+</html>

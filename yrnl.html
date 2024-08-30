@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Odyssey</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #001f3f; }
+        .jellyfish {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(255,255,255,0.8) 57%, rgba(0,255,233,0.1) 100%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        .tentacles {
+            position: absolute;
+            width: 10px;
+            height: 300px;
+            background: linear-gradient(180deg, rgba(0,255,233,0.1) 0%, rgba(126,255,245,0.8) 80%);
+            border-radius: 10px;
+            animation: sway 2s infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-100px) translateX(20px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(10deg); }
+        }
+        #score, #timer {
+            position: absolute;
+            top: 10px;
+            font-size: 24px;
+            color: #00e6e6;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        #score { left: 10px; }
+        #timer { right: 10px; }
+    </style>
+</head>
+<body>
+    <div id="score">Score: 0</div>
+    <div id="timer">Time: 30s</div>
+    <script>
+        const numJellyfish = 10;
+        let score = 0;
+        let timeLeft = 30;
+        
+        function createJellyfish() {
+            for (let i = 0; i < numJellyfish; i++) {
+                let jellyfish = document.createElement('div');
+                jellyfish.className = 'jellyfish';
+                jellyfish.style.left = Math.random() * window.innerWidth + 'px';
+                jellyfish.style.top = Math.random() * window.innerHeight + 'px';
+                jellyfish.addEventListener('click', () => {
+                    score++;
+                    document.getElementById('score').textContent = 'Score: ' + score;
+                    jellyfish.remove();
+                    createSingleJellyfish();
+                });
+
+                for (let j = 0; j < 5; j++) {
+                    let tentacle = document.createElement('div');
+                    tentacle.className = 'tentacles';
+                    tentacle.style.left = (30 * j) + 'px';
+                    jellyfish.appendChild(tentacle);
+                }
+
+                document.body.appendChild(jellyfish);
+            }
+        }
+
+        function createSingleJellyfish() {
+            let jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            jellyfish.style.left = Math.random() * window.innerWidth + 'px';
+            jellyfish.style.top = Math.random() * window.innerHeight + 'px';
+            jellyfish.addEventListener('click', () => {
+                score++;
+                document.getElementById('score').textContent = 'Score: ' + score;
+                jellyfish.remove();
+                createSingleJellyfish();
+            });
+
+            for (let j = 0; j < 5; j++) {
+                let tentacle = document.createElement('div');
+                tentacle.className = 'tentacles';
+                tentacle.style.left = (30 * j) + 'px';
+                jellyfish.appendChild(tentacle);
+            }
+
+            document.body.appendChild(jellyfish);
+        }
+
+        function startTimer() {
+            let timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = 'Time: ' + timeLeft + 's';
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Game Over! Your score was: ' + score);
+                    location.reload();
+                }
+            }, 1000);
+        }
+
+        createJellyfish();
+        startTimer();
+    </script>
+</body>
+</html>

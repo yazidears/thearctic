@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dreamscape Gadgetorium</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Courier New', Courier, monospace;
+        background: #222;
+        color: #f8f8f2;
+    }
+    #gadgetSpace {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .gadget {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background-color: #8be9fd;
+        border-radius: 50%;
+        opacity: 0.7;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .gadget:hover {
+        transform: scale(1.1);
+    }
+    #log {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #50fa7b;
+    }
+    @keyframes orbit {
+        0% { transform: rotate(0deg) translateX(250px) rotate(0deg); }
+        100% { transform: rotate(360deg) translateX(250px) rotate(-360deg); }
+    }
+    .floating {
+        animation: orbit 10s infinite linear;
+    }
+</style>
+</head>
+<body>
+<div id="gadgetSpace"></div>
+<div id="log">Click the gadgets for surprises!</div>
+<script>
+    const gadgetSpace = document.getElementById('gadgetSpace');
+    const log = document.getElementById('log');
+    const colors = ['#ff5555', '#50fa7b', '#ffb86c', '#ff79c6', '#8be9fd', '#bd93f9'];
+    const messages = [
+        "Beware! It's a trap!", 
+        "You found a secret passage!",
+        "This gadget is friendly!",
+        "Oh no, it malfunctioned!",
+        "You gained a new ability!",
+        "The gadget has vanished!"
+    ];
+
+    function createGadget(index) {
+        let gadget = document.createElement('div');
+        gadget.className = 'gadget floating';
+        gadget.style.animationDuration = `${5 + Math.random() * 10}s`;
+        gadget.style.backgroundColor = colors[index % colors.length];
+        gadget.style.left = (15 + Math.random() * 70) + 'vw';
+        gadget.style.top = (15 + Math.random() * 70) + 'vh';
+        gadget.addEventListener('click', () => {
+            let message = messages[Math.floor(Math.random() * messages.length)];
+            log.textContent = message;
+        });
+        gadgetSpace.appendChild(gadget);
+    }
+
+    for (let i = 0; i < 10; i++) {
+        createGadget(i);
+    }
+</script>
+</body>
+</html>

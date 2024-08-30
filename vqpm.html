@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bizarre Metamorphosis</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .creature {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            background: #ff6f61;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: dance 5s infinite alternate;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes dance {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            25% { transform: translate(-40%, -60%) scale(1.2) rotate(45deg); }
+            50% { transform: translate(-60%, -40%) scale(0.8) rotate(90deg); }
+            75% { transform: translate(-50%, -50%) scale(1.3) rotate(135deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(180deg); }
+        }
+
+        #interface {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            padding: 10px 20px;
+            background: #4a90e2;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #357ABD;
+        }
+
+        #message {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 16px;
+            color: #333;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="creature"></div>
+    <div id="interface">
+        <div class="button" onclick="changeColor()">Change Color</div>
+        <div class="button" onclick="spawnShape()">Spawn Shape</div>
+        <div class="button" onclick="toggleDance()">Toggle Dance</div>
+    </div>
+    <div id="message" style="opacity: 0;"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let dancing = true;
+        const creature = document.querySelector('.creature');
+        const message = document.getElementById('message');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function changeColor() {
+            const r = Math.floor(random(0, 256));
+            const g = Math.floor(random(0, 256));
+            const b = Math.floor(random(0, 256));
+            creature.style.backgroundColor = `rgb(${r},${g},${b})`;
+            showMessage(`Color changed to rgb(${r},${g},${b})`);
+        }
+
+        function drawRandomShape() {
+            const x = random(0, canvas.width);
+            const y = random(0, canvas.height);
+            const size = random(20, 80);
+            const shapes = ['circle', 'square', 'triangle'];
+            const shape = shapes[Math.floor(random(0, shapes.length))];
+            ctx.fillStyle = `rgba(${Math.floor(random(0, 256))},${Math.floor(random(0, 256))},${Math.floor(random(0, 256))},${random(0.5, 1)})`;
+            ctx.beginPath();
+            switch (shape) {
+                case 'circle':
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    break;
+                case 'square':
+                    ctx.rect(x - size / 2, y - size / 2, size, size);
+                    break;
+                case 'triangle':
+                    ctx.moveTo(x, y - size);
+                    ctx.lineTo(x - size, y + size);
+                    ctx.lineTo(x + size, y + size);
+                    break;
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function spawnShape() {
+            for (let i = 0; i < 10; i++) {
+                drawRandomShape();
+            }
+            showMessage('10 Shapes spawned!');
+        }
+
+        function toggleDance() {
+            dancing = !dancing;
+            creature.style.animationPlayState = dancing ? 'running' : 'paused';
+            showMessage(dancing ? 'Dance Unpaused!' : 'Dance Paused!');
+        }
+
+        function showMessage(msg) {
+            message.textContent = msg;
+            message.style.opacity = 1;
+            message.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                message.style.opacity = 0;
+                message.style.transform = 'translateY(10px)';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

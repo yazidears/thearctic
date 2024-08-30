@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Machine</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(120deg, #f0f, #0ff, #ff0);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+        }
+        .button {
+            padding: 20px 40px;
+            border: none;
+            color: #fff;
+            background-color: #333;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+        .output {
+            color: #333;
+            font-size: 60px;
+            font-weight: bold;
+            margin-top: 40px;
+            animation: fadeIn 2s forwards;
+            opacity: 0;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .sparkle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #ff0;
+            animation: sparkleMove 8s infinite linear;
+            opacity: 0.8;
+        }
+        @keyframes sparkleMove {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(200vh) rotate(720deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="button" onclick="makeMagic()">Activate Machine</button>
+    <div class="output" id="output">Amazing Machine!</div>
+</div>
+
+<script>
+    const output = document.getElementById('output');
+    const messages = ["Brilliant!", "Incredible!", "Astounding!", "Mind-Boggling!", "Unbelievable!", "Magnificent!", "Stupendous!"];
+    
+    function makeMagic() {
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        output.innerText = randomMessage;
+        output.style.animation = 'none';
+        setTimeout(() => output.style.animation = '', 10);
+        createSparkles();
+    }
+
+    function createSparkles() {
+        const sparkleCount = 50;
+        for (let i = 0; i < sparkleCount; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.animationDelay = Math.random() * 8 + 's';
+            document.body.appendChild(sparkle);
+        }
+    }
+</script>
+
+</body>
+</html>

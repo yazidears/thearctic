@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Wobblewort</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #001f3f;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #main-container {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            border: 5px solid #ff4136;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #ff851b;
+            overflow: hidden;
+            background-color: #0074d9;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            animation: rise 10s infinite ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes rise {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+        #character {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ff4136;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #85144b inset;
+            cursor: pointer;
+        }
+        #thought {
+            display: none;
+            position: absolute;
+            top: -50px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(255, 248, 220, 0.9);
+            border-radius: 5px;
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="character">
+            <div id="thought">Click me to wobble!</div>
+        </div>
+        <div class="bubble" style="width: 20px; height: 20px; bottom: 10%; left: 10%;"></div>
+        <div class="bubble" style="width: 35px; height: 35px; bottom: 15%; left: 40%; animation-delay: 2s;"></div>
+        <div class="bubble" style="width: 25px; height: 25px; bottom: 30%; left: 70%; animation-delay: 4s;"></div>
+        <div class="bubble" style="width: 15px; height: 15px; bottom: 50%; left: 20%; animation-delay: 6s;"></div>
+        <div class="bubble" style="width: 30px; height: 30px; bottom: 70%; left: 50%; animation-delay: 8s;"></div>
+    </div>
+    <script>
+        const character = document.getElementById('character');
+        const thought = document.getElementById('thought');
+
+        character.addEventListener('mouseover', () => {
+            thought.style.display = 'block';
+        });
+
+        character.addEventListener('mouseout', () => {
+            thought.style.display = 'none';
+        });
+
+        character.addEventListener('click', () => {
+            character.style.animation = 'wobble 1s';
+            character.addEventListener('animationend', () => {
+                character.style.animation = '';
+            });
+        });
+
+        function randomPosition() {
+            return {
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%'
+            };
+        }
+
+        setInterval(() => {
+            const position = randomPosition();
+            character.style.left = position.left;
+            character.style.top = position.top;
+        }, 3000);
+
+        @keyframes wobble {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+    </script>
+</body>
+</html>

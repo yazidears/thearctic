@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Bubble Odyssey</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background: linear-gradient(45deg, #3b88eb, #ff99cc); }
+  canvas { display: block; }
+  #counter { position: absolute; top: 10px; left: 10px; color: white; font-size: 24px; font-family: 'Comic Sans MS'; }
+  #info { position: absolute; bottom: 10px; left: 10px; color: white; font-size: 14px; font-family: 'Comic Sans MS'; }
+  .bubble { position: absolute; border-radius: 50%; background-color: rgba(255, 255, 255, 0.8); animation: pop 1.2s infinite linear; }
+  @keyframes pop { 0% {transform: scale(0); opacity: 1;} 50% {opacity: 0.5;} 100% {transform: scale(1); opacity: 0;} }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="counter">Bubbles popped: 0</div>
+<div id="info">Guide the starship to pop bubbles and reveal hidden messages!</div>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let bubblesPopped = 0;
+    const messages = ["Surreal is real!", "Keep dreaming!", "Pop, pop, pop!", "Stars in your eyes!", "Reach for the sky!", "Trust the process!", "Embrace the odd."];
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const bubbles = [];
+    class Bubble {
+       constructor(x, y, size, speed) {
+          this.x = x;
+          this.y = y;
+          this.size = size;
+          this.speed = speed;
+       }
+       draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${Math.floor(255 * Math.random())},${Math.floor(255 * Math.random())},${Math.floor(255 * Math.random())},0.5)`;
+          ctx.fill();
+          ctx.closePath();
+       }
+       update() {
+          this.y -= this.speed;
+          if (this.y + this.size < 0) {
+             this.y = canvas.height + this.size;
+             this.x = Math.random() * canvas.width;
+          }
+       }
+    }
+    function createBubbles(number) {
+       for (let i = 0; i < number; i++) {
+          bubbles.push(new Bubble(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 40 + 20, Math.random() * 3 + 1));
+       }
+    }
+    function animate() {
+       ctx.clearRect(0, 0, canvas.width, canvas.height);
+       bubbles.forEach(bubble => {
+          bubble.update();
+          bubble.draw();
+       });
+       requestAnimationFrame(animate);
+    }
+    function createBubbleElement(x, y) {
+       const bubbleElement = document.createElement("div");
+       bubbleElement.className = "bubble";
+       bubbleElement.style.width = "50px";
+       bubbleElement.style.height = "50px";
+       bubbleElement.style.left = `${x - 25}px`;
+       bubbleElement.style.top = `${y - 25}px`;
+       document.body.appendChild(bubbleElement);
+       setTimeout(() => document.body.removeChild(bubbleElement), 1000);
+    }
+    function popBubble(event) {
+       const x = event.clientX;
+       const y = event.clientY;
+       createBubbleElement(x, y);
+       bubblesPopped++;
+       document.getElementById("counter").textContent = `Bubbles popped: ${bubblesPopped}`;
+       if (bubblesPopped % 5 === 0) {
+          alert(messages[Math.floor(bubblesPopped / 5) % messages.length]);
+       }
+    }
+    window.addEventListener("click", popBubble);
+    createBubbles(30);
+    animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Squiggle Town</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+        }
+        #canvas {
+            background: rgba(255, 255, 255, 0.5);
+            width: 100vw;
+            height: 100vh;
+        }
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #fe8c00;
+            border-radius: 8px;
+        }
+        .info-panel p {
+            margin: 0;
+            padding: 0;
+        }
+        .button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #feb47b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #ff7e5f;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        .animated-text {
+            animation: pulse 2s infinite;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="info-panel">
+        <p class="animated-text">Welcome to Squiggle Town!</p>
+        <button class="button" onclick="changeColors()">Change Colors</button>
+        <button class="button" onclick="teleport()">Teleport!</button>
+        <button class="button" onclick="toggleAnimation()">Toggle Animation</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let player = {x: 0, y: 0, size: 30};
+        let moving = true;
+        const particles = [];
+        let colors = ['#FFEEAD', '#D9534F', '#5CB85C', '#5BC0DE', '#428BCA', '#D63384'];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            player.x = width / 2;
+            player.y = height / 2;
+            createParticles();
+            draw();
+        }
+
+        function createParticles() {
+            particles.length = 0;
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 20 + 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    delta: Math.random() * 2 - 1,
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            for (let part of particles) {
+                ctx.beginPath();
+                ctx.arc(part.x, part.y, part.radius, 0, Math.PI * 2);
+                ctx.fillStyle = part.color;
+                ctx.fill();
+                part.x += part.delta * 2;
+                part.y += part.delta * 2;
+                if (part.x + part.radius < 0 || part.x - part.radius > width) part.delta *= -1;
+                if (part.y + part.radius < 0 || part.y - part.radius > height) part.delta *= -1;
+            }
+            if (moving) updatePlayer();
+            requestAnimationFrame(draw);
+        }
+
+        function teleport() {
+            player.x = Math.random() * width;
+            player.y = Math.random() * height;
+        }
+
+        function changeColors() {
+            colors = colors.map(color => '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0'));
+            createParticles();
+        }
+
+        function toggleAnimation() {
+            moving = !moving;
+        }
+
+        function updatePlayer() {
+            player.x += Math.random() * 8 - 4;
+            player.y += Math.random() * 8 - 4;
+            if (player.x < 0) player.x = width;
+            if (player.x > width) player.x = 0;
+            if (player.y < 0) player.y = height;
+            if (player.y > height) player.y = 0;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+    </script>
+</body>
+</html>
+```

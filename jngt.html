@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Surprise Gift Box</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: azure;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #box {
+            width: 200px;
+            height: 200px;
+            background-color: mediumpurple;
+            border: 5px dashed deepskyblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1.3rem;
+            text-align: center;
+            user-select: none;
+        }
+
+        .gift {
+            visibility: hidden;
+            position: absolute;
+            font-size: 2rem;
+            animation: spin 1s linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        function openBox() {
+            var box = document.getElementById("box");
+            box.style.background = "yellow";
+            box.innerHTML = "<p>Opening...</p>";
+            box.style.pointerEvents = "none";
+            setTimeout(() => {
+                box.style.display = "none";
+                var gift = document.createElement("p");
+                gift.className = "gift";
+                gift.innerHTML = "&#127873; Surprise! &#127873;";
+                gift.style.visibility = "visible";
+                document.body.append(gift);
+                document.body.style.background = "hotpink";
+            }, 2000);
+        }
+    </script>
+</head>
+<body>
+    <div id="box" onclick="openBox();">
+        <p>Click to open your surprise gift box</p>
+    </div>
+</body>
+</html>

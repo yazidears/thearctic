@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quirky Space Adventure</title>
+    <style>
+        body {background-color: #000000;}
+        .star {position: absolute;color: #ffffff;}
+        #rocket {width: 50px;height: 50px;position: absolute;top: 50%;left: 50%;}
+    </style>
+    <script>
+        function createStars() {
+            for (var i = 0; i < 200; i++) {
+                var star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = Math.random() * window.innerHeight + 'px';
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                document.body.appendChild(star);
+            }
+        }
+        function moveRocket(e) {
+            var rocket = document.getElementById('rocket');
+            switch (e.keyCode) {
+                case 37:
+                    rocket.style.left = (parseInt(rocket.style.left) - 10) + 'px';
+                    break;
+                case 38:
+                    rocket.style.top = (parseInt(rocket.style.top) - 10) + 'px';
+                    break;
+                case 39:
+                    rocket.style.left = (parseInt(rocket.style.left) + 10) + 'px';
+                    break;
+                case 40:
+                    rocket.style.top = (parseInt(rocket.style.top) + 10) + 'px';
+                    break;
+            }
+        }
+        window.onload = function() {
+            createStars();
+            window.onkeydown = moveRocket;
+        }
+    </script>
+</head>
+<body>
+    <img id="rocket" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj4KICAgIDxwYXRoIGZpbGw9IiNGRkZGRkYiIGQ9Ik0yMCwgMEwxNSwgMTVMMjAsIDQwTDEyLCAxNEwxLCAxNGwyMCwgMEw0MCwgMTRMNCwgMTRMMjgsIDE0TDIwLCA0MEwyNSwgMTVMMjAsIDBaIiAvPjwvc3ZnPgo=" />
+</body>
+</html>

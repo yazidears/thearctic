@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alien Planet Explorer</title>
+    <style>
+        body {
+            background: black;
+            color: #00ff00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .planet {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation: spin infinite linear;
+        }
+        #planet1 {
+            background: purple;
+            animation-duration: 3s;
+        }
+        #planet2 {
+            background: orange;
+            animation-duration: 5s;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="info"></div>
+    <div id="planet1" class="planet"></div>
+    <div id="planet2" class="planet"></div>
+
+    <script>
+        const planets = ['Zorg', 'Nebulon', 'Plutark', 'Gax'];
+        const infoDiv = document.getElementById('info');
+        let counter = 0;
+
+        setInterval(function() {
+            let planet = document.getElementById('planet' + (counter % 2 + 1));
+            infoDiv.innerText = 'Now exploring: ' + planets[Math.floor(Math.random() * 4)]
+            planet.style.left = Math.random() * window.innerWidth + 'px';
+            planet.style.top = Math.random() * window.innerHeight + 'px';
+            counter++;
+        }, 2000);
+    </script>
+</body>
+</html>

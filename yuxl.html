@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interstellar Goo Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #112, #003);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 1.2em;
+        }
+        #instructions button {
+            font-family: inherit;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #instructions button:hover {
+            background-color: #666;
+        }
+        #fizz, #buzz, #fizzbuzz {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.9em;
+        }
+        .note {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.4);
+            position: absolute;
+            transition: all 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="instructions">
+        <h1>Interstellar Goo Symphony</h1>
+        <p>Blend the cosmic goo with your musical touch. Click to generate symphonic notes!</p>
+        <button onclick="startSymphony()">Get Lost in the Goo</button>
+    </div>
+    <canvas id="gooCanvas"></canvas>
+    <div id="fizz">Fizz: 0</div>
+    <div id="buzz">Buzz: 0</div>
+    <div id="fizzbuzz">FizzBuzz: 0</div>
+    <script>
+        const canvas = document.getElementById('gooCanvas');
+        const ctx = canvas.getContext('2d');
+        const instructions = document.getElementById('instructions');
+        const fizzCounter = document.getElementById('fizz');
+        const buzzCounter = document.getElementById('buzz');
+        const fizzbuzzCounter = document.getElementById('fizzbuzz');
+        let fizzCount = 0, buzzCount = 0, fizzbuzzCount = 0;
+
+        let gooParticles = [];
+        let width, height;
+        
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class GooParticle {
+            constructor(x, y, radius, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.color = color;
+                this.dx = (Math.random() - 0.5) * 2;
+                this.dy = (Math.random() - 0.5) * 2;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+                
+                if (this.x + this.radius > width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+
+                if (this.y + this.radius > height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+
+                this.draw();
+            }
+        }
+
+        function createGooParticles() {
+            for (let i = 0; i < 100; i++) {
+                let radius = Math.random() * 20 + 5;
+                let x = Math.random() * (width - radius * 2) + radius;
+                let y = Math.random() * (height - radius * 2) + radius;
+                let color = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' +
+                            (Math.floor(Math.random() * 256)) + ',' +
+                            (Math.floor(Math.random() * 256)) + ',0.5)';
+                gooParticles.push(new GooParticle(x, y, radius, color));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            gooParticles.forEach(goo => goo.update());
+            requestAnimationFrame(animate);
+        }
+
+        function createMusicNotes(x, y) {
+            const musicNotes = ['♩', '♪', '♫', '♬'];
+            const note = document.createElement('div');
+            note.textContent = musicNotes[Math.floor(Math.random() * musicNotes.length)];
+            note.className = 'note';
+            note.style.left = `${x}px`;
+            note.style.top = `${y}px`;
+            document.body.appendChild(note);
+
+            setTimeout(() => {
+                note.style.transform = 'translateY(-50px)';
+                note.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(note), 500);
+            }, 100);
+        }
+
+        function startSymphony() {
+            instructions.style.display = 'none';
+            createGooParticles();
+            animate();
+            canvas.addEventListener('click', (e) => {
+                const x = e.clientX;
+                const y = e.clientY;
+                createMusicNotes(x, y);
+                playFizzBuzz(x);
+            });
+        }
+
+        function playFizzBuzz(x) {
+            const num = Math.round(x / width * 100);
+            if (num % 15 === 0) {
+                fizzbuzzCount++;
+                fizzyAction("FizzBuzz");
+            } else if (num % 3 === 0) {
+                fizzCount++;
+                fizzyAction("Fizz");
+            } else if (num % 5 === 0) {
+                buzzCount++;
+                fizzyAction("Buzz");
+            }
+            fizzCounter.textContent = `Fizz: ${fizzCount}`;
+            buzzCounter.textContent = `Buzz: ${buzzCount}`;
+            fizzbuzzCounter.textContent = `FizzBuzz: ${fizzbuzzCount}`;
+        }
+        
+        function fizzyAction(word) {
+            const note = document.createElement('div');
+            note.textContent = word;
+            note.className = 'note';
+            note.style.left = (Math.random() * width) + 'px';
+            note.style.top = (Math.random() * height) + 'px';
+            document.body.appendChild(note);
+            setTimeout(() => {
+                note.style.transform = 'scale(0.4)';
+                note.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(note), 

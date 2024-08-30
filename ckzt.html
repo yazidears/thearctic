@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whimsical Universe Generator</title>
+<style>
+    body, html { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', monospace; background: #000; color: #fff; }
+    canvas { position: absolute; top: 0; left: 0; }
+    .control-panel { position: fixed; top: 20px; left: 20px; z-index: 10; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; }
+    button { background: #333; border: 1px solid #444; color: #fff; padding: 5px 10px; cursor: pointer; }
+    button:hover { background: #444; }
+</style>
+</head>
+<body>
+<div class="control-panel">
+    <button id="generate">Generate Universe</button>
+</div>
+<canvas id="universe"></canvas>
+<script>
+    const canvas = document.getElementById('universe');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    const stars = [];
+    const colors = ['#FF0', '#F0F', '#0FF', '#FFF', '#00F'];
+    
+    class Star {
+        constructor(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
+    function init() {
+        resizeCanvas();
+        generateStars();
+        drawUniverse();
+    }
+
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    
+    function generateStars() {
+        const starCount = Math.floor((width * height) / 1000);
+        for (let i = 0; i < starCount; i++) {
+            const x = Math.random() * width;
+            const y = Math.random() * height;
+            const radius = Math.random() * 1.5;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            stars.push(new Star(x, y, radius, color));
+        }
+    }
+    
+    function drawUniverse() {
+        ctx.clearRect(0, 0, width, height);
+        for (const star of stars) {
+            star.draw();
+        }
+    }
+
+    function generateRandomElement() {
+        const types = ['planet', 'comet', 'alien'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        
+        if (type === 'planet') {
+            ctx.beginPath();
+            ctx.arc(x, y, Math.random() * 30 + 10, 0, Math.PI * 2, false);
+            ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+            ctx.fill();
+            ctx.closePath();
+        } else if (type === 'comet') {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x - Math.random() * 30, y - Math.random() * 30);
+            ctx.strokeStyle = '#FFF';
+            ctx.stroke();
+        } else if (type === 'alien') {
+            ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+            ctx.fillRect(x, y, 20, 20);
+            ctx.strokeStyle = '#FFF';
+            ctx.strokeRect(x, y, 20, 20);
+        }
+    }
+
+    window.addEventListener('resize', init);
+    document.getElementById('generate').addEventListener('click', () => {
+        generateRandomElement();
+    });
+
+    init();
+</script>
+</body>
+</html>

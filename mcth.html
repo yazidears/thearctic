@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Blobiverse</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #03071e;
+        }
+        #canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #controlPanel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #ffba08;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e85d04;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controlPanel">
+        <button onclick="addBlob()">Add Blob</button>
+        <button onclick="colorCycle()">Color Cycle</button>
+        <button onclick="toggleMusic()">Toggle Music</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const blobs = [];
+        const colors = [
+            '#d00000', '#dc2f02', '#e85d04', '#f48c06', '#faa307',
+            '#ffba08', '#ffe066', '#caffbf', '#9bf6ff', '#a0c4ff',
+            '#bdb2ff', '#ffc6ff', '#fffffc'
+        ];
+        let colorIndex = 0;
+        let musicPlaying = false;
+        
+        const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+        audio.loop = true;
+        
+        class Blob {
+            constructor(x, y, dx, dy, radius) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.radius = radius;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            
+            update() {
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+                
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+        
+        function addBlob() {
+            const radius = Math.random() * 20 + 20;
+            const x = Math.random() * (canvas.width - radius * 2) + radius;
+            const y = Math.random() * (canvas.height - radius * 2) + radius;
+            const dx = (Math.random() - 0.5) * 4;
+            const dy = (Math.random() - 0.5) * 4;
+            blobs.push(new Blob(x, y, dx, dy, radius));
+        }
+        
+        function colorCycle() {
+            colorIndex = (colorIndex + 1) % colors.length;
+            blobs.forEach(blob => {
+                blob.color = colors[colorIndex];
+            });
+        }
+        
+        function toggleMusic() {
+            musicPlaying = !musicPlaying;
+            if (musicPlaying) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach(blob => blob.update());
+        }
+        
+        for (let i = 0; i < 5; i++) {
+            addBlob();
+        }
+        
+        animate();
+    </script>
+</body>
+</html>

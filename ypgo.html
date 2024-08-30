@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quirky Chameleon World</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #222222;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+        }
+        #chameleon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
+            background-size: 600% 600%;
+            animation: gradientShift 5s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        #eye-left, #eye-right {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+        }
+        #eye-left {
+            left: 25px;
+        }
+        #eye-right {
+            right: 25px;
+        }
+        .pupil {
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #tongue {
+            width: 6px;
+            height: 0;
+            background-color: pink;
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: height 0.3s;
+        }
+        #landscape {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 20%;
+            background: #333;
+        }
+        #landscape svg {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #sky {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 80%;
+            background: #001a4d;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 1s infinite alternate;
+        }
+        @keyframes twinkle {
+            from {opacity: 0.2;}
+            to {opacity: 1;}
+        }
+        #puzzle {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        #puzzle canvas {
+            border: 2px solid white;
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="sky"></div>
+    <div id="landscape">
+        <svg>
+            <path d="M0,0 L50,20 L100,0 L150,30 L200,0 L250,20 L300,0 L350,25 L400,0 L450,20 L500,0 L550,30 L600,0 L650,15 L700,0 L750,20 L800,0 L850,30 L900,0" stroke="#666" stroke-width="5" fill="#333" fill-opacity="0.7"/>
+        </svg>
+    </div>
+    <div id="chameleon">
+        <div id="eye-left"><div class="pupil"></div></div>
+        <div id="eye-right"><div class="pupil"></div></div>
+        <div id="tongue"></div>
+    </div>
+    <div id="puzzle">
+        <canvas id="puzzleCanvas" width="300" height="300"></canvas>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function randomPosition(max) {
+                return Math.floor(Math.random() * max) + 'px';
+            }
+
+            // Create stars
+            const sky = document.getElementById('sky');
+            for (let i = 0; i < 50; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = randomPosition(80) + '%';
+                star.style.left = randomPosition(100) + '%';
+                sky.appendChild(star);
+            }
+
+            const chameleon = document.getElementById('chameleon');
+            const tongue = document.getElementById('tongue');
+
+            chameleon.addEventListener('click', function() {
+                tongue.style.height = (tongue.style.height === '0px') ? '150px' : '0px';
+            });
+
+            function movePupil(event, eye, pupil) {
+                let bounds = eye.getBoundingClientRect();
+                let x = event.clientX - bounds.left - bounds.width / 2;
+                let y = event.clientY - bounds.top - bounds.height / 2;
+                pupil.style.transform = `translate(${x / 10}px, ${y / 10}px)`;
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                movePupil(e, document.getElementById('eye-left'), document.querySelector('#eye-left .pupil'));
+                movePupil(e, document.getElementById('eye-right'), document.querySelector('#eye-right .pupil'));
+            });
+
+            // Puzzle setup
+            const puzzle = document.getElementById('puzzle');
+            puzzle.addEventListener('click', () => puzzle.style.display = 'none');
+
+            chameleon.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                puzzle.style.display = 'flex';
+                setupPuzzle();
+            });
+
+            function setupPuzzle() {
+                const canvas = document.getElementById('puzzleCanvas');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const size = 100;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        ctx.fillStyle = `hsl(${Math.random

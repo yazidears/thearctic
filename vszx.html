@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bizarre Bouncing Bubble Portal</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: linear-gradient(45deg, #f06, #9cf, #6f9);
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #bubblePortal {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+    }
+    #bubblePortal p {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+    .hidden {
+        display: none;
+    }
+    .interactive-zone {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 2px dashed white;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: pulse 3s infinite ease-in-out;
+        cursor: pointer;
+    }
+    @keyframes pulse {
+        0%, 100% {
+            transform: translate(-50%, -50%) scale(1);
+            border-color: white;
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.1);
+            border-color: yellow;
+        }
+    }
+</style>
+</head>
+<body>
+<div id="bubblePortal">
+    <p id="portalText">Pop Bubbles and Unlock the Portal</p>
+</div>
+<div class="interactive-zone"></div>
+<canvas id="bubbleCanvas"></canvas>
+<script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const bubbles = [];
+    const bubbleCount = 50;
+    let portalReady = false;
+
+    for (let i = 0; i < bubbleCount; i++) {
+        bubbles.push(createBubble());
+    }
+
+    function createBubble() {
+        return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 20 + 10,
+            dx: Math.random() < 0.5 ? -1 : 1,
+            dy: Math.random() < 0.5 ? -1 : 1
+        };
+    }
+
+    function drawBubble(bubble) {
+        ctx.beginPath();
+        ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.7)';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function updateBubble(bubble) {
+        bubble.x += bubble.dx;
+        bubble.y += bubble.dy;
+
+        if (bubble.x + bubble.radius > canvas.width || bubble.x - bubble.radius < 0) {
+            bubble.dx *= -1;
+        }
+
+        if (bubble.y + bubble.radius > canvas.height || bubble.y - bubble.radius < 0) {
+            bubble.dy *= -1;
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        bubbles.forEach(bubble => {
+            drawBubble(bubble);
+            updateBubble(bubble);
+        });
+        requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('click', function(event) {
+        const clickX = event.clientX;
+        const clickY = event.clientY;
+
+        for (let i = 0; i < bubbles.length; i++) {
+            const bubble = bubbles[i];
+            const distance = Math.hypot(bubble.x - clickX, bubble.y - clickY);
+
+            if (distance < bubble.radius) {
+                bubbles.splice(i, 1);
+                break;
+            }
+        }
+
+        if (bubbles.length === 0) {
+            portalReady = true;
+            document.getElementById('portalText').textContent = 'The Portal is Ready! Piece of Cheese Awaits.';
+            document.querySelector('.interactive-zone').classList.remove('hidden');
+        }
+    });
+
+    document.querySelector('.interactive-zone').addEventListener('click', function() {
+        if (portalReady) {
+            alert("Congratulations! You reach the mystical land of Cheese!");
+            document.querySelector('.interactive-zone').classList.add('hidden');
+            document.getElementById('portalText').textContent = 'Pop Bubbles and Unlock the Portal';
+            for (let i = 0; i < bubbleCount; i++) {
+                bubbles.push(createBubble());
+            }
+            portalReady = false;
+        }
+    });
+
+    animate();
+</script>
+</body>
+</html>

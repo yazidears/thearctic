@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body, html { 
+            margin: 0; 
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #8e2de2, #4a00e0); 
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #controlPanel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #8e2de2;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #4a00e0;
+        }
+    </style>
+</head>
+<body>
+    <div id="controlPanel">
+        <h3>Surreal Dreamscape</h3>
+        <p>Click "Toggle Dream" to change the dream theme. Try to find all 5 hidden elements!</p>
+        <button onclick="toggleDream()">Toggle Dream</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        let dreamColor = 0;
+        const elements = [];
+        
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            elements.length = 0;
+            for (let i = 0; i < 5; i++) {
+                elements.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 10 + 5,
+                    dx: (Math.random() - 0.5) * 2,
+                    dy: (Math.random() - 0.5) * 2,
+                    found: false
+                });
+            }
+        }
+        
+        window.addEventListener('resize', resize);
+        
+        function toggleDream() {
+            dreamColor = (dreamColor + 1) % 360;
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].found = false;
+            }
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = `hsl(${dreamColor}, 100%, 50%)`;
+            ctx.fillRect(0, 0, w, h);
+            
+            elements.forEach(el => {
+                if (!el.found) {
+                    ctx.beginPath();
+                    ctx.arc(el.x, el.y, el.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.fill();
+                    
+                    el.x += el.dx;
+                    el.y += el.dy;
+                    
+                    if (el.x < 0 || el.x > w) el.dx *= -1;
+                    if (el.y < 0 || el.y > h) el.dy *= -1;
+                }
+            });
+
+            requestAnimationFrame(draw);
+        }
+        
+        canvas.addEventListener('click', e => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            elements.forEach(el => {
+                if (!el.found && Math.hypot(el.x - x, el.y - y) < el.r) {
+                    el.found = true;
+                    ctx.beginPath();
+                    ctx.arc(el.x, el.y, el.r + 10, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+                    ctx.fill();
+                    setTimeout(() => { ctx.clearRect(el.x - el.r - 10, el.y - el.r - 10, (el.r + 10) * 2, (el.r + 10) * 2); }, 300);
+                }
+            });
+        });
+        
+        resize();
+        draw();
+    </script>
+</body>
+</html>

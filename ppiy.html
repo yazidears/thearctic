@@ -1,0 +1,143 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Bubble Symphony</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0; overflow: hidden;
+            background: linear-gradient(to bottom, #ffddc1, #ff758f);
+        }
+        .container {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 20% 20%, #fff, #ff7eb3);
+            box-shadow: inset 0 0 15px 0 rgba(0,0,0,0.1);
+            animation: float infinite ease-in-out;
+            opacity: 0.6;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateZ(0); }
+            50% { transform: translateY(-20px) translateZ(100px); }
+        }
+        #surrealButton {
+            position: relative;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        #surrealButton:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        #critterCanvas {
+            position: absolute;
+            z-index: -1;
+            background: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="surrealButton">Create Symphonic Bubbles</button>
+    </div>
+    
+    <canvas id="critterCanvas"></canvas>
+    
+    <script>
+        const button = document.getElementById('surrealButton');
+        const canvas = document.getElementById('critterCanvas');
+        const ctx = canvas.getContext('2d');
+        const critterCount = 50;
+        let critters = [];
+        let dims = { width: window.innerWidth, height: window.innerHeight };
+
+        canvas.width = dims.width;
+        canvas.height = dims.height;
+        
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        function vibrantColor() {
+            const colors = ['#ec9f05', '#ff4b3e', '#f9c80e', '#f86624', '#ea3546'];
+            return colors[randomInt(0, colors.length - 1)];
+        } 
+        
+        function generateCritters() {
+            critters = [];
+            for (let i = 0; i < critterCount; i++) {
+                critters.push({
+                    x: randomInt(0, dims.width), 
+                    y: randomInt(0, dims.height), 
+                    radius: randomInt(5, 20), 
+                    color: vibrantColor()
+                });
+            }
+        }
+        
+        function drawCritters() {
+            ctx.clearRect(0, 0, dims.width, dims.height);
+            critters.forEach(critter => {
+                ctx.beginPath();
+                ctx.arc(critter.x, critter.y, critter.radius, 0, Math.PI * 2);
+                ctx.fillStyle = critter.color;
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+        
+        function animateBubbles() {
+            const bubbleCount = 30;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                bubble.style.width = `${randomInt(20, 80)}px`;
+                bubble.style.height = bubble.style.width;
+                bubble.style.left = `${randomInt(0, window.innerWidth)}px`;
+                bubble.style.animationDuration = `${randomInt(3, 8)}s`;
+                document.body.appendChild(bubble);
+
+                setTimeout(() => {
+                    document.body.removeChild(bubble);
+                }, randomInt(3000, 8000));
+            }
+        }
+        
+        function init() {
+            generateCritters();
+            drawCritters();
+            animateBubbles();
+        }
+        
+        window.addEventListener('resize', () => {
+            dims.width = window.innerWidth;
+            dims.height = window.innerHeight;
+            canvas.width = dims.width;
+            canvas.height = dims.height;
+            generateCritters();
+            drawCritters();
+        });
+        
+        button.addEventListener('click', () => {
+            init();
+            animateBubbles();
+        });
+
+        init();
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,103 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Enchanted Blorbulator</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #2c3e50, #4ca1af);
+    font-family: 'Comic Sans MS', sans-serif;
+  }
+  #blorbulator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #ecf0f1, #dff9fb, #3c6382);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: pulse 3s infinite;
+  }
+  #dial {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 150px;
+    background-color: #74b9ff;
+    transform-origin: bottom;
+    transform: rotate(0deg);
+    animation: spin 4s infinite;
+  }
+  @keyframes spin {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  .blorb {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle at center, #ffeaa7, #fdcb6e);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #d35400;
+    animation: floating 5s infinite ease-in-out;
+  }
+  @keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
+  .quote {
+    position: absolute;
+    width: 100%;
+    top: 80%;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div id="blorbulator">
+  <div id="dial"></div>
+  <div class="blorb" style="top: 40%; left: 10%; animation-delay: 0s;"></div>
+  <div class="blorb" style="top: 15%; left: 70%; animation-delay: 2s;"></div>
+  <div class="blorb" style="top: 75%; left: 50%; animation-delay: 4s;"></div>
+</div>
+<div class="quote" id="quote">"The Blorbulator knows the way to serenity!"</div>
+
+<script>
+  const quotes = [
+    "\"The Blorbulator leads the way!\"",
+    "\"Blorb'n through the abstract waves\"",
+    "\"Trust in the Blorbulator\"",
+    "\"What happens in the Blorb, stays in the Blorb\"",
+    "\"Blorb tonight, achieve tomorrow\""
+  ];
+
+  function randomInt(min, max) {
+    return min + Math.floor(Math.random() * (max - min + 1));
+  }
+
+  document.getElementById('blorbulator').addEventListener('click', function() {
+    const randomIndex = randomInt(0, quotes.length - 1);
+    document.getElementById('quote').innerText = quotes[randomIndex];
+    document.documentElement.style.setProperty('--bg-color', `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`);
+    this.style.animationName = this.style.animationName === 'pulse' ? 'none' : 'pulse';
+  });
+</script>
+</body>
+</html>
+```

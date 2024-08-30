@@ -1,0 +1,138 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamscape Puzzle Portal</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #2c5364);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #console {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 2;
+            background: rgba(15, 32, 39, 0.8);
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 30%;
+        }
+        .log {
+            margin: 5px;
+        }
+        button {
+            padding: 10px;
+            background: #1f4068;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #162447;
+        }
+        #control-box {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+        }
+        #control-box button {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="console"></div>
+    <div id="control-box">
+        <button onclick="resetCanvas()">Reset Canvas</button>
+        <button onclick="generatePuzzle()">Generate Puzzle</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const consoleDiv = document.getElementById('console');
+        let frameCount = 0;
+        const logArray = [];
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function drawRandomArt() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 300; i++) {
+                ctx.beginPath();
+                ctx.lineWidth = Math.random() * 5;
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.strokeStyle = 'rgba(' + Math.floor(Math.random() * 256) + ',' +
+                                    Math.floor(Math.random() * 256) + ',' +
+                                    Math.floor(Math.random() * 256) + ',' +
+                                    Math.random().toFixed(2) + ')';
+                ctx.stroke();
+            }
+        }
+
+        function log(message) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log';
+            logEntry.textContent = message;
+            consoleDiv.appendChild(logEntry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            logArray.push(message);
+            if (logArray.length > 50) {
+                logArray.shift();
+                consoleDiv.removeChild(consoleDiv.firstChild);
+            }
+        }
+
+        function animate() {
+            drawRandomArt();
+            frameCount++;
+            log(`Frame ${frameCount}: Drawing Random Art`);
+            requestAnimationFrame(animate);
+        }
+
+        function resetCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            log("Canvas Reset!");
+        }
+
+        function generatePuzzle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 20, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                ctx.fill();
+            }
+            log("Generated a new mysterious puzzle.");
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+```

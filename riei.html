@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windy City Vortex</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ddffcc, #88cc99);
+            overflow: hidden;
+        }
+        canvas {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            box-shadow: 0 0 80px rgba(0,0,0,0.3);
+        }
+        #vortex {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+        }
+        .leaf {
+            position: absolute;
+            font-size: 18px;
+            opacity: 0.8;
+            will-change: transform;
+            animation: swirl 10s linear infinite;
+        }
+        @keyframes swirl {
+            from { transform: translate(300px, 0) rotate(0deg); }
+            to { transform: translate(0, 300px) rotate(1080deg); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgCanvas"></canvas>
+    <div id="vortex"></div>
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        function randomColor() {
+            return `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, 0.5)`;
+        }
+
+        function drawBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 150; i++) {
+                ctx.fillStyle = randomColor();
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        drawBackground();
+
+        const vortex = document.getElementById('vortex');
+        const emojis = ["🍃", "🍂", "🍁", "🌿"];
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            leaf.style.left = `${Math.random() * vortex.offsetWidth}px`;
+            leaf.style.animationDuration = `${5 + Math.random() * 15}s`;
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translate(${Math.random() * 200}px)`;
+            leaf.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            vortex.appendChild(leaf);
+
+            setTimeout(() => {
+                leaf.remove();
+            }, 10000);
+        }
+
+        setInterval(createLeaf, 500);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawBackground();
+        });
+
+        document.body.addEventListener('click', drawBackground);
+    </script>
+</body>
+</html>

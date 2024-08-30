@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bizarre Art Machine</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #222;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        #console {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 95%;
+            height: 30%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+        #input {
+            width: 95%;
+            padding: 5px;
+            margin-top: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .art-piece {
+            width: 50px;
+            height: 50px;
+            background-color: #ff00ff;
+            position: absolute;
+            animation: spin infinite 15s linear;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg) scale(1);
+            }
+            to {
+                transform: rotate(360deg) scale(1.5);
+            }
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <div id="console"><div class="message">Welcome to the Bizarre Art Machine! Type "create" to produce a new piece of art.</div></div>
+    <input id="input" placeholder="Type a command..." autofocus>
+    <script>
+        const consoleEl = document.getElementById('console');
+        const inputEl = document.getElementById('input');
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        inputEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = inputEl.value.toLowerCase();
+                inputEl.value = '';
+                processCommand(command);
+            }
+        });
+
+        const messages = [
+            "Art is being generated...",
+            "Behold the abstract creation!",
+            "Colors and chaos manifest!",
+            "Your new art piece appears!"
+        ];
+
+        function processCommand(command) {
+            const messageEl = document.createElement('div');
+            if (command === 'create') {
+                const message = messages[Math.floor(Math.random() * messages.length)];
+                messageEl.textContent = message;
+                consoleEl.appendChild(messageEl);
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+                createArt();
+            } else {
+                messageEl.textContent = `Unknown command: ${command}`;
+                consoleEl.appendChild(messageEl);
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }
+        }
+
+        function createArt() {
+            const artPiece = document.createElement('div');
+            artPiece.classList.add('art-piece');
+            document.body.appendChild(artPiece);
+
+            artPiece.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            artPiece.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+
+            setTimeout(() => {
+                document.body.removeChild(artPiece);
+            }, 5000);
+        }
+
+        function createBackground() {
+            let hue = 0;
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, `hsl(${hue}, 100%, 50%)`);
+                gradient.addColorStop(1, `hsl(${hue + 100}, 100%, 50%)`);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                hue += 0.1;
+                document.body.style.background = `hsl(${hue}, 100%, 10%)`;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        createBackground();
+    </script>
+</body>
+</html>

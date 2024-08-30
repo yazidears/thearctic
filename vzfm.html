@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dreamy Surreal Landscape</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001f3f, #0074D9, #7FDBFF);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 100px;
+            animation: float 30s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateX(-200px); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            height: 50vh;
+            width: 0;
+            border-style: solid;
+        }
+        .moon {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            width: 10vw;
+            height: 10vw;
+            background: radial-gradient(circle, #FFF89A, #FFD700);
+            border-radius: 50%;
+            box-shadow: 0 0 30px 10px #FFD700;
+        }
+        .lake {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25vh;
+            background: rgba(0, 119, 190, 0.5);
+            animation: wave 5s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(-5px); }
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 5px white;
+            animation: twinkle 5s linear infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="landscape"></div>
+    <script>
+        function createElementWithClass(type, className) {
+            const element = document.createElement(type);
+            element.className = className;
+            return element;
+        }
+
+        function randomRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function createClouds(count) {
+            for (let i = 0; i < count; i++) {
+                const cloud = createElementWithClass('div', 'cloud');
+                cloud.style.width = randomRange(100, 200) + 'px';
+                cloud.style.height = randomRange(50, 100) + 'px';
+                cloud.style.top = randomRange(0, 50) + 'vh';
+                cloud.style.left = -200 + 'px';
+                cloud.style.opacity = Math.random();
+                document.body.appendChild(cloud);
+            }
+        }
+
+        function createMountains(count) {
+            for (let i = 1; i <= count; i++) {
+                const mountain = createElementWithClass('div', 'mountain');
+                mountain.style.borderColor = '#555 transparent transparent transparent';
+                mountain.style.borderWidth = `0 ${20 * i}vw ${10 + i * 5}vh 0`;
+                mountain.style.left = `${i * 10}vw`;
+                document.body.appendChild(mountain);
+            }
+        }
+
+        function createMoon() {
+            const moon = createElementWithClass('div', 'moon');
+            document.body.appendChild(moon);
+        }
+        
+        function createLake() {
+            const lake = createElementWithClass('div', 'lake');
+            document.body.appendChild(lake);
+        }
+
+        function createStars(count) {
+            for (let i = 0; i < count; i++) {
+                const star = createElementWithClass('div', 'star');
+                star.style.top = randomRange(0, 100) + 'vh';
+                star.style.left = randomRange(0, 100) + 'vw';
+                star.style.animationDelay = randomRange(0, 5) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        createClouds(10);
+        createMountains(3);
+        createMoon();
+        createLake();
+        createStars(50);
+
+        document.body.addEventListener('click', function(event) {
+            const bubble = createElementWithClass('div', 'star');
+            bubble.style.top = event.clientY + 'px';
+            bubble.style.left = event.clientX + 'px';
+            bubble.style.width = '10px';
+            bubble.style.height = '10px';
+            document.body.appendChild(bubble);
+        });
+    </script>
+</body>
+</html>

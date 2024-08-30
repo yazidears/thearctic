@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Oscillator</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1e1e2f;
+            font-family: Arial, sans-serif;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff7d78, #ff3d3d);
+        }
+        #content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            z-index: 10;
+            line-height: 1.5;
+        }
+        #content h1 {
+            font-size: 3em;
+        }
+        #content p {
+            font-size: 1.5em;
+        }
+        .hidden {
+            opacity: 0;
+        }
+        .visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Dream Oscillator</h1>
+        <p>Click the circles, change the reality.</p>
+    </div>
+    <script>
+        const numCircles = 100;
+        const circles = [];
+        for (let i = 0; i < numCircles; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.style.width = circle.style.height = (Math.random() * 30 + 20) + 'px';
+            circle.style.top = (Math.random() * window.innerHeight) + 'px';
+            circle.style.left = (Math.random() * window.innerWidth) + 'px';
+            circle.style.transition = 'all 0.3s ease';
+            document.body.appendChild(circle);
+            circles.push(circle);
+            circle.addEventListener('click', () => {
+                circle.style.background = 'radial-gradient(circle, #78d1ff, #0056ff)';
+                toggleVisibility();
+            });
+        }
+
+        function toggleVisibility() {
+            document.querySelector('#content').classList.toggle('hidden');
+            document.querySelector('#content').classList.toggle('visible');
+        }
+
+        setInterval(() => {
+            circles.forEach(circle => {
+                circle.style.top = (Math.random() * window.innerHeight) + 'px';
+                circle.style.left = (Math.random() * window.innerWidth) + 'px';
+                circle.style.width = circle.style.height = (Math.random() * 30 + 20) + 'px';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

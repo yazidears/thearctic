@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Ants: Cosmic Conundrum</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #001f3f, #000);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #universe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vmin;
+            height: 90vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 50%, rgba(255, 255, 255, 0.1) 60%);
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        .ant {
+            width: 2vmin;
+            height: 2vmin;
+            position: absolute;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzYiIGhlaWdodD0iNzYiIHZpZXdCb3g9IjAgMCA3NiA3NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudz
+                        Mub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTM4IDc2QzU5LjA3IDI1LjI4IDY2LjcgNS44NzEgNTAgMS41IDQ5LjUgMS4zNzYgNDEuNSA4IDM4IDguMDUwQzM0LjUgOCAyNi41IDEuM
+                        zU2IDI2IDEuNUMtNi43MiA1LjcyIDYuIDUwLjMgMzggNzYiIGZpbGw9IiNGRkYiLz4KPHBhdGggZD0iTTE5LjUgMTIuNEM2Mi4xNSAtMy4yNyA1OS42MyAzNC4zNCAzNS41IDI0LjVDMTI
+                        gMTQuNSAzNi45IC0yLjYyIDM3LjY2IDMwLjZDMTggMzAuNSAxOS44NTUgMTguODg5IDE5LjUgMTIuNEwyNSAzOGwtMi41IDEzTDQgMEwyOSAxTDExLjUgMTEuNlYzQTE0IDE0IDAgMDE
+                        zOCA4LjVDNzguNjcgNC43NiA4NS40MyAyMiA3NS4xOSAyOC4zNUM2NC44NCAzNC43IDY0IDU0LjMzIDE3IDYwLjdDODAgNjEuMzQgNzMuMiA3NiAyNCA2Mi42NUMyNi41IDM4IDM3IDU3IDE
+                        5LjUgMTIuNFoiIGZpbGw9IiNFNTU1RTMiLz4KPC9zdmc+') center/cover no-repeat;
+        }
+        .star {
+            width: 2px;
+            height: 2px;
+            background: white;
+            position: absolute;
+            border-radius: 50%;
+        }
+        #console {
+            position: absolute;
+            top: 80vmin;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vmin;
+            height: 15vmin;
+            background: rgba(0, 31, 63, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            overflow-y: auto;
+            font-size: 1.2vmin;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    <div id="console"></div>
+    <script>
+        const universe = document.getElementById('universe');
+        const consoleBox = document.getElementById('console');
+        const antCount = 20;
+        const starCount = 100;
+        const messages = [
+            'Tip: Click on the ants to see what happens!',
+            'Did you know? Ants can carry up to 50 times their body weight!',
+            'Galactic Fact: The universe is 13.8 billion years old!',
+            'Cosmic Hint: Look for patterns in chaos.'
+        ];
+        
+        function createAnts() {
+            for (let i = 0; i < antCount; i++) {
+                const ant = document.createElement('div');
+                ant.className = 'ant';
+                moveAnt(ant);
+                ant.onclick = () => showMessage(messages[Math.floor(Math.random() * messages.length)]);
+                universe.appendChild(ant);
+            }
+        }
+
+        function moveAnt(ant) {
+            const x = Math.random() * universe.offsetWidth;
+            const y = Math.random() * universe.offsetHeight;
+            ant.style.left = `${x}px`;
+            ant.style.top = `${y}px`;
+            setTimeout(() => moveAnt(ant), (5000 + Math.random() * 5000));
+        }
+
+        function createStars() {
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                universe.appendChild(star);
+            }
+        }
+
+        function showMessage(message) {
+            clearConsole();
+            consoleBox.style.display = 'block';
+            consoleBox.innerHTML = message;
+            setTimeout(hideConsole, 5000);
+        }
+
+        function clearConsole() {
+            consoleBox.innerHTML = '';
+        }
+
+        function hideConsole() {
+            consoleBox.style.display = 'none';
+        }
+
+        createAnts();
+        createStars();
+    </script>
+</body>
+</html>

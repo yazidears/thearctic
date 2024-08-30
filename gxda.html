@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wacky Wormhole Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+        #universe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4000px;
+            height: 4000px;
+            transform: translate(-50%, -50%);
+            background-color: #e0f7fa;
+            border-radius: 50%;
+            animation: spin 100s linear infinite;
+        }
+        .nebula {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(240,248,255,0) 0%, #87ceeb 50%, #00bfff 100%);
+            border-radius: 50%;
+            animation: pulse 5s infinite alternate;
+        }
+        .nebula:nth-child(1) { top: 15%; left: 10%; animation-duration: 10s; }
+        .nebula:nth-child(2) { top: 40%; left: 30%; animation-duration: 8s; }
+        .nebula:nth-child(3) { top: 60%; left: 50%; animation-duration: 12s; }
+        .nebula:nth-child(4) { top: 80%; left: 70%; animation-duration: 9s; }
+        .nebula:nth-child(5) { top: 30%; left: 75%; animation-duration: 11s; }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.3); opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div id="universe">
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+        <div class="nebula"></div>
+    </div>
+    <div id="wormhole"></div>
+    
+    <script>
+        const wormhole = document.createElement('div');
+        wormhole.style.position = 'absolute';
+        wormhole.style.top = '50%';
+        wormhole.style.left = '50%';
+        wormhole.style.width = '100px';
+        wormhole.style.height = '100px';
+        wormhole.style.backgroundColor = '#00f';
+        wormhole.style.borderColor = '#f00';
+        wormhole.style.borderStyle = 'dotted';
+        wormhole.style.borderRadius = '50%';
+        wormhole.style.transform = 'translate(-50%, -50%) scale(1)';
+        wormhole.style.transition = 'transform 0.5s';
+        wormhole.id = 'wormhole';
+        document.body.appendChild(wormhole);
+
+        wormhole.addEventListener('click', function() {
+            const scale = Math.random() * 2 + 0.5;
+            wormhole.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+        });
+
+        const planetColors = ['#ff6347', '#7fff00', '#ba55d3', '#fffacd', '#8b0000', '#00ced1'];
+        for (let i = 0; i < 10; i++) {
+            createRandomFloatingPlanet();
+        }
+
+        function createRandomFloatingPlanet() {
+            const planet = document.createElement('div');
+            planet.style.position = 'absolute';
+            planet.style.width = (Math.random() * 50 + 20) + 'px';
+            planet.style.height = planet.style.width;
+            planet.style.backgroundColor = planetColors[Math.floor(Math.random() * planetColors.length)];
+            planet.style.borderRadius = '50%';
+            planet.style.left = (Math.random() * 100) + 'vw';
+            planet.style.top = (Math.random() * 100) + 'vh';
+            planet.style.transition = 'transform 2s linear';
+            document.body.appendChild(planet);
+            animatePlanet(planet);
+        }
+
+        function animatePlanet(planet) {
+            const maxSize = Math.random() * 1.5 + 0.5;
+            function move() {
+                const newLeft = Math.random() * window.innerWidth;
+                const newTop = Math.random() * window.innerHeight;
+                planet.style.transform = 'translate(' + newLeft + 'px, ' + newTop + 'px) scale(' + maxSize + ')';
+                window.setTimeout(move, Math.random() * 3000 + 2000);
+            }
+            move();
+        }
+    </script>
+</body>
+</html>

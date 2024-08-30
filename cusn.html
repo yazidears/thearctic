@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Wave Generator</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #0f3057;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ffffff;
+            background: rgba(15, 48, 87, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 2;
+        }
+        #slider {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        #slider input {
+            width: 300px;
+        }
+    </style>
+</head>
+<body onload="init()">
+
+<div id="instructions">
+    <h2>Whimsical Wave Generator</h2>
+    <p>Use the slider to change the wave frequency. Click anywhere to change wave patterns.</p>
+</div>
+
+<div id="slider">
+    <input type="range" min="10" max="100" value="50" id="frequencySlider">
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    let canvas, ctx, w, h;
+    let wavePhase = 0;
+    let frequency = 50;
+
+    function init() {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+        resizeCanvas();
+        document.getElementById('frequencySlider').addEventListener('input', function (e) {
+            frequency = e.target.value;
+        });
+        canvas.addEventListener('click', changeWaveform);
+        window.addEventListener('resize', resizeCanvas);
+        animate();
+    }
+
+    function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+
+    function changeWaveform() {
+        wavePhase = (wavePhase + 1) % 4;
+    }
+
+    function drawWaves() {
+        ctx.clearRect(0, 0, w, h);
+        const colors = ['#00a8cc', '#0f3057', '#f6efa6', '#ff6f61'];
+        for (let i = 0; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, h / 2);
+            for (let x = 0; x < w; x++) {
+                let angle = ((x + i * 20) * 0.02) + (frequency * wavePhase * 0.002);
+                let y = h / 2 + Math.sin(angle) * 50 * Math.sin(wavePhase + i);
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = colors[i];
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+
+    function animate() {
+        drawWaves();
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

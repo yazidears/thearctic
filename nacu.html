@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bizarre Universe</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1d;
+            color: #f1f1f1;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            background: #444;
+            box-shadow: 0 0 20px #000;
+        }
+        #title {
+            position: absolute;
+            top: 10px;
+            font-size: 24px;
+            text-align: center;
+            width: 100%;
+        }
+        .entity {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">Welcome to the Bizarre Universe!</div>
+    <script>
+        const colors = ["#ffeb3b", "#2196f3", "#f44336", "#4caf50", "#9c27b0"];
+        const canvas = document.createElement('div');
+        canvas.id = "canvas";
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        document.body.appendChild(canvas);
+
+        function createEntity(x, y, size) {
+            const entity = document.createElement('div');
+            entity.className = "entity";
+            entity.style.background = colors[Math.floor(Math.random() * colors.length)];
+            entity.style.width = entity.style.height = `${size}px`;
+            document.body.appendChild(entity);
+
+            const rect = canvas.getBoundingClientRect();
+            positionEntity(entity, x - rect.left, y - rect.top);
+        }
+
+        function positionEntity(entity, x, y) {
+            entity.style.left = `${x}px`;
+            entity.style.top = `${y}px`;
+            moveEntity(entity);
+        }
+
+        function moveEntity(entity) {
+            const rect = canvas.getBoundingClientRect();
+            const maxLeft = rect.width - parseFloat(entity.style.width);
+            const maxTop = rect.height - parseFloat(entity.style.height);
+
+            entity.style.left = Math.round(Math.random() * maxLeft) + "px";
+            entity.style.top = Math.round(Math.random() * maxTop) + "px";
+
+            setTimeout(() => moveEntity(entity), Math.random() * 3000 + 1000);
+        }
+
+        function randomSize() {
+            return Math.floor(Math.random() * 50) + 30;
+        }
+
+        for (let i = 0; i < 20; i++) {
+            createEntity(Math.random() * window.innerWidth, Math.random() * window.innerHeight, randomSize());
+        }
+
+        canvas.addEventListener('click', function(e) {
+            createEntity(e.clientX, e.clientY, randomSize());
+        });
+    </script>
+</body>
+</html>

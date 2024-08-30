@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Sandwich Machine</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4faff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #333;
+        }
+        #machine {
+            position: relative;
+            width: 300px;
+            height: 600px;
+            background-color: #f5b042;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .sandwich-part {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            left: 0;
+            background-size: cover;
+            animation: float 4s infinite alternate ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+        #bread-top { top: 0; background-image: url('https://placehold.co/300x50/dfa333/e8e8e8?text=Bread+Top'); }
+        #meat { top: 60px; background-image: url('https://placehold.co/300x50/bb4444/ffffff?text=Meat'); }
+        #cheese { top: 120px; background-image: url('https://placehold.co/300x50/ffff55/000000?text=Cheese'); }
+        #lettuce { top: 180px; background-image: url('https://placehold.co/300x50/44bb44/ffffff?text=Lettuce'); }
+        #tomato { top: 240px; background-image: url('https://placehold.co/300x50/dd5555/ffffff?text=Tomato'); }
+        #bread-bottom { top: 300px; background-image: url('https://placehold.co/300x50/dfa333/e8e8e8?text=Bread+Bottom'); }
+        #make-sandwich-btn {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        #make-sandwich-btn:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div id="machine">
+        <div id="bread-top" class="sandwich-part"></div>
+        <div id="meat" class="sandwich-part"></div>
+        <div id="cheese" class="sandwich-part"></div>
+        <div id="lettuce" class="sandwich-part"></div>
+        <div id="tomato" class="sandwich-part"></div>
+        <div id="bread-bottom" class="sandwich-part"></div>
+        <button id="make-sandwich-btn">Make my Sandwich!</button>
+    </div>
+
+    <script>
+        const sandwichParts = Array.from(document.querySelectorAll('.sandwich-part'));
+        const button = document.getElementById('make-sandwich-btn');
+        const partColors = ['#dfa333', '#bb4444', '#ffff55', '#44bb44', '#dd5555', '#dfa333'];
+
+        button.addEventListener('click', () => {
+            let assembled = sandwichParts.map((part, index) => {
+                let randomX = Math.random() * 150 - 75;
+                let randomY = index * 60;
+                return { part, randomX, randomY, index };
+            }).sort(() => Math.random() - 0.5);
+
+            assembled.forEach(({ part, randomX, randomY, index }) => {
+                part.style.transition = 'transform 0.8s ease-in-out';
+                part.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                part.style.zIndex = Math.abs(randomX) > 50 ? -index : index;
+            });
+
+            let finalState = setTimeout(() => {
+                assembled.forEach(({ part }) => {
+                    part.style.transform = `translate(0, ${part.dataset.order*60}px)`;
+                    part.style.transition = 'transform 0.8s ease-in-out, background-color 1s';
+                    part.style.backgroundColor = partColors[part.dataset.order];
+                });
+            }, 1000);
+
+            setTimeout(() => clearTimeout(finalState), 1500);
+        });
+    </script>
+</body>
+</html>

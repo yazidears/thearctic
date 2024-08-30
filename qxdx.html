@@ -1,0 +1,123 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #0a0d2e, #000000);
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        #universe {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+        }
+        #music-box {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #tune-button {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #tune-button:hover {
+            background: #555;
+        }
+        .planet {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #f75b4c;
+            border-radius: 50%;
+            animation: spin infinite linear 12s;
+        }
+        .planet-2 {
+            width: 80px;
+            height: 80px;
+            background: #57f5d0;
+            animation-duration: 18s;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+    </style>
+</head>
+<body>
+    <canvas id="universe"></canvas>
+    <div class="planet" style="left: 10%; top: 40%;"></div>
+    <div class="planet planet-2" style="right: 10%; bottom: 30%;"></div>
+    <div id="music-box">
+        <button id="tune-button">Play Cosmic Tune</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('universe');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function randomX() {
+            return Math.floor(Math.random() * window.innerWidth);
+        }
+
+        function randomY() {
+            return Math.floor(Math.random() * window.innerHeight);
+        }
+
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(randomX(), randomY(), Math.random() * 2, 0, Math.PI * 2, true);
+                ctx.fill();
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createStars();
+        });
+
+        function playCosmicTune() {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const o = context.createOscillator();
+            const g = context.createGain();
+            o.type = "sine";
+            o.connect(g);
+            g.connect(context.destination);
+            g.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 5);
+            o.frequency.setValueAtTime(440, context.currentTime);
+            o.start();
+            o.stop(context.currentTime + 5);
+        }
+
+        document.getElementById('tune-button').addEventListener('click', playCosmicTune);
+        createStars();
+    </script>
+</body>
+</html>
+```

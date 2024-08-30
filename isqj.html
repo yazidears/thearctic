@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Maze Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #mazeContainer {
+            width: 90vw;
+            height: 90vh;
+            background: white;
+            position: relative;
+            border: 5px solid #444;
+        }
+        .cell {
+            position: absolute;
+            background-color: #333;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s;
+        }
+        #player {
+            width: 40px;
+            height: 40px;
+            background: yellow;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+            transform: translate(-20px, -20px);
+        }
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+        .goal {
+            width: 40px;
+            height: 40px;
+            background: pink;
+            position: absolute;
+            border-radius: 50%;
+            animation: sparkle 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="mazeContainer"></div>
+    <script>
+        const mazeContainer = document.getElementById('mazeContainer');
+        const rows = 10;
+        const cols = 10;
+        const cellSize = Math.min(mazeContainer.clientWidth / cols, mazeContainer.clientHeight / rows);
+        const maze = Array.from({ length: rows }, () => Array(cols).fill(0));
+        let playerPos = { x: 0, y: 0 };
+        let goalPos = { x: cols - 1, y: rows - 1 };
+
+        function setupMaze() {
+            for(let y = 0; y < rows; y++) {
+                for(let x = 0; x < cols; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    cell.style.top = `${y * cellSize}px`;
+                    cell.style.left = `${x * cellSize}px`;
+                    mazeContainer.appendChild(cell);
+                }
+            }
+
+            const player = document.createElement('div');
+            player.id = 'player';
+            player.style.top = `${playerPos.y * cellSize + cellSize / 2}px`;
+            player.style.left = `${playerPos.x * cellSize + cellSize / 2}px`;
+            mazeContainer.appendChild(player);
+
+            const goal = document.createElement('div');
+            goal.className = 'goal';
+            goal.style.top = `${goalPos.y * cellSize + cellSize / 2}px`;
+            goal.style.left = `${goalPos.x * cellSize + cellSize / 2}px`;
+            mazeContainer.appendChild(goal);
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
+            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
+                playerPos.x = newX;
+                playerPos.y = newY;
+            }
+            renderPlayer();
+            checkGoalReached();
+        }
+
+        function renderPlayer() {
+            const player = document.getElementById('player');
+            player.style.top = `${playerPos.y * cellSize + cellSize / 2}px`;
+            player.style.left = `${playerPos.x * cellSize + cellSize / 2}px`;
+        }
+
+        function checkGoalReached() {
+            if (playerPos.x === goalPos.x && playerPos.y === goalPos.y) {
+                alert('Congratulations, you reached the goal!');
+                playerPos = { x: 0, y: 0 };
+                renderPlayer();
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowUp':
+                    movePlayer(0, -1);
+                    break;
+                case 'ArrowDown':
+                    movePlayer(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    movePlayer(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    movePlayer(1, 0);
+                    break;
+            }
+        });
+
+        setupMaze();
+    </script>
+</body>
+</html>

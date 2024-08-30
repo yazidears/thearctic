@@ -1,0 +1,120 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Peculiar Ocean of Tranquility</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #00111a, #002233);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #ocean {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: radial-gradient(circle, #003752, #000);
+            overflow: hidden;
+        }
+        .fish {
+            position: absolute;
+            width: 3%;
+            height: 3%;
+            background: #ffcc00;
+            clip-path: polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%);
+            transition: transform 2s ease-in-out;
+        }
+        #moon {
+            position: absolute;
+            right: 10%;
+            top: 10%;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            background: #ffffff;
+            box-shadow: 0 0 20px #ffffff;
+        }
+        #stars {
+            position: absolute;
+            width: 100%;
+            height: 40%;
+            top: 0;
+            background: transparent;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        #info {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            background: rgba(0, 51, 77, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        #info h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        #info p {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div id="moon"></div>
+<div id="ocean">
+    <div class="fish" style="top:30%; left:10%;"></div>
+    <div class="fish" style="top:50%; left:20%;"></div>
+    <div class="fish" style="top:10%; left:70%;"></div>
+    <div class="fish" style="top:40%; left:50%;"></div>
+</div>
+<div id="info">
+    <h2>The Peculiar Ocean of Tranquility</h2>
+    <p>Narrative: The ocean waves gently sway under the magical starlit sky. As you gaze into the tranquil abyss, the whimsical inhabitants of the ocean emerge, playing a delicate dance of life amidst the moonlight.</p>
+    <p>Fun Fact: The "Ocean of Tranquility" is a region on the moon, a perfect place to inspire calm and peculiar visions at twilight.</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            stars.appendChild(star);
+        }
+
+        const fishes = document.querySelectorAll('.fish');
+        setInterval(() => {
+            fishes.forEach(fish => {
+                const randomX = Math.random() * 100;
+                const randomY = Math.random() * 100;
+                fish.style.transform = `translate(${randomX}%, ${randomY}%) rotate(${Math.random() * 360}deg)`;
+            });
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>
+```

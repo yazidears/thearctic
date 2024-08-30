@@ -1,0 +1,92 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystical Snowglobe</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #001f3f; 
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .globe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            margin-left: -150px;
+            margin-top: -150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #74b9ff 40%, #0984e3 100%);
+            overflow: hidden;
+            box-shadow: inset 0 0 60px rgba(255,255,255,0.3), 0 0 20px rgba(255,255,255,0.9);
+        }
+        .snowflake {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.8;
+            font-size: 1em;
+            user-select: none;
+            will-change: transform;
+        }
+        @keyframes fall {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(60vh); }
+        }
+        .message {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.8;
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #ffffff; }
+            to { text-shadow: 0 0 20px #ff9ff3, 0 0 30px #00d2d3, 0 0 40px #feca57; }
+        }
+    </style>
+</head>
+<body>
+    <div class="globe" id="globe"></div>
+    <div class="message">Click to Shake the Globe!</div>
+    <script>
+        const snowflakeSymbols = ['❅', '❆', '❄', '✻'];
+        const globe = document.getElementById('globe');
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.innerHTML = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            snowflake.style.animationName = 'fall';
+            globe.appendChild(snowflake);
+
+            setTimeout(() => { globe.removeChild(snowflake); }, 5000);
+        }
+        
+        function randomSnowfall() {
+            createSnowflake();
+            setTimeout(randomSnowfall, Math.random() * 300);
+        }
+
+        globe.addEventListener('click', () => {
+            for(let i=0; i<50; i++) {
+                setTimeout(createSnowflake, Math.random() * 1000);
+            }
+        });
+
+        randomSnowfall();
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Magic Crystal</title>
+    <style>
+        body { 
+            background-color: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+        #crystal {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            perspective: 1500px;
+        }
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        #face1 { transform: rotateY(   0deg) translateZ(100px); }
+        #face2 { transform: rotateX(  90deg) translateZ(100px); }
+        #face3 { transform: rotateY(  90deg) translateZ(100px); }
+        #face4 { transform: rotateY( 180deg) translateZ(100px); }
+        #face5 { transform: rotateY(-90deg) translateZ(100px); }
+        #face6 { transform: rotateX( -90deg) translateZ(100px); }
+    </style>
+    <script>
+        window.onload = function () {
+            var crystal = document.getElementById('crystal');
+
+            function rotate() {
+                crystal.style.transform = 'rotateX('+window.pageYOffset+'deg) rotateY('+window.pageYOffset+'deg)';
+                window.requestAnimationFrame(rotate);
+            }
+            rotate();        
+        };
+    </script>
+</head>
+<body>
+    <div id="crystal">
+        <div class="face" id="face1"></div>
+        <div class="face" id="face2"></div>
+        <div class="face" id="face3"></div>
+        <div class="face" id="face4"></div>
+        <div class="face" id="face5"></div>
+        <div class="face" id="face6"></div>
+    </div>
+</body>
+</html>

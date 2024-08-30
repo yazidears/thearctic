@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                background: #000;
+                overflow: hidden;
+            }
+            .ball {
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.7;
+            }
+            #ball1 {
+                background: #f00;
+                animation: move1 5s infinite;
+            }
+            #ball2 {
+                background: #0f0;
+                animation: move2 5s infinite;
+            }
+            #ball3 {
+                background: #00f;
+                animation: move3 5s infinite;
+            }
+            @keyframes move1 {
+                0% {top: 50%; left: 50%; width: 0; height: 0;}
+                50% {top: 0; left: 0; width: 100px; height: 100px;}
+                100% {top: 50%; left: 50%; width: 0; height: 0;}
+            }
+            @keyframes move2 {
+                0% {top: 50%; left: 50%; width: 0; height: 0;}
+                50% {top: 0; left: 100%; width: 100px; height: 100px;}
+                100% {top: 50%; left: 50%; width: 0; height: 0;}
+            }
+            @keyframes move3 {
+                0% {top: 50%; left: 50%; width: 0; height: 0;}
+                50% {top: 100%; left: 50%; width: 100px; height: 100px;}
+                100% {top: 50%; left: 50%; width: 0; height: 0;}
+            }
+            #message {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                font-size: 30px;
+                color: #fff;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="ball" id="ball1"></div>
+        <div class="ball" id="ball2"></div>
+        <div class="ball" id="ball3"></div>
+        <div id="message">Keep your eyes on balls!</div>
+        <script>
+            var message = document.getElementById('message');
+            var counter = 0;
+            setInterval(function() {
+                counter++;
+                if (counter % 4 === 0) {
+                    message.textContent = "Time flies! It's already " + counter / 4 + " Seconds";
+                }
+            }, 1000);
+        </script>
+    </body>
+</html>

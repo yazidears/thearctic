@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insectoid Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1b1f23;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            border: 5px solid #fff;
+            background-color: #111;
+        }
+        .note {
+            animation: glow 2s infinite;
+        }
+        @keyframes glow {
+            0%, 100% { color: #f44; text-shadow: 0 0 5px #f44, 0 0 10px #f44, 0 0 15px #f44, 0 0 20px #f44; }
+            50% { color: #fb7; text-shadow: 0 0 5px #fb7, 0 0 10px #fb7, 0 0 15px #fb7, 0 0 20px #fb7; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width = window.innerWidth * 0.8;
+        const height = canvas.height = window.innerHeight * 0.8;
+
+        const insects = [];
+        const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
+        function randomColor() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            return `rgb(${r},${g},${b})`;
+        }
+
+        function createInsect() {
+            return {
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 3 + 2,
+                xspeed: (Math.random() - 0.5) * 2,
+                yspeed: (Math.random() - 0.5) * 2,
+                color: randomColor(),
+            };
+        }
+
+        for (let i = 0; i < 50; i++) {
+            insects.push(createInsect());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            insects.forEach(insect => {
+                ctx.fillStyle = insect.color;
+                ctx.beginPath();
+                ctx.arc(insect.x, insect.y, insect.radius, 0, Math.PI * 2);
+                ctx.fill();
+                insect.x += insect.xspeed;
+                insect.y += insect.yspeed;
+
+                if (insect.x < 0 || insect.x > width) insect.xspeed *= -1;
+                if (insect.y < 0 || insect.y > height) insect.yspeed *= -1;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('click', () => {
+            const note = document.createElement('div');
+            note.className = 'note';
+            note.style.position = 'absolute';
+            note.style.top = `${Math.random() * 80}vh`;
+            note.style.left = `${Math.random() * 80}vw`;
+            note.style.fontSize = `${Math.random() * 20 + 10}px`;
+            note.textContent = notes[Math.floor(Math.random() * notes.length)];
+            document.body.appendChild(note);
+            setTimeout(() => note.remove(), 3000);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
+```

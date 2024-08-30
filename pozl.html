@@ -1,0 +1,81 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Randomonium</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: 'Comic Sans MS', cursive; }
+        #canvas { position: absolute; top: 0; left: 0; z-index: -1; }
+        #message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; text-align: center; }
+        .twinkles { animation: twinkle 3s infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        #strangeButton { cursor: pointer; background: radial-gradient(circle, #ff22ea, #1cb5ff); border: none; padding: 20px; font-size: 1.5em; border-radius: 30px; box-shadow: 0 0 15px #fff; }
+        #hiddenSection { display: none; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); color: #f9a06d; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">
+        <h1>Welcome to the World of Randomonium!</h1>
+        <p>Experience the unexpected...<br>Click the button for a strange surprise!</p>
+        <button id="strangeButton">Click Me!</button>
+    </div>
+    <div id="hiddenSection">✨ This is the secret message you found! Keep exploring... ✨</div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        const maxStars = 500;
+        const stars = [];
+
+        for (let i = 0; i < maxStars; i++) {
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 1.5,
+                color: "white"
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, w, h);
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = star.color;
+                ctx.fill();
+            });
+        }
+
+        function animateStars() {
+            stars.forEach(star => {
+                star.x += (Math.random() - 0.5) * 0.5;
+                star.y += (Math.random() - 0.5) * 0.5;
+                if (star.x > w || star.x < 0 || star.y > h || star.y < 0) {
+                    star.x = Math.random() * w;
+                    star.y = Math.random() * h;
+                }
+            });
+            drawStars();
+            requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+
+        document.getElementById("strangeButton").addEventListener("click", () => {
+            const hiddenSection = document.getElementById("hiddenSection");
+            hiddenSection.style.display = hiddenSection.style.display === "none" ? "block" : "none";
+            hiddenSection.classList.toggle("twinkles");
+        });
+        
+        window.addEventListener("resize", () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
+```

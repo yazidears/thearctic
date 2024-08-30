@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Forest of Kaleidoscope Critters</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #003366, #3399ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+        #section {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 300px;
+            margin-top: -150px;
+            margin-left: -250px;
+            background: rgba(0, 51, 102, 0.8);
+            border: 5px solid #3399ff;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 15px;
+            z-index: 2;
+        }
+        .critter {
+            font-size: 2rem;
+            position: absolute;
+            animation: float 5s infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="section">
+        <h1>Welcome to the Whimsical Forest</h1>
+        <p>Discover kaleidoscope critters hidden around!</p>
+        <button id="createCritter">Create a Critter!</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const colors = ['#FF6347', '#FFD700', '#ADFF2F', '#00CED1', '#FF69B4'];
+        
+        function drawCircle(x, y, r, start, end, color) {
+            context.fillStyle = color;
+            context.beginPath();
+            context.arc(x, y, r, start, end);
+            context.fill();
+        }
+        
+        function drawBackground() {
+            for (let i = 0; i < 100; i++) {
+                drawCircle(Math.random() * canvas.width, Math.random() * canvas.height, 5 + Math.random() * 50, 0, 2 * Math.PI, colors[Math.floor(Math.random() * colors.length)]);
+            }
+        }
+
+        drawBackground();
+        
+        let critterCount = 0;
+        
+        document.getElementById('createCritter').onclick = function() {
+            if (critterCount > 15) return;
+            const critter = document.createElement('div');
+            critterCount++;
+            critter.innerHTML = ['🐸', '🐢', '🦆', '🐇', '🐿️'][Math.floor(Math.random() * 5)];
+            critter.className = 'critter';
+            critter.style.left = Math.random() * window.innerWidth + 'px';
+            critter.style.top = Math.random() * window.innerHeight + 'px';
+            critter.style.animationDuration = (3 + Math.random() * 3) + 's';
+            document.body.appendChild(critter);
+        };
+        
+        function updateCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+        }
+        
+        window.addEventListener('resize', updateCanvasSize);
+    </script>
+</body>
+</html>

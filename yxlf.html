@@ -1,0 +1,80 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Garden of Bouncing Bubbles</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(120deg, #6a93cb, #a4bfcc, #e7e8d1, #c29d84, #7a4d6d);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            cursor: url('https://cur.cursors-4u.net/smilies/smi-1/smi45.cur'), pointer;
+        }
+        h1 {
+            color: #fff;
+            font-size: 2rem;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 25% 25%, #fff, rgba(204,204,255,0));
+        }
+    </style>
+</head>
+<body>
+    <h1>The Surreal Garden of Bouncing Bubbles</h1>
+    <script>
+        var bubbleCount = 50;
+        for (var i = 0; i < bubbleCount; i++) {
+            var bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            document.body.appendChild(bubble);
+            bubble.style.width = (Math.random() * 20 + 10) + 'vmin';
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = (Math.random() * 100) + 'vw';
+            bubble.style.top = (Math.random() * 100) + 'vh';
+            bubble.speedX = (Math.random() - 0.5) * 4;
+            bubble.speedY = (Math.random() - 0.5) * 4;
+            animateBubble(bubble);
+        }
+        function animateBubble(bubble) {
+            setInterval(function() {
+                var rect = bubble.getBoundingClientRect();
+                if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+                    bubble.speedY *= -1;
+                }
+                if (rect.right >= window.innerWidth || rect.left <= 0) {
+                    bubble.speedX *= -1;
+                }
+                bubble.style.left = (rect.left + bubble.speedX) + 'px';
+                bubble.style.top = (rect.top + bubble.speedY) + 'px';
+            }, 1000 / 60);
+        }
+        document.body.addEventListener('click', function(e) {
+            var x = e.clientX;
+            var y = e.clientY;
+            var newBubble = document.createElement('div');
+            newBubble.className = 'bubble';
+            document.body.appendChild(newBubble);
+            newBubble.style.width = newBubble.style.height = (Math.random() * 20 + 10) + 'vmin';
+            newBubble.style.left = x + 'px';
+            newBubble.style.top = y + 'px';
+            newBubble.speedX = (Math.random() - 0.5) * 4;
+            newBubble.speedY = (Math.random() - 0.5) * 4;
+            animateBubble(newBubble);
+        });
+    </script>
+</body>
+</html>
+```

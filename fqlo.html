@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Aquarium</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+        .aquarium {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, #00aaff, #0055aa);
+            position: relative;
+        }
+        .bubble {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            opacity: 0;
+            animation: floatUp 10s linear infinite;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+            }
+        }
+        .fish {
+            width: 5vw;
+            animation: swim 5s infinite linear;
+            position: absolute;
+        }
+        @keyframes swim {
+            0% {
+                transform: translateX(-10%);
+            }
+            50% {
+                transform: translateX(110%);
+            }
+            100% {
+                transform: translateX(-10%);
+            }
+        }
+        .kelp {
+            width: 2vw;
+            height: 15vh;
+            background: green;
+            position: absolute;
+            bottom: 0;
+            border-radius: 50%;
+            clip-path: polygon(50% 0%, 70% 75%, 30% 100%);
+            animation: sway 3s infinite ease-in-out;
+        }
+        @keyframes sway {
+            0% {transform: rotate(0);}
+            50% {transform: rotate(15deg);}
+            100% {transform: rotate(0);}
+        }
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+        }
+        #toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="aquarium">
+        <div class="message">Welcome to The Surreal Aquarium</div>
+        <button id="toggle">Toggle Mystical Fish</button>
+    </div>
+    <script>
+        const aquarium = document.querySelector('.aquarium');
+        const toggleBtn = document.getElementById('toggle');
+        let fishExist = false;
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            const size = Math.random() * 5 + 2;
+            bubble.classList.add('bubble');
+            bubble.style.width = `${size}vw`;
+            bubble.style.height = `${size}vw`;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            aquarium.appendChild(bubble);
+            setTimeout(() => aquarium.removeChild(bubble), 10000);
+        }
+
+        function createFish() {
+            const fish = document.createElement('div');
+            fish.classList.add('fish');
+            fish.style.top = `${Math.random() * 80 + 10}vh`;
+            fish.innerHTML = `
+                <svg viewBox="0 0 100 50" fill="orange" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="0,25 20,10 20,40"/>
+                    <circle cx="40" cy="25" r="20"/>
+                    <polygon points="60,25 100,0 100,50"/>
+                </svg>`;
+            aquarium.appendChild(fish);
+            setTimeout(() => aquarium.removeChild(fish), 5000);
+        }
+
+        function createKelp() {
+            const kelp = document.createElement('div');
+            kelp.classList.add('kelp');
+            kelp.style.left = `${Math.random() * 100}vw`;
+            aquarium.appendChild(kelp);
+            setTimeout(() => aquarium.removeChild(kelp), 5000);
+        }
+
+        setInterval(createBubble, 500);
+        setInterval(createKelp, 2000);
+
+        toggleBtn.addEventListener('click', () => {
+            fishExist = !fishExist;
+            if (fishExist) {
+                intervalID = setInterval(createFish, 1500);
+                toggleBtn.innerText = "Shoo Fish Away";
+            } else {
+                clearInterval(intervalID);
+                toggleBtn.innerText = "Summon Mystical Fish";
+            }
+        });
+    </script>
+</body>
+</html>

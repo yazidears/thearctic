@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Jigsaw: A Particle Puzzle</title>
+    <style>
+        body {
+            background-color: #282c34;
+            font-family: "Courier New", Courier, monospace;
+            color: #61dafb;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            background-color: #ffffff22;
+            border: 5px dashed #61dafb;
+            position: relative;
+            width: 800px;
+            height: 600px;
+            overflow: hidden;
+            box-shadow: 0 0 20px #61dafb44;
+        }
+        .piece {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            border: 1px solid #333;
+            box-shadow: 0 0 10px #0004;
+            background: linear-gradient(145deg, #3a3a3a, #1a1a1a);
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #61dafb;
+            animation: drift 10s infinite linear, pulse 2s infinite alternate;
+        }
+        @keyframes drift {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(100px, 200px, 0); }
+        }
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const particles = [];
+        const gridSize = 5;
+        const pieceSize = 80;
+        const gridWidth = pieceSize * gridSize;
+
+        // Create puzzle pieces
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                const piece = document.createElement('div');
+                piece.className = 'piece';
+                piece.style.left = `${i * pieceSize}px`;
+                piece.style.top = `${j * pieceSize}px`;
+                piece.style.backgroundPosition = `-${i * pieceSize}px -${j * pieceSize}px`;
+                piece.onmousedown = (e) => dragPiece(e, piece);
+                canvas.appendChild(piece);
+            }
+        }
+
+        // Create quantum particles
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = particle.style.height = `${Math.random() * 5 + 5}px`;
+            particle.style.left = `${Math.random() * gridWidth}px`;
+            particle.style.top = `${Math.random() * gridWidth}px`;
+            canvas.appendChild(particle);
+            particles.push({element: particle, speed: Math.random() * 2 - 1});
+        }
+
+        // Animate particles
+        function animateParticles() {
+            particles.forEach(p => {
+                const rect = p.element.getBoundingClientRect();
+                if (rect.left < 0 || rect.left > canvas.clientWidth) p.speed *= -1;
+                p.element.style.transform = `translateX(${(rect.left + p.speed)}px)`;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        function dragPiece(event, piece) {
+            event.preventDefault();
+            document.onmousemove = (e) => {
+                piece.style.left = `${e.clientX - pieceSize / 2}px`;
+                piece.style.top = `${e.clientY - pieceSize / 2}px`;
+            };
+            document.onmouseup = () => {
+                document.onmousemove = document.onmouseup = null;
+            };
+        }
+    </script>
+</body>
+</html>

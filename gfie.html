@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Infinite Pasta Machine</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #f7f3e9; }
+        #wrapper { display: flex; height: 100vh; align-items: center; justify-content: center; }
+        #machine { width: 300px; height: 400px; background: #b5651d; position: relative; border-radius: 15px; box-shadow: 0 0 16px rgba(0,0,0,0.3); }
+        #control-panel { width: 100%; height: 50px; position: absolute; bottom: 0; display: flex; justify-content: space-around; align-items: center; background: #8b4513; border-radius: 0 0 15px 15px; }
+        #pasta-output { position: absolute; width: 100px; height: 50px; bottom: 50px; left: 50%; transform: translateX(-50%); overflow: hidden; }
+        #control-panel button { background: #f4a460; border: none; border-radius: 5px; padding: 10px 15px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        #control-panel button:hover { background: #d2691e; }
+        .pasta { width: 30px; height: 30px; background: #ffebcd; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.2); position: absolute; animation: drop 2s infinite; display: none; }
+        @keyframes drop { 0%, 100% { top: 0; } 50% { top: 300px; } }
+        #score-counter { position: absolute; top: 10px; right: 10px; background: #fff0e1; padding: 5px 10px; border-radius: 5px; box-shadow: 0 0 8px rgba(0,0,0,0.2); }
+        #score-display { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="machine">
+            <div id="score-counter">Score: <span id="score-display">0</span></div>
+            <div id="pasta-output"></div>
+            <div id="control-panel">
+                <button id="start-button">Start</button>
+                <button id="stop-button">Stop</button>
+                <button id="reset-button">Reset</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+        const resetButton = document.getElementById('reset-button');
+        const pastaOutput = document.getElementById('pasta-output');
+        const scoreDisplay = document.getElementById('score-display');
+        let score = 0;
+        let interval;
+        
+        function createPasta() {
+            const pasta = document.createElement('div');
+            pasta.classList.add('pasta');
+            pasta.style.left = `${Math.random() * 70}px`;
+            pasta.style.animationDuration = `${1 + Math.random()}s`;
+            pastaOutput.appendChild(pasta);
+            pasta.style.display = 'block';
+
+            pasta.addEventListener('animationiteration', () => {
+                score += 1;
+                scoreDisplay.textContent = score;
+            });
+        }
+
+        startButton.addEventListener('click', () => {
+            clearInterval(interval);
+            interval = setInterval(createPasta, 500);
+        });
+
+        stopButton.addEventListener('click', () => clearInterval(interval));
+
+        resetButton.addEventListener('click', () => {
+            clearInterval(interval);
+            score = 0;
+            scoreDisplay.textContent = score;
+            pastaOutput.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

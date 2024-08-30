@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Dreamscapes</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffcc00, #ff66ff, #3399ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        canvas {
+            border: 5px solid white;
+        }
+        #controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 10;
+            color: #fff;
+            font-size: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .control-button {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .control-button:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="dreamscape"></canvas>
+    <div id="controls">
+        <div class="control-button" onclick="toggleAnimation()">Pause / Play</div>
+        <div class="control-button" onclick="changeColor()">Change Colors</div>
+    </div>
+    <script>
+        const canvas = document.getElementById('dreamscape');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        let animationId;
+        let hue = 0;
+
+        function drawWave() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+
+            for (let i = 0; i < canvas.width; i++) {
+                ctx.lineTo(i, canvas.height / 2 + Math.sin(i * 0.02 + hue) * 50);
+            }
+
+            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+            ctx.stroke();
+            hue += 0.5;
+            animationId = requestAnimationFrame(drawWave);
+        }
+
+        function toggleAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            } else {
+                drawWave();
+            }
+        }
+
+        function changeColor() {
+            hue = Math.random() * 360;
+        }
+
+        drawWave();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
+```

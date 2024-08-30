@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Random Adventure of Pixel Pete</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            background: #1b1b1b;
+            position: relative;
+            cursor: crosshair;
+        }
+        .star {
+            position: absolute;
+            background: radial-gradient(circle, #fff, transparent);
+            border-radius: 50%;
+        }
+        #dialogue {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            pointer-events: none;
+        }
+        #container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .pete {
+            width: 50px;
+            height: 50px;
+            background: url('https://i.imgur.com/R7qkZUe.png') no-repeat center;
+            background-size: cover;
+            position: absolute;
+            bottom: 0;
+        }
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #002d1c;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas">
+        <div id="container">
+            <div class="pete"></div>
+        </div>
+        <div id="ground"></div>
+        <div id="dialogue">Welcome to the cosmos!</div>
+    </div>
+    <script>
+        const dialogue = [
+            "It's a starry night, perfect for an adventure!",
+            "Watch out for those cosmic rays!",
+            "This universe is full of mysteries.",
+            "Do you see the shooting star?",
+            "Every step is a journey into the unknown.",
+            "Catch the fallen stars and light up the night!",
+            "Feel the space wind through the pixels!"
+        ];
+
+        const dialogueBox = document.getElementById('dialogue');
+        let messageIndex = 0;
+
+        function changeDialogue() {
+            messageIndex = (messageIndex + 1) % dialogue.length;
+            dialogueBox.innerHTML = dialogue[messageIndex];
+        }
+
+        setInterval(changeDialogue, 5000);
+
+        const canvas = document.getElementById('canvas');
+        const pete = document.querySelector('.pete');
+
+        canvas.onclick = function(e) {
+            const newStar = document.createElement('div');
+            newStar.className = 'star';
+            newStar.style.width = (Math.random() * 5 + 2) + 'px';
+            newStar.style.height = newStar.style.width;
+            newStar.style.left = e.clientX + 'px';
+            newStar.style.top = e.clientY + 'px';
+            canvas.appendChild(newStar);
+
+            setTimeout(() => canvas.removeChild(newStar), 5000);
+        };
+
+        document.addEventListener('keydown', function(e) {
+            const stepSize = 10;
+            const canvasRect = canvas.getBoundingClientRect();
+            const peteRect = pete.getBoundingClientRect();
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    if (peteRect.left > canvasRect.left) {
+                        pete.style.transform = `translate(${-stepSize}px, 0)`;
+                        pete.style.left = (pete.offsetLeft - stepSize) + 'px';
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (peteRect.right < canvasRect.right) {
+                        pete.style.transform = `translate(${stepSize}px, 0)`;
+                        pete.style.left = (pete.offsetLeft + stepSize) + 'px';
+                    }
+                    break;
+                case 'ArrowUp':
+                    if (peteRect.top > canvasRect.top) {
+                        pete.style.transform = `translate(0, ${-stepSize}px)`;
+                        pete.style.top = (pete.offsetTop - stepSize) + 'px';
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (peteRect.bottom < canvasRect.bottom - 50) { // minus ground height
+                        pete.style.transform = `translate(0, ${stepSize}px)`;
+                        pete.style.top = (pete.offsetTop + stepSize) + 'px';
+                    }
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

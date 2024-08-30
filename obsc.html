@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animated Alien Universe</title>
+    <style>
+        body {
+            background: #000;
+            animation: 1s sweep infinite;
+        }
+
+        .universe {
+            perspective: 1000px;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .planet {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            animation: 1s orbit infinite linear, 5s spin infinite linear;
+            background: blue;
+        }
+
+        .alien {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            background: green;
+            animation: 1s blink infinite linear;
+        }
+
+        @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(250px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(250px) rotate(-360deg); }
+        }
+
+        @keyframes spin {
+            0% { background: blue; }
+            50% { background: red; }
+            100% { background: blue; }
+        }
+
+        @keyframes blink {
+            0% { background: green; }
+            50% { background: yellow; }
+            100% { background: green; }
+        }
+
+        @keyframes sweep {
+            0% { background: black; }
+            50% { background: darkgray; }
+            100% { background: black; }
+        }
+    </style>
+</head>
+<body>
+    <div class="universe">
+        <div class="planet">
+            <div class="alien"></div>
+        </div>
+    </div>
+    <script>
+        const planet = document.querySelector('.planet'),
+        alien = document.querySelector('.alien');
+
+        planet.addEventListener('mouseover', function(){
+            this.style.animation = 'none';
+            alien.style.animation = 'none';
+            alert('Alien Spaceship has stopped!');
+        });
+
+        planet.addEventListener('mouseout', function(){
+            this.style.animation = '1s orbit infinite linear,z 5s spin infinite linear';
+            alien.style.animation = '1s blink infinite linear';
+            alert('Alien Spaceship is moving again...');
+        });
+    </script>
+</body>
+</html>

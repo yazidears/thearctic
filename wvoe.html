@@ -1,0 +1,144 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Magpie Forest</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #03045e, #90e0ef);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #magpie {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        h1 {
+            color: #f0f3bd;
+            font-size: 3em;
+            text-shadow: 2px 2px #03045e;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            height: 150px;
+            background-color: darkgreen;
+            transform-origin: bottom center;
+            animation: sway 4s ease-in-out infinite;
+        }
+        .tree:before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -25px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: forestgreen;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Surreal Magpie Forest</h1>
+    <img id="magpie" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Aus_Landschaftsforms_Eurasian_Magpie.svg/240px-Aus_Landschaftsforms_Eurasian_Magpie.svg.png" alt="Magpie">
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const magpie = document.getElementById('magpie');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const magpieAudio = new AudioContext();
+        const magpieOscillator = magpieAudio.createOscillator();
+        magpieOscillator.type = 'square';
+        magpieOscillator.frequency.setValueAtTime(440, magpieAudio.currentTime);
+        magpieOscillator.connect(magpieAudio.destination);
+        magpieOscillator.start();
+
+        const birds = [];
+
+        function createBird() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 4 + 2,
+                speed: Math.random() * 2 - 1,
+                color: `hsl(${Math.random() * 360}, 80%, 60%)`
+            };
+        }
+
+        for (let i = 0; i < 50; i++) {
+            birds.push(createBird());
+        }
+
+        function drawBirds() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            birds.forEach(bird => {
+                ctx.fillStyle = bird.color;
+                ctx.beginPath();
+                ctx.arc(bird.x, bird.y, bird.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                bird.x += bird.speed;
+                if (bird.x > canvas.width) bird.x = 0;
+                if (bird.x < 0) bird.x = canvas.width;
+
+                bird.y += Math.sin(bird.x / 50) * 2;
+            });
+        }
+
+        function drawForest() {
+            for (let i = 0; i < 20; i++) {
+                const xPos = i * 80;
+                const tree = document.createElement('div');
+                tree.className = 'tree';
+                tree.style.left = `${xPos + Math.random() * 40 - 20}px`;
+                tree.style.zIndex = Math.floor(-xPos);
+                document.body.appendChild(tree);
+            }
+        }
+
+        function animate() {
+            drawBirds();
+            requestAnimationFrame(animate);
+        }
+
+        function showMagpie() {
+            magpie.style.opacity = 1;
+            setTimeout(() => magpie.style.opacity = 0, 2000);
+            magpieOscillator.frequency.setValueAtTime(Math.random() * 500 + 200, magpieAudio.currentTime);
+        }
+
+        drawForest();
+        animate();
+        setInterval(showMagpie, 3000);
+    </script>
+</body>
+</html>
+```

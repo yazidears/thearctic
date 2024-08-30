@@ -1,0 +1,107 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intergalactic Jellyfish Ballet</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #081b4b, #0a3473, #1864ab);
+  }
+  .jellyfish {
+    position: absolute;
+    border-radius: 50%;
+    animation: floaty 10s infinite;
+  }
+  @keyframes floaty {
+    0% {transform: translateY(0px);}
+    50% {transform: translateY(-30px);}
+    100% {transform: translateY(0px);}
+  }
+  .tentacle {
+    position: absolute;
+    width: 4px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    animation: wavy 2s infinite;
+  }
+  @keyframes wavy {
+    0%, 100% {transform: rotate(0deg);}
+    50% {transform: rotate(10deg);}
+  }
+  #message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Courier New', Courier, monospace;
+    color: #f7f7f7;
+    text-align: center;
+    opacity: 0;
+    animation: appear 3s forwards;
+  }
+  @keyframes appear {
+    30% {opacity: 0.3;}
+    100% {opacity: 1;}
+  }
+</style>
+</head>
+<body>
+<div id="ballet"></div>
+<div id="message">
+  <h1>Welcome to the Intergalactic Jellyfish Ballet</h1>
+  <p>Hover over them to join their ethereal dance.</p>
+</div>
+<script>
+  const numberOfJellyfish = 15;
+  const ballet = document.getElementById('ballet');
+
+  function randomColor() {
+    const r = Math.floor(Math.random() * 100) + 155;
+    const g = Math.floor(Math.random() * 155);
+    const b = Math.floor(Math.random() * 100) + 155;
+    return `rgba(${r}, ${g}, ${b}, 0.8)`;
+  }
+
+  function createJellyfish() {
+    for (let i = 0; i < numberOfJellyfish; i++) {
+      const jellyfish = document.createElement('div');
+      jellyfish.classList.add('jellyfish');
+      jellyfish.style.width = '50px';
+      jellyfish.style.height = '50px';
+      jellyfish.style.backgroundColor = randomColor();
+      jellyfish.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+      jellyfish.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+      jellyfish.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      
+      for (let j = 0; j < 5; j++) {
+        const tentacle = document.createElement('div');
+        tentacle.classList.add('tentacle');
+        tentacle.style.left = 10 * j + 'px';
+        tentacle.style.animationDelay = (Math.random() * 2) + 's';
+        jellyfish.appendChild(tentacle);
+      }
+      
+      jellyfish.addEventListener('mouseenter', () => {
+        jellyfish.style.animationPlayState = 'paused';
+        [...jellyfish.children].forEach(t => t.style.transform = `rotate(${Math.random() * 20 - 10}deg)`);
+      });
+
+      jellyfish.addEventListener('mouseleave', () => {
+        jellyfish.style.animationPlayState = 'running';
+        [...jellyfish.children].forEach(t => t.style.transform = 'rotate(0deg)');
+      });
+
+      ballet.appendChild(jellyfish);
+    }
+  }
+
+  createJellyfish();
+</script>
+</body>
+</html>
+```

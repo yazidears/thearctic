@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Cosmic Garden</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+        }
+        .floating-object {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            transform-origin: center;
+            opacity: 0.7;
+        }
+        #message {
+            position: fixed;
+            top: 10%;
+            width: 100%;
+            font-size: 2em;
+        }
+        #clickable-nucleus {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: gold;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+        #abstract-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="message">Click the Nucleus to Create Life</div>
+    <canvas id="abstract-canvas"></canvas>
+    <div id="clickable-nucleus"></div>
+    <script>
+        const canvas = document.getElementById('abstract-canvas');
+        const ctx = canvas.getContext('2d');
+        const nucleus = document.getElementById('clickable-nucleus');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function getRandomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 50%)`;
+        }
+
+        function createFloatingObjects(count) {
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-object';
+                el.style.background = getRandomColor();
+                el.style.top = `${Math.random() * 100}%`;
+                el.style.left = `${Math.random() * 100}%`;
+                animateFloatingObject(el);
+                document.body.appendChild(el);
+            }
+        }
+
+        function animateFloatingObject(el) {
+            const duration = Math.random() * 5 + 3;
+            el.animate([
+                { transform: 'translate(-50%, -50%) scale(1)' },
+                { transform: `translate(${Math.random() * 100 - 50}%, ${Math.random() * 100 - 50}%) scale(${Math.random() + 0.5})` },
+            ], {
+                duration: duration * 1000,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'ease-in-out'
+            });
+        }
+
+        function blastNucleus() {
+            nucleus.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            setTimeout(() => {
+                nucleus.style.transform = 'translate(-50%, -50%) scale(1)';
+                createParticleBlast({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+            }, 100);
+        }
+
+        function createParticleBlast(origin) {
+            const particles = [];
+            const numParticles = 50;
+
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: origin.x,
+                    y: origin.y,
+                    vx: Math.random() * 4 - 2,
+                    vy: Math.random() * 4 - 2,
+                    color: getRandomColor(),
+                    size: 5,
+                });
+            }
+
+            const animate = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+                    ctx.fill();
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.99;
+                    p.vy *= 0.99;
+                    p.size *= 0.98;
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        nucleus.addEventListener('click', blastNucleus);
+
+        createFloatingObjects(20);
+    </script>
+</body>
+</html>

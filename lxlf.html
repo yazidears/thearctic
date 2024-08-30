@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Bubblescape</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #bubbleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #mysteryButton {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes floatAnimation {
+            from {transform: scale(1);}
+            50% {transform: scale(1.1);}
+            to {transform: scale(1);}
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bubbleCanvas"></canvas>
+    <button id="mysteryButton">Click for Surprise!</button>
+    <script>
+        // Setup canvas
+        const canvas = document.getElementById('bubbleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Generate random bubbles
+        const bubbles = [];
+        for (let i = 0; i < 200; i++) {
+            bubbles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random()*30 + 10,
+                xSpeed: Math.random() * 2 - 1,
+                ySpeed: Math.random() * 2 - 1,
+                hue: Math.random() * 360
+            });
+        }
+
+        // Draw and animate bubbles
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(bubble => {
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${bubble.hue}, 100%, 70%, 0.7)`;
+                ctx.fill();
+                bubble.x += bubble.xSpeed;
+                bubble.y += bubble.ySpeed;
+                if (bubble.x - bubble.radius < 0 || bubble.x + bubble.radius > canvas.width) bubble.xSpeed *= -1;
+                if (bubble.y - bubble.radius < 0 || bubble.y + bubble.radius > canvas.height) bubble.ySpeed *= -1;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        // Mystery button interaction
+        const button = document.getElementById('mysteryButton');
+        button.addEventListener('click', () => {
+            alert("You've opened the door to bubble dimensions!");
+            const surprise = document.createElement('div');
+            surprise.style.position = 'absolute';
+            surprise.style.top = `${Math.random() * 80 + 10}%`;
+            surprise.style.left = `${Math.random() * 80 + 10}%`;
+            surprise.style.width = '50px';
+            surprise.style.height = '50px';
+            surprise.style.borderRadius = '50%';
+            surprise.style.background = `linear-gradient(135deg, hsla(${Math.random()*360}, 100%, 65%, 1), hsla(${Math.random()*360+90}, 100%, 65%, 1))`;
+            surprise.style.zIndex = '10';
+            surprise.style.animation = 'floatAnimation 3s infinite alternate';
+            document.body.appendChild(surprise);
+            setTimeout(() => { document.body.removeChild(surprise); }, 3000);
+        });
+
+        // Adjust canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

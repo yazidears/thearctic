@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Jellyfish Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #001f3f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            background: radial-gradient(circle at center, #112, #001f3f, #000);
+        }
+        .jellyfish {
+            position: absolute;
+            transition: transform 0.1s;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
+        }
+        .tentacle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(0, 0, 255, 0.1));
+            animation: wave infinite linear;
+            transform-origin: top center;
+        }
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+            100% { transform: rotate(0deg); }
+        }
+        #moon {
+            position: absolute;
+            top: 10%;
+            left: 80%;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff, #ccc);
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="moon"></div>
+    <div id="music-note" style="position: fixed; right: 10px; top: 10px; cursor: pointer;">
+        🎵
+    </div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const jellyfishes = [];
+
+        for (let i = 0; i < 5; i++) {
+            const jellyfish = document.createElement("div");
+            jellyfish.className = "jellyfish";
+            jellyfish.style.width = `${30 + Math.random() * 50}px`;
+            jellyfish.style.height = jellyfish.style.width;
+            jellyfish.style.left = `${Math.random() * 100}%`;
+            jellyfish.style.top = `${Math.random() * 100}%`;
+
+            for (let j = 0; j < 7; j++) {
+                const tentacle = document.createElement("div");
+                tentacle.className = "tentacle";
+                tentacle.style.width = `10px`;
+                tentacle.style.height = `${60 + Math.random() * 80}px`;
+                tentacle.style.left = `${parseFloat(jellyfish.style.width) / 2 - 5}px`;
+                tentacle.style.transform = `rotate(${j * 15 - 45}deg)`;
+                jellyfish.appendChild(tentacle);
+            }
+            document.body.appendChild(jellyfish);
+            jellyfishes.push(jellyfish);
+        }
+
+        document.getElementById('music-note').addEventListener('click', () => {
+            alert("Enjoy the symphony of lights!");
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            jellyfishes.forEach(jellyfish => {
+                const randomX = (Math.random() - 0.5) * 5;
+                const randomY = (Math.random() - 0.5) * 5;
+                const newX = Math.min(Math.max(parseFloat(jellyfish.style.left) + randomX, 0), window.innerWidth - parseFloat(jellyfish.style.width));
+                const newY = Math.min(Math.max(parseFloat(jellyfish.style.top) + randomY, 0), window.innerHeight - parseFloat(jellyfish.style.height));
+                jellyfish.style.left = newX + "px";
+                jellyfish.style.top = newY + "px";
+                jellyfish.style.transform = `rotate(${randomX * 20}deg)`;
+            });
+
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fill();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

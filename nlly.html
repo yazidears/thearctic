@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Robo Jungle</title>
+<style>
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+  background: #111;
+  color: #fff;
+  text-align: center;
+}
+.canvas-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+#canvas {
+  display: block;
+  background: linear-gradient(135deg, #001514, #006666);
+}
+.info-box {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+}
+.robot {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  transition: all 0.5s ease-in-out;
+}
+.controls {
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  text-align: center;
+}
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background: #09c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px #067;
+  outline: none;
+}
+button:active {
+  box-shadow: 0 2px #067;
+  transform: translateY(4px);
+}
+</style>
+</head>
+<body>
+<div class="canvas-wrapper">
+<canvas id="canvas"></canvas>
+</div>
+<div class="info-box" id="info-box">
+  <p>Welcome to the Surreal Robo Jungle!</p>
+  <p>Use the buttons to move your robot.</p>
+</div>
+<img src="https://via.placeholder.com/150" class="robot" id="robot" style="top: 50%; left: 50%;">
+<div class="controls">
+  <button onclick="moveRobot('up')">Up</button>
+  <button onclick="moveRobot('left')">Left</button>
+  <button onclick="moveRobot('right')">Right</button>
+  <button onclick="moveRobot('down')">Down</button>
+</div>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const robot = document.getElementById('robot');
+let robotPosition = { x: window.innerWidth / 2 - 75, y: window.innerHeight / 2 - 75 };
+
+const colors = ['#FF5722', '#FF9800', '#FFC107', '#FFEB3B', '#CDDC39', '#8BC34A', '#4CAF50', '#009688', '#00BCD4'];
+
+function drawRandomShapes() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  for (let i = 0; i < 100; i++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const size = Math.random() * 50;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function moveRobot(direction) {
+  const step = 20;
+  switch (direction) {
+    case 'up':
+      robotPosition.y -= step;
+      break;
+    case 'down':
+      robotPosition.y += step;
+      break;
+    case 'left':
+      robotPosition.x -= step;
+      break;
+    case 'right':
+      robotPosition.x += step;
+      break;
+  }
+  robot.style.top = robotPosition.y + 'px';
+  robot.style.left = robotPosition.x + 'px';
+}
+
+setInterval(drawRandomShapes, 1000);
+window.onresize = () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  drawRandomShapes();
+};
+</script>
+</body>
+</html>

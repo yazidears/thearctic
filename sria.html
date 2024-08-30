@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Ants Go Marching!</title>
+    <style>
+        body {
+            background-color: yellowGreen;
+            font-family: Arial, sans-serif;
+        }
+
+        .ant {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: black;
+            border-radius: 50%;
+            transition: 1s;
+        }
+
+        .directions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 20px;
+            padding: 10px;
+            font-size: 20px;
+            border: none;
+            color: white;
+            background-color: red;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: darkRed;
+        }
+    </style>
+</head>
+<body>
+    <section class="directions">
+        <h1>The Ants Go Marching One by One!</h1>
+        <button id="move">Move the Ant!</button>
+    </section>
+    <div id="antContainer">
+        <!-- Here we go -->
+    </div>
+
+    <script>
+        let antContainer = document.querySelector("#antContainer");
+        let moveButton = document.querySelector("#move");
+        let antCount = 0;
+
+        function createRandomPosition() {
+            return (Math.random() * (window.innerWidth - 100)) + "px";
+        }
+
+        function createAnt() {
+            let newAnt = document.createElement("div");
+            newAnt.classList.add("ant");
+            newAnt.style.top = createRandomPosition();
+            newAnt.style.left = createRandomPosition();
+            newAnt.innerHTML = `<h2 style="color:White; padding: 10px;">Ant ${++antCount}</h2>`;
+            return newAnt;
+        }
+
+        function moveAnts() {
+            let allAnts = document.querySelectorAll(".ant");
+            allAnts.forEach((ant) => {
+                ant.style.top = createRandomPosition();
+                ant.style.left = createRandomPosition();
+            });
+        }
+
+        setinterval(()=>{
+           antContainer.appendChild(createAnt()); 
+         }, 1000)
+
+        moveButton.addEventListener("click", moveAnts);
+    </script>
+
+</body>
+</html>

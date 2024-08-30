@@ -1,0 +1,73 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quirky Universe</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            animation: twinkle infinite ease-in-out var(--duration) var(--delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 1;
+                transform: translate(var(--x), var(--y));
+            }
+
+            50% {
+                opacity: .2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const numOfStars = 500;
+
+        for (let i = 0; i < numOfStars; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+            star.style.setProperty('--x', (Math.random() * window.innerWidth) + 'px');
+            star.style.setProperty('--y', (Math.random() * window.innerHeight) + 'px');
+            star.style.setProperty('--duration', (Math.random() * 2 + 2) + 's');
+            star.style.setProperty('--delay', (Math.random() * 2) + 's');
+            document.body.appendChild(star);
+        }
+
+        let alien = document.createElement("div");
+        alien.innerHTML = "👽";
+        alien.style.position = "absolute";
+        alien.style.fontSize = "50px";
+        alien.style.top = "50%";
+        alien.style.left = "50%";
+        alien.style.transform = "translate(-50%, -50%)";
+        document.body.appendChild(alien);
+
+        setInterval(() => {
+            alien.style.left = Math.random() * window.innerWidth + 'px';
+            alien.style.top = Math.random() * window.innerHeight + 'px';
+            alien.style.transform = "translate(-50%, -50%)";
+        }, 2000);
+    </script>
+</body>
+</html>
+
+```
+
+This website has a dark background representing space and it's filled with twinkling star animations created using CSS. A tiny alien emoji moves randomly around the screen at certain intervals with the help of JavaScript. This creates a quirky universe filled with stars and an unpredictable alien.

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Studio</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffffff;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #f1c40f;
+        }
+        .dialogue {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="dialogue" id="surrealMsg">Welcome to your dreamscape! Click the button for a surprise...</div>
+    <button class="button" onclick="triggerSurprise()">Unleash the Abstract</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particles = [];
+        const colors = ['#ff4757', '#1e90ff', '#2ed573', '#ffa502', '#ff6b81'];
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 15 + 5;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.velocity = Math.random() * 2 - 1;
+                this.angle = Math.random() * 2 * Math.PI;
+            }
+            update() {
+                this.x += Math.cos(this.angle) * this.velocity;
+                this.y += Math.sin(this.angle) * this.velocity;
+                this.size *= 0.95;
+                if (this.size < 0.1) {
+                    this.size = 0;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.size <= 0) {
+                    particles.splice(index, 1);
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        function triggerSurprise() {
+            const msg = document.getElementById('surrealMsg');
+            if (particles.length > 500) {
+                msg.textContent = "You've unleashed the abstract too many times!";
+            } else {
+                msg.textContent = 'Let your imagination run wild!';
+            }
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

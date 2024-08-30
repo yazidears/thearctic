@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Kitchen</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            background-color: #F2D7D5;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        .kitchen {
+            position: absolute;
+            width: 80vw;
+            height: 80vh;
+            top: 10%;
+            left: 10%;
+            background-color: rgba(220, 118, 51, 0.9);
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            transform-style: preserve-3d;
+            animation: spin 20s infinite linear;
+        }
+        .utensil {
+            width: 100px;
+            height: 100px;
+            background-color: #7DCEA0;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 20px #641E16;
+            transform: translateZ(0);
+            animation: float 5s infinite ease-in-out;
+        }
+        .utensil:hover {
+            cursor: pointer;
+            animation-play-state: paused;
+        }
+        @keyframes spin {
+            from { transform: rotateX(0deg) rotateY(0deg); }
+            to { transform: rotateX(360deg) rotateY(360deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateZ(0); }
+            50% { transform: translateY(-30px) translateZ(100px); }
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #212F3D;
+            color: #FDFEFE;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="kitchen" id="kitchen">
+        <div class="utensil" id="pan" style="left: 20%; top: 30%;"></div>
+        <div class="utensil" id="spoon" style="right: 20%; top: 20%;"></div>
+        <div class="utensil" id="fork" style="left: 40%; bottom: 20%;"></div>
+        <div class="utensil" id="knife" style="right: 40%; bottom: 30%;"></div>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+    <script>
+        const utensilsDescriptions = {
+            pan: "This is a magical pan that cooks ideas into reality.",
+            spoon: "The spoon stirs imagination into the cauldron of chaos.",
+            fork: "A fork that guides you through the tunnels of twisted tales.",
+            knife: "A knife that cuts away the veils of reality to reveal the surreal."
+        };
+        
+        document.querySelectorAll('.utensil').forEach(utensil => {
+            utensil.addEventListener('mouseover', () => {
+                const tooltip = document.getElementById('tooltip');
+                const rect = utensil.getBoundingClientRect();
+                tooltip.style.left = `${rect.x + 20}px`;
+                tooltip.style.top = `${rect.y - 30}px`;
+                tooltip.innerHTML = utensilsDescriptions[utensil.id];
+                tooltip.style.display = 'block';
+            });
+
+            utensil.addEventListener('mouseleave', () => {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.style.display = 'none';
+            });
+
+            utensil.addEventListener('click', () => {
+                const kitchen = document.getElementById('kitchen');
+                kitchen.style.animationPlayState = kitchen.style.animationPlayState === 'running' ? 'paused' : 'running';
+            });
+        });
+    </script>
+</body>
+</html>
+```

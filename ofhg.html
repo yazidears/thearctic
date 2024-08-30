@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quirky Quantum Aquarium</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #020c2c;
+            color: #fffcf2;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #aquarium {
+            position: relative;
+            width: 80%;
+            height: 70%;
+            border: 15px solid #ff7f50;
+            box-sizing: border-box;
+            background: #001f3f;
+            overflow: hidden;
+        }
+        .fish {
+            position: absolute;
+            border-radius: 50%;
+            transition: transform 2s;
+        }
+        .bubble {
+            position: absolute;
+            background: #a1c0f2;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: bubbleRise 5s infinite ease-in;
+        }
+        @keyframes bubbleRise {
+            0% {
+                bottom: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                bottom: 100%;
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        #quantum-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #ff5722;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+        }
+        #quantum-message {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+    </style>
+</head>
+<body>
+    <div id="aquarium">
+        <div id="quantum-message">Watch the quantum fish dance!</div>
+        <button id="quantum-button">Quantum Reality</button>
+    </div>
+    <script>
+        const aquarium = document.getElementById('aquarium');
+        const quantumButton = document.getElementById('quantum-button');
+        const quantumMessage = document.getElementById('quantum-message');
+
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        function createFish() {
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.style.width = fish.style.height = Math.random() * (100 - 20) + 20 + 'px';
+            fish.style.top = Math.random() * (aquarium.offsetHeight - 100) + 'px';
+            fish.style.left = Math.random() * (aquarium.offsetWidth - 100) + 'px';
+            fish.style.backgroundColor = getRandomColor();
+            aquarium.appendChild(fish);
+            setTimeout(() => fish.classList.add('move'), 100);
+        }
+
+        function animateFish(fishes) {
+            fishes.forEach(fish => {
+                const posX = Math.random() * (aquarium.offsetWidth - 100);
+                const posY = Math.random() * (aquarium.offsetHeight - 100);
+                fish.style.transform = `translate(${posX}px, ${posY}px)`;
+            });
+        }
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.width = bubble.style.height = Math.random() * (30 - 10) + 10 + 'px';
+            bubble.style.left = Math.random() * aquarium.offsetWidth + 'px';
+            aquarium.appendChild(bubble);
+            setTimeout(() => aquarium.removeChild(bubble), 5000);
+        }
+
+        quantumButton.addEventListener('click', () => {
+            const fishes = document.querySelectorAll('.fish');
+            animateFish(fishes);
+            for (let i = 0; i < 10; i++) {
+                createBubble();
+            }
+            quantumMessage.style.opacity = 1;
+            setTimeout(() => quantumMessage.style.opacity = 0, 2000);
+        });
+
+        for (let i = 0; i < 10; i++) {
+            createFish();
+        }
+
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                createBubble();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

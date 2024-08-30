@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Weather Orchestra</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #151515;
+            color: #e8e8e8;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #sky {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(blue, skyblue);
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: floaty 8s linear infinite;
+        }
+        @keyframes floaty {
+            0% { transform: translateX(-100%);}
+            100% { transform: translateX(100%);}
+        }
+        .raindrop {
+            width: 3px;
+            height: 15px;
+            background: lightblue;
+            position: absolute;
+            bottom: 100%;
+            animation: rain 1s infinite linear;
+            border-radius: 50%;
+        }
+        @keyframes rain {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .instrument {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        #drum {
+            background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzMgMzMuMDA1IiBmaWxsPSIjZmZmIj48Y2lyY2xlIGN4PSIxNi41IiBjeT0iMTYuNSIgcj0iMTYuNSIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNi43MjEgMjIuNjIyYzEuNC0uMDAzIDIuNTg2IDIuMTYgNSA0LjU0Mi42MTUgLjYxNSAxLjcwOS42NjkgMi40NjMgMS4wMjkgMS40NDMuNzY2IDIuMDggLjI2NCAyLjQxNC0uMTE3IDIuNDE1LS41NjQgNS0yLjQyOCA1LTRIODZjLS4wMDIgMi4wMjUgMy41IDMuMjIzIDUgNCAuNjgtLjM2IDIuMzIzLS4wNDYgMi41OS0uMDM5eiIgZmlsbD0iIzAwMCIvPjxwYXRoIGQ9Ik0xNi4zNzEgMGMyLjg4NCAwIDUuMjk1IDEuMDBzNC4wNzEgMy4xNTIgNC45OTcgNC45NzdoLTkuOTU1Yy0uMjE0LTEuNjI0LTMuMjk1LTQuOTc3LTQuOTkyLTQuOTc3aDkmMzAgN0gtNyAwem0wIWMtMi40MDYgMC00LjcyOSAxLjEyMS01Ljg4NyA0IDIuMjUyLS43NDMgOS44ODctMiAyMi4yNTkgMmMtLjc5OCAyLjQwNi0xLjQ0NSAyLjQzOS01Ljg0NyA0Ljc0NXotMS4wMzQgNi43MDEhMS4wNDAxIDEgMCAydi0yLjA2MGgxLjIxOGMwIC44MzgtMS4wNjcgMS4xMDYtMS4yMTggMi42NDV6IiBmaWxsPSIjZmZmIiBzdHJva2U9IiMyMmIiIHN0cm9rZS13aWR0aD0iMS4wMDciLz48cGF0aCBkPSJNMTUuNzY4IDYuNzE2YzEuNDI4LS43NzQgMi42NyAxLjE3IDEuMTEgMS40NTIuODUxLjgwMyAxLjY5OSAxLjUzMyAyLjU1IDIuMjU5IDMuMi0xLjE2OCAxLjM5Mi0uNzcyIDIuODkzLS43MjZzMjAuMDgtLjc2My0yLjg5Mi05LjgyNGwtMS40MTgtLjQzYy0xIDEzLjkwMS4yNTYgNC40NjUgMS45MDIgNC4xNGEuMDE3IDEuMDE3IDAgASAwIDAgMC0uMTE5Yy44MjggOS4yOTgtNy44NzUgMi44OTUtMy42MjQgMGEuMDE3IDEuMDE3IDAgMSAxIC0xLjI2LS43OTQtMi4xNzgtMi4xNDIuNzIxLTMuMjA0em0tMS4xMjQuODU5Yy01LjI3MiAzLjk5NS0uODUyIDYuODMtMi0wIC0yLjEwOSAyNS4yMTYtMi44OTEgMCAyLjM2My44MjYgMy4xMjUtMS45MDIgMiAyLjgxNC0xMC42MjkgMS41OGM1LjQ0NC0xLjg3NyAwIC4wOSAwIDBjLjA5IDkuMjc5LTEuODUgMi40NzEgNS0xLjU2IDEuNzI3LTEuNzU3LS43IDIuNjggMS4yNj' alt="drum" cover-position="center" hover="rotate(10deg)" clickSound="drums" />
+        .sun {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: radial-gradient(circle, yellow, orange);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: spins 10s linear infinite;
+        }
+        @keyframes spins {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="sky"></div>
+    <div class="sun"></div>
+    <div class="cloud" style="width: 80px; height: 40px; top: 10%; left: 20%; animation

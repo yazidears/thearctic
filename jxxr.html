@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Undersea Forest</title>
+<style>
+body, html { margin: 0; padding: 0; overflow: hidden; background: #001f3f; font-family: Arial, sans-serif; color: #fff; }
+canvas { position: absolute; top: 0; left: 0; }
+#controls { position: absolute; top: 10px; right: 10px; z-index: 10; }
+button { padding: 5px 10px; border: none; background: #39CCCC; color: #111; cursor: pointer; border-radius: 5px; }
+#forest { position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; opacity: 0.8; pointer-events: none; }
+@keyframes wobble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10%); } }
+.tree { position: absolute; bottom: 0; background: linear-gradient(to top, #2ECC40, #7FDBFF); width: 10px; animation: wobble 4s infinite; }
+</style>
+</head>
+<body>
+<canvas id="underwater"></canvas>
+<div id="controls"><button onclick="addRandomTree()">Add Tree</button></div>
+<script>
+const canvas = document.getElementById('underwater');
+const context = canvas.getContext('2d');
+const width = window.innerWidth;
+const height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+
+function drawFish(x, y, size, color) {
+    context.fillStyle = color;
+    context.beginPath();
+    context.moveTo(x, y);
+    context.lineTo(x - size, y + size / 2);
+    context.lineTo(x - size, y - size / 2);
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.arc(x, y, size / 2, 0, Math.PI * 2);
+    context.fill();
+}
+
+function randomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const fishColors = ['#FF4136', '#FF851B', '#FFDC00', '#F012BE', '#B10DC9'];
+let fishes = [];
+
+function initializeFish() {
+    for (let i = 0; i < 20; i++) {
+        fishes.push({ x: randomBetween(0, width), y: randomBetween(0, height), size: randomBetween(10, 30), color: fishColors[randomBetween(0, fishColors.length - 1)] });
+    }
+}
+
+function drawFishes() {
+    context.clearRect(0, 0, width, height);
+    fishes.forEach(fish => {
+        fish.x += Math.random() * 2 - 1;
+        fish.y += Math.random() * 2 - 1;
+        drawFish(fish.x, fish.y, fish.size, fish.color);
+    });
+    requestAnimationFrame(drawFishes);
+}
+
+initializeFish();
+drawFishes();
+
+const forest = document.createElement('div');
+forest.id = 'forest';
+document.body.appendChild(forest);
+
+function addRandomTree() {
+    const tree = document.createElement('div');
+    tree.className = 'tree';
+    tree.style.height = randomBetween(50, 150) + 'px';
+    tree.style.left = randomBetween(0, window.innerWidth - 10) + 'px';
+    tree.style.animationDuration = (randomBetween(3000, 5000) / 1000) + 's';
+    forest.appendChild(tree);
+}
+</script>
+</body>
+</html>

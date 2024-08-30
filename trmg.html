@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Clockwork Forest</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(145deg, #5e60ce, #00b4d8);
+            font-family: 'Courier New', Courier, monospace;
+            color: #f1f5f9;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        #instructions span {
+            color: #48cae4;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="instructions">Welcome to the <span>The Surreal Clockwork Forest</span>! <br> Click on the trees to explore hidden dreams.</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const trees = [];
+        let treeId = 0;
+
+        function randomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 75%)`;
+        }
+
+        function createTree(x, y) {
+            const tree = {
+                id: treeId++,
+                x: x,
+                y: y,
+                branches: Math.floor(Math.random() * 5 + 5),
+                color: randomColor(),
+                open: false,
+                opening: Math.random() > 0.5
+            };
+            return tree;
+        }
+
+        function drawTree(tree) {
+            ctx.save();
+            ctx.translate(tree.x, tree.y);
+            const angleStep = (Math.PI / tree.branches);
+            for (let i = 0; i < tree.branches; i++) {
+                ctx.rotate(angleStep);
+                ctx.strokeStyle = tree.color;
+                ctx.lineWidth = 2 + Math.random() * 4;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                if (tree.open) {
+                    ctx.lineTo(0, -30 - Math.random() * 20);
+                } else {
+                    ctx.lineTo(0, 10);
+                }
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const tree of trees) {
+                drawTree(tree);
+                if (tree.opening) {
+                    tree.open = !tree.open;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('click', (e) => {
+            const tree = createTree(e.clientX, e.clientY);
+            tree.open = false;
+            tree.opening = true;
+            trees.push(tree);
+            const dreamNode = document.createElement('div');
+            dreamNode.className = 'dream hidden';
+            dreamNode.style.position = 'absolute';
+            dreamNode.style.left = `${e.clientX}px`;
+            dreamNode.style.top = `${e.clientY}px`;
+            dreamNode.style.width = '20px';
+            dreamNode.style.height = '20px';
+            dreamNode.style.borderRadius = '50%';
+            dreamNode.style.backgroundColor = tree.color;
+            dreamNode.style.animation = 'pulse 1s infinite';
+            document.body.appendChild(dreamNode);
+            setTimeout(() => dreamNode.classList.remove('hidden'), 1000);
+            setTimeout(() => dreamNode.classList.add('hidden'), 3000);
+            setTimeout(() => document.body.removeChild(dreamNode), 4000);
+        });
+
+        animate();
+    </script>
+</body>
+</html>

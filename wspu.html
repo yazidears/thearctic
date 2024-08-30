@@ -1,0 +1,152 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful Quantum Haze</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(140deg, #1e3c72, #2a5298, #f2fcfe);
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #centerElement {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            margin-top: -100px;
+            margin-left: -100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #e66465, #9198e5);
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse {
+            0% {transform: scale(0.9);}
+            50% {transform: scale(1.1);}
+            100% {transform: scale(0.9);}
+        }
+        .message {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            top: 20%;
+            animation: flash 6s infinite alternate;
+        }
+        @keyframes flash {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        #hoverButton {
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #hoverButton:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="message">Welcome to the Quantum Haze!</div>
+    <div id="centerElement"></div>
+    <button id="hoverButton">Don't Hover Over This</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const colors = ['#FF6347', '#FFD700', '#1E90FF', '#32CD32'];
+        const maxParticles = 1000;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = [];
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = Math.random() * 3 + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.angle = Math.random() * Math.PI * 2;
+                this.velocity = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += Math.cos(this.angle) * this.velocity;
+                this.y += Math.sin(this.angle) * this.velocity;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function initParticles() {
+            if (particles.length < maxParticles) {
+                particles.push(new Particle());
+            }
+        }
+
+        function updateParticles() {
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            initParticles();
+            updateParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        document.getElementById('hoverButton').addEventListener('mouseover', () => {
+            alert('You unleashed the Quantum Haze!');
+        });
+    </script>
+</body>
+</html>
+```

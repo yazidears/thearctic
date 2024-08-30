@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewildering Bubble Bazaar</title>
+<style>
+  body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+  #canvas { display: block; background: radial-gradient(circle at 20% 50%, #111, #000); }
+  .riddlePopup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px; display: none; text-align: center; }
+  .riddlePopup p { margin-bottom: 20px; font-family: 'Comic Sans MS', sans-serif; font-size: 20px; }
+  #closeRiddle { padding: 10px 20px; background: #ff5722; border: none; color: white; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="riddlePopup" id="riddle">
+  <p>What is seen in the middle of March and April that can't be seen at the beginning or end of either month?</p>
+  <button id="closeRiddle">Try Again Later!</button>
+</div>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const bubbles = [];
+  const maxBubbles = 150;
+  const colors = ['#FF5733', '#FFE933', '#33FF57', '#3357FF', '#F333FF', '#FF338B', '#33FFF9'];
+  let riddleVisible = false;
+
+  function createBubble() {
+    if (bubbles.length < maxBubbles) {
+      bubbles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 20 + 15,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 2,
+        angle: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  function drawBubble(bubble) {
+    ctx.beginPath();
+    ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+    ctx.fillStyle = bubble.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  function updateBubble(bubble) {
+    bubble.y -= bubble.speedY;
+    bubble.x += bubble.speedX;
+    bubble.angle += 0.01;
+    bubble.radius += Math.sin(bubble.angle) * 0.5;
+
+    if (bubble.y + bubble.radius < 0) {
+      bubble.y = canvas.height + bubble.radius;
+      bubble.x = Math.random() * canvas.width;
+    }
+  }
+
+  function handleBubbles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    bubbles.forEach((bubble, index) => {
+      drawBubble(bubble);
+      updateBubble(bubble);
+      bubbles[index] = bubble;
+    });
+  }
+
+  function loop() {
+    createBubble();
+    handleBubbles();
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!riddleVisible) {
+      const bubble = bubbles.find(b => Math.hypot(b.x - e.clientX, b.y - e.clientY) < b.radius);
+      if (bubble) {
+        riddleVisible = true;
+        document.getElementById('riddle').style.display = 'block';
+      }
+    }
+  });
+
+  document.getElementById('closeRiddle').addEventListener('click', () => {
+    riddleVisible = false;
+    document.getElementById('riddle').style.display = 'none';
+  });
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  loop();
+</script>
+</body>
+</html>

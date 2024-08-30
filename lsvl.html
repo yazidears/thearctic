@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bouncing Tofu Symphony</title>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        background: linear-gradient(45deg, #f0f, #0ff, #ff0, #f0f);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        overflow: hidden;
+    }
+    @keyframes gradient {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+    .tofu {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        animation: floatTofu 6s ease-in-out infinite, spinTofu 2s linear infinite;
+    }
+    @keyframes floatTofu {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    @keyframes spinTofu {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    #crazyTune {
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+
+<div class="tofu" id="tofu1" style="top: 20%; left: 10%;"></div>
+<div class="tofu" id="tofu2" style="top: 50%; left: 50%;"></div>
+<div class="tofu" id="tofu3" style="top: 30%; left: 70%;"></div>
+
+<div id="crazyTune">Press space to play the Tofu Symphony!</div>
+
+<script>
+    const tofuElements = [...document.querySelectorAll('.tofu')];
+    const sounds = [
+        new Audio('https://www.soundjay.com/button/sounds/button-3.mp3'),
+        new Audio('https://www.soundjay.com/button/sounds/button-6.mp3'),
+        new Audio('https://www.soundjay.com/button/sounds/button-7.mp3'),
+    ];
+    
+    let isPlaying = false;
+    document.body.onkeyup = function(e){
+        if(e.keyCode == 32){
+            toggleSound();
+        }
+    }
+
+    function toggleSound() {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            playInstrument(0);
+        }
+    }
+
+    function playInstrument(index) {
+        if (!isPlaying) return;
+        tofuElements[index].classList.add('active');
+        sounds[index].play().then(() => {
+            sounds[index].currentTime = 0;
+        }).catch(() => {});
+        
+        setTimeout(() => {
+            tofuElements[index].classList.remove('active');
+            playInstrument((index + 1) % sounds.length);
+        }, 1000);
+    }
+
+    tofuElements.forEach((el, index) => {
+        el.addEventListener('mouseenter', () => {
+            el.style.background = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+            sounds[index].play().catch(() => {});
+        });
+    });
+</script>
+
+</body>
+</html>

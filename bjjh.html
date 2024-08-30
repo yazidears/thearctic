@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreamscape Odyssey</title>
+<style>
+body, html { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    background: linear-gradient(135deg, #ffcc33, #ff6699);
+    overflow: hidden;
+}
+#container { 
+    position: relative; 
+    width: 800px; 
+    height: 600px; 
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    overflow: hidden;
+}
+#surreal-landscape { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    animation: scroll 30s linear infinite;
+}
+#characters {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.character {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #6633CC;
+    border-radius: 50%;
+}
+.character span {
+    display: block;
+    margin: 8px;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+}
+@keyframes scroll {
+    0% { top: 0; }
+    100% { top: -100%; }
+}
+@keyframes blink {
+    50% { background: #FFCC33; }
+}
+#interactive-point {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #ff0000;
+    top: 50%;
+    left: 50%;
+    animation: move 5s linear infinite;
+}
+
+@keyframes move {
+    0% { transform: translate3d(-50px, -50px, 0); }
+    25% { transform: translate3d(50px, -50px, 0); }
+    50% { transform: translate3d(50px, 50px, 0); }
+    75% { transform: translate3d(-50px, 50px, 0); }
+    100% { transform: translate3d(-50px, -50px, 0); }
+}
+</style>
+</head>
+<body>
+<div id="container">
+    <div id="surreal-landscape">
+        <div class="character" style="top:10%; left:20%;"><span></span><span></span></div>
+        <div class="character" style="top:50%; left:70%;"><span></span><span></span></div>
+        <div class="character" style="top:85%; left:15%;"><span></span><span></span></div>
+    </div>
+    <div id="interactive-point"></div>
+    <div id="characters"></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const interactivePoint = document.getElementById('interactive-point');
+    let score = 0;
+
+    interactivePoint.addEventListener('mouseenter', () => {
+        score++;
+        alert(`You've found the secret point! Score: ${score}`);
+    });
+
+    document.addEventListener('click', (e) => {
+        const colors = ['#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff'];
+        if (e.target === document.body || e.target === interactivePoint) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.background = `linear-gradient(135deg, ${color}, #ff6699)`;
+        }
+    });
+
+    setInterval(() => {
+        const charContainer = document.getElementById('characters');
+        const char = document.createElement('div');
+        char.classList.add('character');
+        char.style.top = `${Math.random() * 100}%`;
+        char.style.left = `${Math.random() * 100}%`;
+        charContainer.appendChild(char);
+        setTimeout(() => charContainer.removeChild(char), 2000);
+    }, 1000);
+});
+</script>
+</body>
+</html>

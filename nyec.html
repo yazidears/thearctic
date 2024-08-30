@@ -1,0 +1,143 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bizarre Balloons</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #171717;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #balloonCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .wiggle {
+            animation: wiggle 1s infinite;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f36b08;
+            border: none;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #c25607;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="balloonCanvas"></canvas>
+    <button onclick="toggleBalloons()">Toggle Balloons</button>
+    <script>
+        const canvas = document.getElementById('balloonCanvas');
+        const ctx = canvas.getContext('2d');
+        let balloons = [];
+        let wind = 0.5;
+        let running = true;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Balloon {
+            constructor(x, y, dx, dy, color) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.color = color;
+                this.radius = 20 + Math.random() * 30;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius);
+                ctx.lineTo(this.x, this.y + this.radius + 60);
+                ctx.strokeStyle = this.color;
+                ctx.stroke();
+                ctx.closePath();
+            }
+            update() {
+                this.x += this.dx + wind;
+                this.y += this.dy;
+
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+                if (this.y + this.radius > canvas.height * (Math.random() * 0.5) || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+            }
+        }
+
+        function createBalloons() {
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height + 100;
+                const dx = 2 * (Math.random() - 0.5);
+                const dy = -3 * Math.random();
+                const color = `hsl(${Math.random() * 360}, 60%, 60%)`;
+                balloons.push(new Balloon(x, y, dx, dy, color));
+            }
+        }
+
+        function animate() {
+            if (running) {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                balloons.forEach(balloon => {
+                    balloon.update();
+                    balloon.draw();
+                });
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            balloons = [];
+            createBalloons();
+        });
+
+        function toggleBalloons() {
+            running = !running;
+            if (running) {
+                animate();
+            }
+        }
+
+        createBalloons();
+        animate();
+        
+        // Fun effect on button click
+        const button = document.querySelector('button');
+        button.addEventListener('click', function() {
+            this.classList.add('wiggle');
+            setTimeout(() => this.classList.remove('wiggle'), 1000);
+        });
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Clockwork Collection</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #111;
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .clock-face {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            border: 10px solid #444;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 5px #666;
+        }
+        .hand {
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: #eee;
+            top: 50%;
+            transform-origin: 100%;
+            transition: all 0.05s;
+        }
+        #second-hand {
+            height: 2px;
+            background: #f00;
+        }
+        #mystery-hand-a {
+            background: #88f;
+        }
+        #mystery-hand-b {
+            background: #ff8;
+        }
+        .hand-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .surprise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            opacity: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 2em;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        canvas {
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-face">
+        <div class="hand-container">
+            <div id="second-hand" class="hand"></div>
+        </div>
+        <div class="hand-container">
+            <div id="minute-hand" class="hand"></div>
+        </div>
+        <div class="hand-container">
+            <div id="hour-hand" class="hand"></div>
+        </div>
+        <div class="hand-container" style="animation: spinA 20s infinite linear;">
+            <div id="mystery-hand-a" class="hand"></div>
+        </div>
+        <div class="hand-container" style="animation: spinB 30s infinite linear;">
+            <div id="mystery-hand-b" class="hand"></div>
+        </div>
+    </div>
+    <div class="surprise">
+        <p>You've unlocked the cosmic dance of Chronos!</p>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const secondHand = document.querySelector('#second-hand');
+        const minuteHand = document.querySelector('#minute-hand');
+        const hourHand = document.querySelector('#hour-hand');
+        const surpriseMsg = document.querySelector('.surprise');
+        let surpriseShown = false;
+
+        function setClock() {
+            const now = new Date();
+            const secondsRatio = now.getSeconds() / 60;
+            const minutesRatio = (secondsRatio + now.getMinutes()) / 60;
+            const hoursRatio = (minutesRatio + now.getHours()) / 12;
+
+            setRotation(secondHand, secondsRatio);
+            setRotation(minuteHand, minutesRatio);
+            setRotation(hourHand, hoursRatio);
+
+            if (secondsRatio === 0 && !surpriseShown) {
+                surpriseMsg.style.opacity = 1;
+                setTimeout(() => {
+                    surpriseMsg.style.opacity = 0;
+                }, 2000);
+                surpriseShown = true;
+                setTimeout(() => surpriseShown = false, 60000);
+            }
+        }
+
+        function setRotation(element, rotationRatio) {
+            element.style.transform = `rotate(${rotationRatio * 360}deg)`;
+        }
+        setInterval(setClock, 1000);
+
+        function createBackgroundPattern() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const { width, height } = canvas;
+            for (let x = 0; x < width; x += 20) {
+                for (let y = 0; y < height; y += 20) {
+                    ctx.fillStyle = `hsl(${360 * Math.random()}, 50%, 50%)`;
+                    ctx.fillRect(x, y, 10, 10);
+                }
+            }
+        }
+        createBackgroundPattern();
+
+        setClock();
+        document.body.addEventListener('click', createBackgroundPattern);
+
+        document.body.addEventListener('mouseover', event => {
+            if(event.ctrlKey) {
+                const hues = ['#f90', '#09f', '#f09', '#0f9'];
+                document.body.style.backgroundColor = hues[Math.floor(Math.random() * hues.length)];
+            }
+        });
+
+        let Aangle = 0;
+        let Bangle = 0;
+
+        function animateMysteryHands() {
+            Aangle += 0.02;
+            Bangle -= 0.02;
+            document.querySelector('#mystery-hand-a').style.transform = `rotate(${Aangle * 180 / Math.PI}deg)`;
+            document.querySelector('#mystery-hand-b').style.transform = `rotate(${Bangle * 180 / Math.PI}deg)`;
+            requestAnimationFrame(animateMysteryHands);
+        }
+
+        animateMysteryHands();
+    </script>
+</body>
+</html>

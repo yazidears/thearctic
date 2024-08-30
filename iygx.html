@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Land of Quirks</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff0075, #00f0ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #header {
+            font-size: 2em;
+            margin: 20px;
+        }
+        #content {
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+        #quirks {
+            display: flex;
+            justify-content: space-around;
+        }
+        .quirk {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .quirk:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="backgroundCanvas"></canvas>
+    <div id="content">
+        <div id="header">The Land of Quirks</div>
+        <div id="quirks">
+            <div class="quirk" onclick="displayMessage('A funky dance!')">🕺</div>
+            <div class="quirk" onclick="displayMessage('Bizarre sound!')">🎶</div>
+            <div class="quirk" onclick="displayMessage('Crazy spin!')">🔄</div>
+            <div class="quirk" onclick="displayMessage('Strange shape!')">🔺</div>
+        </div>
+        <div class="message" id="messageBox"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('backgroundCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const colors = ['#ff0075', '#ff5700', '#fff200', '#00f0ff', '#ff006e'];
+
+        class Particle {
+            constructor(x, y, size, color, weight) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.weight = weight;
+                this.directionX = Math.random() * 5 - 2.5;
+            }
+            update() {
+                this.weight += 0.05;
+                this.y += this.weight;
+                this.x += this.directionX;
+                if ((this.y > canvas.height) || (this.x > canvas.width)) {
+                    this.y = 0;
+                    this.x = Math.random() * canvas.width;
+                    this.weight = Math.random() * 2 + 1;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 100; i++) {
+                let size = Math.random() * 20 + 10;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                let weight = Math.random() * 2 + 1;
+                particlesArray.push(new Particle(x, y, size, color, weight));
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+
+        init();
+        animateCanvas();
+
+        function displayMessage(message) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => { 
+                messageBox.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esoteric Garden</title>
+    <style>
+        body {
+            background-color: #1d1f20;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        #garden-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .plant {
+            position: absolute;
+            bottom: 0;
+            animation: grow 5s infinite;
+            transform-origin: bottom;
+        }
+        @keyframes grow {
+            0%, 100% { height: 0; }
+            50% { height: 100px; }
+        }
+        #wizard {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 50px;
+            height: 80px;
+            background-color: purple;
+            border-radius: 50%;
+            box-shadow: 0px 0px 20px purple;
+        }
+        #starfield {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        #message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            display: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="starfield"></div>
+    <div id="garden-container"></div>
+    <div id="wizard"></div>
+    <div id="message">You found the hidden message!</div>
+    <script>
+        function createRandomStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = '2px';
+            star.style.height = '2px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            document.getElementById('starfield').appendChild(star);
+        }
+        for (let i = 0; i < 100; i++) {
+            createRandomStar();
+        }
+
+        function randomColor() {
+            return 'hsl(' + Math.floor(Math.random() * 360) + ', 100%, 75%)';
+        }
+
+        function createRandomPlant() {
+            const plant = document.createElement('div');
+            plant.classList.add('plant');
+            plant.style.width = Math.random() * 5 + 5 + 'px';
+            plant.style.left = Math.random() * 100 + 'vw';
+            plant.style.backgroundColor = randomColor();
+            document.getElementById('garden-container').appendChild(plant);
+        }
+        setInterval(createRandomPlant, 500);
+
+        document.getElementById('wizard').addEventListener('click', function () {
+            document.querySelector('body').style.background = randomColor();
+            const message = document.getElementById('message');
+            message.style.display = 'block';
+            setTimeout(() => message.style.display = 'none', 2000);
+        });
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Whirlwind</title>
+    <style>
+        body {
+            background: linear-gradient(130deg, #ff7e5f, #feb47b);
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        #spiralCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        .button {
+            position: absolute;
+            z-index: 1000;
+            padding: 10px 20px;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            background: transparent;
+            cursor: pointer;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: background-color 0.5s, color 0.5s;
+            font-size: 20px;
+        }
+        .button:hover {
+            background-color: #fff;
+            color: #ff7e5f;
+        }
+        #bouncingBlock {
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            position: absolute;
+            border-radius: 50%;
+            z-index: 999;
+            left: 50%;
+            top: 50%;
+        }
+        @keyframes moveBlock {
+            0% {left: 10%; top: 10%;}
+            25% {left: 90%; top: 10%;}
+            50% {left: 90%; top: 90%;}
+            75% {left: 10%; top: 90%;}
+            100% {left: 10%; top: 10%;}
+        }
+        .animateBlock {
+            animation: moveBlock 6s infinite linear;
+        }
+        #floatingText {
+            position: absolute;
+            font-size: 16px;
+            animation: float 5s infinite;
+            z-index: 1000;
+            opacity: 0;
+        }
+        @keyframes float {
+            0% {transform: translateY(0); opacity: 0;}
+            50% {opacity: 1;}
+            100% {transform: translateY(-100px); opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+    <canvas id="spiralCanvas"></canvas>
+    <button class="button">Unleash the Whirlwind!</button>
+    <div id="bouncingBlock"></div>
+    <script>
+        const canvas = document.getElementById('spiralCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        function drawSpiral() {
+            ctx.clearRect(0, 0, width, height);
+            let cx = width / 2;
+            let cy = height / 2;
+            let radius = 0;
+            let angle = 0;
+            ctx.beginPath();
+            while (radius < Math.min(width, height)) {
+                angle += 0.1;
+                radius += 0.5;
+                let x = cx + radius * Math.cos(angle);
+                let y = cy + radius * Math.sin(angle);
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            requestAnimationFrame(drawSpiral);
+        }
+        drawSpiral();
+
+        document.querySelector('.button').addEventListener('click', function() {
+            let text = document.createElement('div');
+            text.id = 'floatingText';
+            text.style.top = (Math.random() * height) + 'px';
+            text.style.left = (Math.random() * width) + 'px';
+            text.textContent = 'Whirlwind!';
+            document.body.appendChild(text);
+            setTimeout(() => {
+                text.parentElement.removeChild(text);
+            }, 5000);
+        });
+
+        function animateBlock() {
+            document.getElementById('bouncingBlock').classList.add('animateBlock');
+        }
+
+        window.onload = animateBlock;
+    </script>
+</body>
+</html>
+```

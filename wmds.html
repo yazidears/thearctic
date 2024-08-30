@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Jellyfish Journey</title>
+<style>
+    body {
+        margin: 0; 
+        overflow: hidden;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background: linear-gradient(to bottom, #000046, #1cb5e0);
+    }
+    #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .jellyfish {
+        position: absolute;
+        width: 60px;
+        height: 100px;
+        background: radial-gradient(circle at 50% 18%, pink, transparent 40%);
+        border-radius: 50% 50% 60% 60%;
+        animation: float 5s infinite ease-in-out;
+    }
+    .tentacle {
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        width: 5px;
+        height: 60px;
+        background: pink;
+        border-radius: 50%;
+        transform-origin: top;
+        animation: sway 2s infinite ease-in-out alternate;
+    }
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+    @keyframes sway {
+        0% {
+            transform: rotate(-10deg);
+        }
+        100% {
+            transform: rotate(10deg);
+        }
+    }
+    .bubble {
+        position: absolute;
+        background: rgba(255,255,255,0.6);
+        border-radius: 50%;
+        animation: rise infinite linear;
+    }
+    @keyframes rise {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-200%);
+        }
+    }
+    .message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 32px;
+        text-align: center;
+        display: none;
+    }
+    .star {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: white;
+        border-radius: 50%;
+        animation: twinkle 1s infinite alternate;
+    }
+    @keyframes twinkle {
+        0% { opacity: 0.8; }
+        100% { opacity: 0.4; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div class="jellyfish" id="jellyfish">
+    <div class="tentacle" style="left: 20px;"></div>
+    <div class="tentacle" style="left: 40px;"></div>
+</div>
+<div class="message" id="message">You found the secret!</div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for(let i = 0; i < 100; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(x, y, Math.random() * 2, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
+
+    function createBubbles() {
+        for(let i = 0; i < 10; i++) {
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.style.width = bubble.style.height = `${Math.random() * 20 + 5}px`;
+            bubble.style.left = `${Math.random() * window.innerWidth}px`;
+            bubble.style.bottom = `${Math.random() * window.innerHeight/2}px`;
+            bubble.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            document.body.appendChild(bubble);
+        }
+    }
+
+    function createStars() {
+        for(let i = 0; i < 50; i++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            star.style.top = `${Math.random() * window.innerHeight}px`;
+            star.style.left = `${Math.random() * window.innerWidth}px`;
+            star.style.animationDuration = `${Math.random() * 2}s`;
+            document.body.appendChild(star);
+        }
+    }
+
+    function secretInteraction() {
+        const jellyfish = document.getElementById("jellyfish");
+        const message = document.getElementById("message");
+
+        let secretCounter = 0;
+        jellyfish.addEventListener("click", () => {
+            secretCounter++;
+            if (secretCounter === 5) {
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+                secretCounter = 0;
+            }
+        });
+    }
+
+    drawStars();
+    createBubbles();
+    createStars();
+    secretInteraction();
+</script>
+
+</body>
+</html>

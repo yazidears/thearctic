@@ -1,0 +1,96 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mindful Maze</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #0e0b16; }
+        .maze-container { position: relative; width: 100vw; height: 100vh; display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; background-color: #232b2b; }
+        .maze-cell { width: 9vw; height: 9vh; margin: 0.5vh; background: repeating-linear-gradient(45deg, #1e313f, #1e313f 10px, #3a4f5c 10px, #3a4f5c 20px); box-shadow: 2px 2px 8px rgba(0,0,0,0.7); border-radius: 10%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .maze-character { font-size: 1.5rem; color: #ffee93; transition: transform 0.3s; }
+        .hidden { color: transparent; }
+        .selected { background-color: #5bc0be; }
+        #game-status { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); color: #f0f0f0; font-size: 2rem; text-shadow: 2px 2px 4px #000; }
+        #timer { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: #ff9f1c; font-size: 1.5rem; }
+        @keyframes neon-glow { 
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fee, 0 0 20px #d93838, 0 0 35px #d93838, 0 0 40px #d93838, 0 0 50px #d93838; }
+            100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #f33, 0 0 20px #d93838, 0 0 35px #d93838, 0 0 40px #d93838, 0 0 50px #d93838; }
+        }
+        .winner-text { animation: neon-glow 1s ease infinite alternate; }
+    </style>
+</head>
+<body>
+    <div id="game-status">Uncover the mystery!</div>
+    <div class="maze-container" id="maze">
+        <div class="maze-cell"><span class="maze-character">🌑</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🔮</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌞</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">⭐</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🪐</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌈</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌜</span></div>
+        <div class="maze-cell"><span class="maze-character">🌟</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">⚡</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌊</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌪️</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🔥</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🍀</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">❄️</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🎇</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">✨</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">💧</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌌</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">☄️</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌻</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌿</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🌺</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🍄</span></div>
+        <div class="maze-cell"><span class="maze-character hidden">🔮</span></div>
+    </div>
+    <div id="timer">60</div>
+    <script>
+        const cells = document.querySelectorAll('.maze-cell');
+        const timerDisplay = document.getElementById('timer');
+        const statusDisplay = document.getElementById('game-status');
+        let successfulClicks = 0;
+        let timer = 60;
+        let timerInterval;
+        
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                const character = cell.querySelector('.maze-character');
+                if (!character.classList.contains('visible')) {
+                    character.classList.remove('hidden');
+                    character.classList.add('visible');
+                    cell.classList.add('selected');
+                    if (character.textContent === '🔮') {
+                        successfulClicks++;
+                        if (successfulClicks === 2) {
+                            endGame(true);
+                        }
+                    }
+                }
+            });
+        });
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timer--;
+                timerDisplay.textContent = timer;
+                if (timer === 0) {
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function endGame(won) {
+            clearInterval(timerInterval);
+            cells.forEach(cell => cell.removeEventListener('click', () => {}));
+            if (won) {
+                statusDisplay.textContent = 'You found the Mystics!';
+                statusDisplay.classList.add('winner-text');
+            } else {
+                statusDisplay.textContent = 'Time is up!';
+           

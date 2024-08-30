@@ -1,0 +1,72 @@
+Understood. Here's an example of a website with a dancing cactus emoji theme, with a button to control its dance mode:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dancing Cactus Emoji</title>
+    <style>
+        body {
+            background: linear-gradient(90deg, rgba(113,210,155,1) 0%, rgba(59,155,98,1) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .wrapper {
+            text-align: center;
+        }
+        .cactus {
+            font-size: 120px;
+            animation: dance 1s infinite;
+        }
+        .dance-control {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .dance-control:hover {
+            background-color: #f5f5f5;
+        }
+        @keyframes dance {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            var dancingCactus = document.getElementById('dancing-cactus');
+            var danceControl = document.getElementById('dance-control');
+            var isDancing = true;
+
+            danceControl.addEventListener('click', function() {
+                if (isDancing) {
+                    dancingCactus.style.animation = 'none';
+                    danceControl.innerText = 'Start Dancing'
+                } else {
+                    dancingCactus.style.animation = 'dance 1s infinite';
+                    danceControl.innerText = 'Stop Dancing'
+                }
+                isDancing = !isDancing;
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="cactus" id="dancing-cactus">🌵</div>
+        <button class="dance-control" id="dance-control">Stop Dancing</button>
+    </div>
+</body>
+</html>
+```
+
+This page has a single dancing cactus emoji in the center of the page, which dances by slightly rotating left and right. There is also a button that lets you toggle the dancing animation on and off. The page's background color is a cool gradient of green colors to match the cactus theme.

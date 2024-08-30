@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Blob Exploratorium</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(120deg, #8ec5fc, #e0c3fc);
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #floating-sphere {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin-left: -50px;
+            margin-top: -50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff004c, #ff6a00);
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+            50% { transform: translateY(-300px) translateX(200px) scale(1.5); }
+        }
+        #quantum-blobs-canvas {
+            width: 100vw;
+            height: 100vh;
+        }
+        #notification {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff77cd;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            color: #fff;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="quantum-blobs-canvas"></canvas>
+    <div id="floating-sphere"></div>
+    <div id="notification">You've discovered a Quantum Blob!</div>
+    <script>
+        const canvas = document.getElementById('quantum-blobs-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const blobs = [];
+        const colors = ['#ff7eb9', '#ff65a3', '#7afcff', '#feff9c', '#fff740'];
+
+        function createBlob() {
+            const size = Math.random() * 50 + 10;
+            blobs.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: size,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                dx: (Math.random() - 0.5) * 2,
+                dy: (Math.random() - 0.5) * 2,
+                dr: Math.random() * 0.02,
+            });
+        }
+
+        for (let i = 0; i < 50; i++) {
+            createBlob();
+        }
+
+        function animateBlobs() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach((blob, index) => {
+                ctx.beginPath();
+                ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
+                ctx.fillStyle = blob.color;
+                ctx.fill();
+
+                blob.x += blob.dx;
+                blob.y += blob.dy;
+                blob.radius += blob.dr;
+                if (blob.radius >= 70 || blob.radius <= 5) blob.dr = -blob.dr;
+
+                if (blob.x + blob.radius > canvas.width || blob.x - blob.radius < 0)
+                    blob.dx = -blob.dx;
+                if (blob.y + blob.radius > canvas.height || blob.y - blob.radius < 0)
+                    blob.dy = -blob.dy;
+            });
+            requestAnimationFrame(animateBlobs);
+        }
+
+        animateBlobs();
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            blobs.forEach(blob => {
+                const dist = Math.hypot(x - blob.x, y - blob.y);
+                if (dist - blob.radius < 1) {
+                    const notification = document.getElementById('notification');
+                    notification.style.display = 'block';
+                    setTimeout(() => notification.style.display = 'none', 2000);
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

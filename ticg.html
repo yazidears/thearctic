@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(60deg, #1a2a6c, #b21f1f, #fdbb2d);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            display: block;
+        }
+        .drifter {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: drift linear infinite;
+        }
+        @keyframes drift {
+            0% {transform: translate3d(0, 0, 0) scale(1);}
+            50% {transform: translate3d(30px, 50px, 0) scale(1.5);}
+            100% {transform: translate3d(0, 0, 0) scale(1);}
+        }
+        .button-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .button-control:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="button-control" onclick="generateJellyfish()">Summon Jellyfish</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const colors = ['#FF5733', '#FFC300', '#DAF7A6', '#C70039', '#900C3F', '#581845'];
+
+        function randomIntFromRange(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function randomColor(colors) {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function DistortableCircle(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.velocityX = (Math.random() - 0.5) * 2;
+            this.velocityY = (Math.random() - 0.5) * 2;
+
+            this.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            this.update = () => {
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.velocityX = -this.velocityX;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.velocityY = -this.velocityY;
+                }
+                this.x += this.velocityX;
+                this.y += this.velocityY;
+                this.draw();
+            }
+        }
+
+        const circlesArray = [];
+        for (let i = 0; i < 100; i++) {
+            const radius = randomIntFromRange(10, 20);
+            const x = randomIntFromRange(radius, canvas.width - radius);
+            const y = randomIntFromRange(radius, canvas.height - radius);
+            const color = randomColor(colors);
+            circlesArray.push(new DistortableCircle(x, y, radius, color));
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            circlesArray.forEach(circle => {
+                circle.update();
+            });
+        }
+        animate();
+
+        function generateJellyfish() {
+            let jellyfish = document.createElement('div');
+            jellyfish.className = 'drifter';
+            jellyfish.style.width = `${randomIntFromRange(40, 100)}px`;
+            jellyfish.style.height = jellyfish.style.width;
+            jellyfish.style.backgroundColor = randomColor(colors);
+            jellyfish.style.top = `${randomIntFromRange(0, window.innerHeight)}px`;
+            jellyfish.style.left = `${randomIntFromRange(0, window.innerWidth)}px`;
+
+            jellyfish.style.animationDuration = `${randomIntFromRange(5, 15)}s`;
+            document.body.appendChild(jellyfish);
+        }
+    </script>
+</body>
+</html>

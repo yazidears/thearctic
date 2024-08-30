@@ -1,0 +1,125 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Jungle Symphony</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; }
+        body { 
+            background-color: #000;
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+        }
+        .canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        canvas { position: absolute; }
+        #quote {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 10px #000;
+        }
+        #music-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #weird-creature {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            transition: transform 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container">
+        <canvas id="jungle-canvas"></canvas>
+        <div id="quote">"Listen to the Jungle's Call"</div>
+        <div id="music-controls">
+            <button id="play-btn">Play Sounds</button>
+            <button id="pause-btn">Pause Sounds</button>
+        </div>
+        <img id="weird-creature" src="https://via.placeholder.com/150" alt="Weird Creature" width="100">
+    </div>
+    <audio id="jungle-sounds" loop>
+        <source src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-living-worlds/atmo_jungle01.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        const canvas = document.getElementById('jungle-canvas');
+        const context = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        const colors = ['#0FF', '#F0F', '#FF0', '#00F', '#0F0', '#F00'];
+        
+        function drawBackground() {
+            context.fillStyle = '#002';
+            context.fillRect(0, 0, width, height);
+            for (let i = 0; i < 100; i++) {
+                context.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                context.beginPath();
+                context.arc(Math.random() * width, Math.random() * height, Math.random() * 50, 0, Math.PI * 2);
+                context.fill();
+            }
+        }
+        
+        function displayQuote() {
+            const quotes = [
+                "The wilderness is alive.",
+                "Mysteries of the jungle unfold.",
+                "Every sound tells a story."
+            ];
+            document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+        
+        function animateCreature() {
+            const creature = document.getElementById('weird-creature');
+            creature.style.transform = `rotate(${Math.random() * 360}deg)`;
+            creature.width = Math.random() * 100 + 50;
+            creature.src = `https://picsum.photos/seed/${Math.round(Math.random() * 1000)}/150`;
+        }
+        
+        setInterval(() => {
+            drawBackground();
+            displayQuote();
+            animateCreature();
+        }, 3000);
+
+        window.onresize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            drawBackground();
+        };
+
+        document.getElementById('play-btn').addEventListener('click', () => {
+            document.getElementById('jungle-sounds').play();
+        });
+
+        document.getElementById('pause-btn').addEventListener('click', () => {
+            document.getElementById('jungle-sounds').pause();
+        });
+    </script>
+</body>
+</html>
+```

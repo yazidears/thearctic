@@ -1,0 +1,154 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            overflow: hidden;
+        }
+        #landscape {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float 20s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateX(-100px) translateY(-50px); }
+            50% { transform: translateX(100vw) translateY(50px); }
+            100% { transform: translateX(-100px) translateY(-50px); }
+        }
+        .tree {
+            position: absolute;
+            background-color: green;
+            border-radius: 20px;
+            animation: sway 5s ease-in-out infinite;
+        }
+        .trunk {
+            position: absolute;
+            background-color: brown;
+            width: 20px;
+            height: 60px;
+            border-radius: 10px;
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(0); }
+            50% { transform: rotate(2deg); }
+        }
+        #frog {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-color: lime;
+            border-radius: 30px;
+            top: 70vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            animation: jump 3s ease infinite;
+            z-index: 1;
+        }
+        @keyframes jump {
+            0%, 100% { transform: translate(-50%, 0) rotate(-10deg); }
+            50% { transform: translate(-50%, -150px) rotate(10deg); }
+        }
+        #pond {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 60vw;
+            height: 20vh;
+            opacity: 0.8;
+            transform: translateX(-50%);
+            background: radial-gradient(circle at bottom, rgba(0, 191, 255, 0.5), rgba(0, 128, 255, 0.9));
+            border-radius: 50% 50% 0 0;
+            overflow: hidden;
+        }
+        .ripples {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 5px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: ripple 8s infinite;
+        }
+        @keyframes ripple {
+            0% {
+                opacity: 1;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(3);
+            }
+        }
+        .message {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            font-size: 24px;
+            color: white;
+            animation: fadeInOut 8s infinite;
+            transform: translateX(-50%);
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="landscape">
+        <div class="cloud" style="width: 100px; height: 50px; top: 20vh; animation-duration: 15s;"></div>
+        <div class="cloud" style="width: 120px; height: 60px; top: 25vh; animation-duration: 18s; animation-delay: 5s;"></div>
+        <div class="cloud" style="width: 80px; height: 40px; top: 30vh; animation-duration: 12s; animation-delay: 2s;"></div>
+        <div class="tree trunk" style="bottom: 0; left: 10%;"></div>
+        <div class="tree" style="width: 60px; height: 60px; bottom: 60px; left: 0;"></div>
+        <div class="tree trunk" style="bottom: 0; right: 20%;"></div>
+        <div class="tree" style="width: 70px; height: 70px; bottom: 60px; right: 10%;"></div>
+        <div id="frog"></div>
+        <div id="pond">
+            <div class="ripples" style="left: 50%; top: 10%; animation-delay: 0s;"></div>
+            <div class="ripples" style="left: 25%; top: 20%; animation-delay: 2s;"></div>
+            <div class="ripples" style="left: 75%; top: 20%; animation-delay: 4s;"></div>
+        </div>
+        <div class="message">Welcome to the Surreal Wonderland</div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const frog = document.getElementById('frog');
+            frog.addEventListener('click', function() {
+                const originalColor = frog.style.backgroundColor;
+                frog.style.backgroundColor = 'orange';
+                setTimeout(() => frog.style.backgroundColor = originalColor, 500);
+            });
+
+            const messages = [
+                "The sky is not the limit!",
+                "Dream bigger!",
+                "Leap like a frog!",
+                "Find your own wonderland!",
+                "Sky's the canvas!"
+            ];
+            const messageDiv = document.querySelector('.message');
+
+            setInterval(() => {
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                messageDiv.textContent = randomMessage;
+            }, 6000);
+        });
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quantum Garden</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: #1b1b1b;
+            color: #eee;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            color: #fff;
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+        h1:hover {
+            transform: scale(1.2) rotate(5deg);
+        }
+        .npc {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 0.5s;
+            z-index: 10;
+        }
+        .npc:hover {
+            transform: translateY(-10px) scale(1.1);
+        }
+        .npc img {
+            width: 100%;
+            height: auto;
+        }
+        #dialogue {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #dialogue.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Quantum Garden</h1>
+    <div class="npc" id="character" style="top: 50%; left: 50%;">
+        <img src="https://randomuser.me/api/portraits/lego/5.jpg" alt="NPC">
+    </div>
+    <div id="dialogue">
+        <p>Hello traveler, welcome to the Quantum Garden. Engage with the elements and seek the secrets hidden within.</p>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 300; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speedX: Math.random() * 2 - 1,
+                speedY: Math.random() * 2 - 1,
+                size: Math.random() * 5
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fill();
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        const character = document.getElementById('character');
+        const dialogue = document.getElementById('dialogue');
+
+        let dialogueVisible = false;
+        character.addEventListener('click', () => {
+            dialogueVisible = !dialogueVisible;
+            dialogue.classList.toggle('visible', dialogueVisible);
+        });
+
+        document.body.addEventListener('mousemove', function(event) {
+            const { clientX, clientY } = event;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            if (Math.abs(clientX - width / 2) < 50 && Math.abs(clientY - height / 2) < 50) {
+                character.style.top = `${clientY - 30}px`;
+                character.style.left = `${clientX - 30}px`;
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

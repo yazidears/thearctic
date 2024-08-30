@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quantum Cat Rave</title>
+    <style>
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+        }
+        .cat {
+            font-size: 5rem;
+            position: absolute;
+            transition: transform 0.5s ease;
+        }
+        #lights {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, transparent, transparent, aquamarine, lime, magenta);
+            animation: flash 1s infinite alternate-reverse;
+        }
+        @keyframes flash {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.5); }
+        }
+        .cat:hover {
+            transform: scale(1.2) rotate(20deg);
+        }
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="lights"></div>
+    <div id="raveCats">
+        <div class="cat" style="top: 10%; left: 20%;">🐱</div>
+        <div class="cat" style="top: 40%; left: 70%;">😸</div>
+        <div class="cat" style="top: 80%; left: 30%;">😻</div>
+        <div class="cat" style="top: 50%; left: 50%;">😺</div>
+    </div>
+    <canvas id="waveCanvas"></canvas>
+    <script>
+        let waveCanvas = document.getElementById('waveCanvas');
+        let ctx = waveCanvas.getContext('2d');
+        waveCanvas.width = window.innerWidth;
+        waveCanvas.height = window.innerHeight;
+        
+        let t = 0;
+        function drawWave() {
+            ctx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            ctx.strokeStyle = 'cyan';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let x = 0; x < waveCanvas.width; x++) {
+                let y = waveCanvas.height / 2 + Math.sin(x * 0.01 + t) * 30;
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            t += 0.04;
+            requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        document.getElementById('raveCats').addEventListener('click', function(e) {
+            if (e.target.classList.contains('cat')) {
+                let meow = new Audio('https://www.soundjay.com/button/sounds/beep-07.wav');
+                meow.play();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            waveCanvas.width = window.innerWidth;
+            waveCanvas.height = window.innerHeight;
+        });
+
+        const catColors = ['#FF69B4', '#32CD32', '#1E90FF', '#FFD700'];
+        const cats = document.getElementsByClassName('cat');
+        setInterval(() => {
+            for (let i = 0; i < cats.length; i++) {
+                cats[i].style.color = catColors[Math.floor(Math.random() * catColors.length)];
+            }
+        }, 500);
+    </script>
+</body>
+</html>

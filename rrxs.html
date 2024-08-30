@@ -1,0 +1,148 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Boogie Blob Experience</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #fff;
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">
+        <h2>Welcome to the Boogie Blob Experience!</h2>
+        <p>Use your mouse to control the blobs and make them dance to the vortex rhythm.</p>
+        <p><span class="button" onclick="toggleInfo()">Close</span></p>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+        let blobs = [];
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        function Blob() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.r = Math.random() * 30 + 20;
+            this.dx = Math.random() - 0.5;
+            this.dy = Math.random() - 0.5;
+            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        }
+
+        Blob.prototype.update = function () {
+            this.x += this.dx * 2;
+            this.y += this.dy * 2;
+
+            if (this.x < 0 || this.x > w) this.dx *= -1;
+            if (this.y < 0 || this.y > h) this.dy *= -1;
+        }
+
+        Blob.prototype.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+
+        for (let i = 0; i < 50; i++) {
+            blobs.push(new Blob());
+        }
+
+        function drawCircle(cx, cy, radius, color, lineWidth) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            blobs.forEach(blob => {
+                blob.update();
+                blob.draw();
+            });
+            
+            drawCircle(w / 2, h / 2, 100, 'rgba(255, 255, 255, 0.1)', 5);
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('mousemove', function(e) {
+            blobs.forEach(blob => {
+                blob.dx += (e.clientX - blob.x) * 0.0005;
+                blob.dy += (e.clientY - blob.y) * 0.0005;
+            });
+        });
+
+        document.body.addEventListener('keydown', function(e) {
+            if (e.keyCode === 73) { // I key
+                toggleInfo();
+            }
+        });
+
+        function toggleInfo() {
+            const info = document.getElementById('info');
+            if (info.style.display === 'block') {
+                info.style.display = 'none';
+            } else {
+                info.style.display = 'block';
+            }
+        }
+
+        animate();
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('info').style.display = 'block';
+            }, 500);
+        }
+    </script>
+</body>
+</html>
+```

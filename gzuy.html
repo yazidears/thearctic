@@ -1,0 +1,124 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimension Portal</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+        }
+        #portal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            margin-top: -100px;
+            margin-left: -100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00c6ff, #0072ff, transparent);
+            animation: pulse 3s infinite;
+            cursor: pointer;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px #00c6ff, 0 0 30px #0072ff;
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px #00c6ff, 0 0 40px #0072ff;
+            }
+        }
+        #dimension {
+            display: none;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 16px;
+        }
+        #dimension img {
+            border-radius: 20px;
+            width: 60%;
+            height: auto;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        #close-btn {
+            margin-top: 20px;
+            padding: 5px 10px;
+            border: 2px solid #00c6ff;
+            background-color: transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #close-btn:hover {
+            background-color: rgba(0, 198, 255, 0.2);
+        }
+        #info {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="portal"></div>
+    <div id="dimension">
+        <img src="https://picsum.photos/1000/600?random=20" alt="Dimension">
+        <button id="close-btn">Return to Portal</button>
+    </div>
+    <div id="info">Materialize alternate realities by interacting with the portal</div>
+    <script>
+        const portal = document.getElementById('portal');
+        const dimension = document.getElementById('dimension');
+        const closeButton = document.getElementById('close-btn');
+
+        portal.addEventListener('click', () => {
+            portal.style.display = 'none';
+            dimension.style.display = 'block';
+            playMusic();
+            changeImage();
+        });
+
+        closeButton.addEventListener('click', () => {
+            dimension.style.display = 'none';
+            portal.style.display = 'block';
+            stopMusic();
+        });
+
+        const audio = new Audio('https://www.soundjay.com/button/sounds/button-2.mp3');
+
+        function playMusic() {
+            if(!audio) return;
+            audio.loop = true;
+            audio.play();
+        }
+
+        function stopMusic() {
+            if(!audio) return;
+            audio.pause();
+            audio.currentTime = 0; 
+        }
+        
+        function changeImage() {
+            const randomNum = Math.floor(Math.random() * 100);
+            const img = dimension.querySelector('img');
+            img.src = `https://picsum.photos/1000/600?random=${randomNum}`;
+        }
+    </script>
+</body>
+</html>
+```

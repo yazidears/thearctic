@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Soundscape</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+            font-family: Arial, sans-serif;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            animation: move 5s linear infinite;
+            background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        @keyframes move {
+            0% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(30px); }
+            50% { transform: translateY(-40px) translateX(-30px); }
+            75% { transform: translateY(20px) translateX(-30px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        #mysteryText {
+            color: pink;
+            font-size: 48px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        #message {
+            display: none;
+            font-size: 24px;
+            position: absolute;
+            bottom: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <div id="mysteryText" onclick="revealMessage()">Click Me!</div>
+            <div id="message">You have discovered the secret soundscape!</div>
+        </div>
+    </div>
+
+    <div class="circle" style="width: 100px; height: 100px; background: radial-gradient(circle, rgba(144,238,144,1) 0%, rgba(0,255,127,1) 100%); left: 10%; top: 30%;"></div>
+    <div class="circle" style="width: 120px; height: 120px; background: radial-gradient(circle, rgba(186,0,255,1) 0%, rgba(106,90,205,1) 100%); left: 50%; top: 70%;"></div>
+    <div class="circle" style="width: 80px; height: 80px; background: radial-gradient(circle, rgba(255,99,71,1) 0%, rgba(255,69,0,1) 100%); left: 90%; top: 20%;"></div>
+
+    <audio id="sound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+    <script>
+        const circles = document.querySelectorAll('.circle');
+        circles.forEach(circle => {
+            circle.addEventListener('mouseover', () => {
+                const audio = document.getElementById('sound');
+                audio.volume = Math.random();
+                audio.play();
+            });
+        });
+
+        function revealMessage() {
+            const message = document.getElementById('message');
+            message.style.display = 'block';
+            const mysteryText = document.getElementById('mysteryText');
+            mysteryText.style.color = 'cyan';
+            setTimeout(() => {
+                message.style.display = 'none';
+                mysteryText.style.color = 'pink';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

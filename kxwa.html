@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Symphonic Symphony</title>
+    <style>
+        body, html {
+            margin: 0;
+            overflow: hidden;
+            background-color: #101010;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            user-select: none;
+        }
+        input[type="range"] {
+            width: 100px;
+            margin-left: 8px;
+        }
+        .note {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: brightness(1.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="control-panel">
+        <label>
+            Note Size:
+            <input type="range" id="node-size" min="5" max="30" value="15">
+        </label> 
+        <br>
+        <label>
+            Amplitude:
+            <input type="range" id="amp" min="10" max="100" value="50">
+        </label>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const sizeControl = document.getElementById('node-size');
+        const ampControl = document.getElementById('amp');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        const symphonicOrbs = [];
+        
+        class SymphonicOrb {
+            constructor(x, y, size, amplitude) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.amplitude = amplitude;
+                this.frequency = Math.random() * 0.02 + 0.01;
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            }
+
+            draw() {
+                ctx.beginPath();
+                const time = Date.now() * this.frequency;
+                const curvedX = this.x + Math.sin(time) * this.amplitude;
+                const curvedY = this.y + Math.cos(time) * this.amplitude;
+                ctx.arc(curvedX, curvedY, this.size, 0, Math.PI * 2);
+                ctx.strokeStyle = this.color;
+                ctx.stroke();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) {
+            const orb = new SymphonicOrb(
+                Math.random() * width,
+                Math.random() * height,
+                sizeControl.value,
+                ampControl.value
+            );
+            symphonicOrbs.push(orb);
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            symphonicOrbs.forEach(orb => orb.draw());
+            requestAnimationFrame(animate);
+        }
+        
+        sizeControl.addEventListener('input', (event) => {
+            const newSize = event.target.value;
+            symphonicOrbs.forEach(orb => orb.size = newSize);
+        });
+
+        ampControl.addEventListener('input', (event) => {
+            const newAmp = event.target.value;
+            symphonicOrbs.forEach(orb => orb.amplitude = newAmp);
+        });
+
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        });
+
+        animate();
+    </script>
+</body>
+</html>

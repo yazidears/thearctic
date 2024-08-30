@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Time Machine</title>
+<style>
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    background: linear-gradient(145deg, #9900cc, #ffcc00);
+    color: #fff;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+  .container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .clock-face {
+    position: absolute;
+    width: 30vmin;
+    height: 30vmin;
+    border: 3px dashed #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 10s linear infinite;
+  }
+  .clock-hand {
+    position: absolute;
+    width: 1px;
+    height: 50%;
+    background: #fff;
+    transform-origin: bottom;
+  }
+  .popover {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    color: #ffcc00;
+  }
+  .quantic-time {
+    font-size: 6vmin;
+    letter-spacing: 3px;
+    animation: dream-text 5s infinite alternate;
+  }
+  .control-panel {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .control-panel button {
+    background: #ffcc00;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .control-panel button:hover {
+    background: #ffa500;
+  }
+  @keyframes spin {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes dream-text {
+    from { opacity: 0.5; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(10px); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="clock-face">
+    <div class="clock-hand" id="hand"></div>
+  </div>
+  <div class="popover" id="popover">Quantum realms await...</div>
+  <div class="control-panel">
+    <div class="quantic-time" id="quantic-time">TIME</div>
+    <button onclick="togglePopover()">Enter The Machine</button>
+  </div>
+</div>
+<script>
+  const hand = document.getElementById('hand');
+  const popover = document.getElementById('popover');
+  const quanticTime = document.getElementById('quantic-time');
+
+  function rndmColor() {
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
+  }
+  
+  setInterval(() => {
+    hand.style.height = (Math.random() * 50 + 25) + '%';
+    hand.style.backgroundColor = rndmColor();
+    quanticTime.style.color = rndmColor();
+    randomTime();
+  }, 1000);
+
+  function togglePopover() {
+    if (popover.style.display === 'none' || popover.style.display === '') {
+      popover.style.display = 'block';
+      document.body.style.backgroundColor = rndmColor();
+    } else {
+      popover.style.display = 'none';
+    }
+  }
+
+  function randomTime() {
+    const hour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+    const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    const second = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    quanticTime.textContent = `${hour}:${minute}:${second}`;
+  }
+
+  randomTime();
+</script>
+</body>
+</html>

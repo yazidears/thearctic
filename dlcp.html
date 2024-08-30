@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Night Watcher</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(48,35,174,1) 0%, rgba(0,212,255,1) 100%);
+            overflow: hidden;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            width: 100vmin;
+            height: 100vmin;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0,0,0,.5);
+        }
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle infinite alternate;
+            opacity: 0.7;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.5); }
+        }
+        #moon {
+            position: absolute;
+            top: 10vmin;
+            left: 10vmin;
+            width: 30vmin;
+            height: 30vmin;
+            background: radial-gradient(circle, #fff 50%, transparent 60%);
+            border-radius: 50%;
+            box-shadow: 0 0 15vmin rgba(255,255,255,0.5);
+            animation: moonMove 10s infinite alternate linear;
+        }
+        @keyframes moonMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(20vmin) translateY(10vmin); }
+        }
+        #chrono {
+            font-size: 2vmin;
+            position: fixed;
+            bottom: 5vmin;
+        }
+        #strange {
+            position: absolute;
+            bottom: 5vmin;
+            right: 5vmin;
+            font-size: 5vmin;
+            display: none;
+            cursor: pointer;
+        }
+        #eye {
+            position: absolute;
+            bottom: 20vmin;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10vmin;
+            height: 10vmin;
+            background: #222;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        #pupil {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4vmin;
+            height: 4vmin;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 5s infinite;
+        }
+        @keyframes blink {
+            0%, 90% { transform: translate(-50%, -50%) scale(1); }
+            95%, 100% { transform: translate(-50%, -50%) scaleX(0); }
+        }
+        .creepyText {
+            position: absolute;
+            font-size: 4vmin;
+            animation: weirdText 20s infinite alternate;
+            opacity: 0.8;
+        }
+        @keyframes weirdText {
+            0% { transform: rotate(0deg) translate(0, 0) scale(1); }
+            100% { transform: rotate(360deg) translate(20vmin, 10vmin) scale(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas">
+        <div id="moon"></div>
+        <div id="chrono">Time: <span id="time">00:00:00</span></div>
+        <div id="strange" onclick="openEye()">👁</div>
+        <div class="creepyText" style="top: 30%; left: 5%;">Whispers</div>
+        <div class="creepyText" style="top: 60%; right: 5%;">are</div>
+        <div class="creepyText" style="bottom: 15%; right: 15%;">Watching...</div>
+        <div id="eye"><div id="pupil"></div></div>
+    </div>
+    <script>
+        const maxStars = 50;
+        for (let i = 0; i < maxStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const duration = Math.random() * 3 + 2;
+            star.style.top = y + '%';
+            star.style.left = x + '%';
+            star.style.animationDuration = duration + 's';
+            document.getElementById('canvas').appendChild(star);
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const hrs = now.getHours().toString().padStart(2, '0');
+            const min = now.getMinutes().toString().padStart(2, '0');
+            const sec = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('time').textContent = `${hrs}:${min}:${sec}`;
+        }
+        setInterval(updateTime, 1000);
+
+        function openEye() {
+            const eye = document.getElementById('eye');
+            eye.style.transform = 'scale(1.5)';
+            setTimeout(() => eye.style.transform = '', 3000);
+        }
+
+        document.querySelector('body').addEventListener('mousemove', (e) => {
+            const pupil = document.getElementById('pupil');
+            const rect = pupil.parentElement.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            pupil.style.transform = `translate(${x / 10}px, ${y / 10}px)`;
+        });
+    </script>
+</body>
+</html>

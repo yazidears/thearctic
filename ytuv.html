@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Typewriter of Dreams</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Courier New', Courier, monospace;
+            color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        #typewriter {
+            width: 80vw;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            position: relative;
+        }
+        #paper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            font-size: 1.2em;
+            line-height: 1.5;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .key {
+            width: 30px;
+            height: 30px;
+            background-color: #34495e;
+            color: white;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px #2c3e50;
+            transition: all 0.2s ease;
+        }
+        .key:active {
+            box-shadow: 0 2px #2c3e50;
+            transform: translateY(2px);
+        }
+        #keyboard {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .sound {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="typewriter">
+        <div id="paper" contenteditable="false"></div>
+        <div id="keyboard"></div>
+    </div>
+    <audio class="sound" id="typeSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    <audio class="sound" id="bellSound" src="https://www.soundjay.com/button/beep-08.wav"></audio>
+
+    <script>
+        const characters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                            'U', 'V', 'W', 'X', 'Y', 'Z', ' ', ',', '.', '!', '?'];
+                            
+        const paper = document.getElementById('paper');
+        const keyboard = document.getElementById('keyboard');
+        const typeSound = document.getElementById('typeSound');
+        const bellSound = document.getElementById('bellSound');
+
+        characters.forEach(char => {
+            const key = document.createElement('div');
+            key.classList.add('key');
+            key.textContent = char;
+            key.onclick = function() {
+                typeSound.currentTime = 0;
+                typeSound.play();
+                paper.textContent += char;
+                if (char === '!') {
+                    bellSound.currentTime = 0;
+                    bellSound.play();
+                }
+            };
+            keyboard.appendChild(key);
+        });
+
+        function randomEffect() {
+            const effects = [
+                () => { paper.style.fontWeight = (paper.style.fontWeight === 'bold' ? 'normal' : 'bold'); },
+                () => { paper.style.fontStyle = (paper.style.fontStyle === 'italic' ? 'normal' : 'italic'); },
+                () => { paper.style.textDecoration = (paper.style.textDecoration === 'underline' ? 'none' : 'underline'); },
+                () => { paper.style.color = `#${Math.floor(Math.random()*16777215).toString(16)}`; },
+                () => { document.body.style.backgroundColor = `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, 0.8)`; },
+                () => { paper.style.fontSize = `${Math.random() * 2 + 1}em`; },
+                () => { paper.textContent = shuffle(paper.textContent); }
+            ];
+            return effects[Math.floor(Math.random() * effects.length)];
+        }
+
+        function shuffle(str) {
+            const arr = str.split('');
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr.join('');
+        }
+
+        setInterval(() => {
+            randomEffect()();
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Cubist Playground</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: black; color: white; font-family: Arial, sans-serif;}
+        canvas { display: block; position: absolute; left: 0; top: 0; z-index: 1; }
+        #message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; text-align: center; }
+        #message h1 { font-size: 4em; margin: 0; }
+        #message p { font-size: 1.2em; }
+        #challenge { border: 5px solid white; padding: 10px; cursor: pointer; margin-top: 20px; }
+        #challenge:hover { background: white; color: black; }
+        #flashing-box { width: 100px; height: 100px; position: absolute; }
+        #key { position: absolute; color: white; font-size: 3em; z-index: 3; opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">
+        <h1>Welcome to the Surreal Cubist Playground</h1>
+        <p>Engage with interactive shapes. Discover the secret!</p>
+        <button id="challenge">Accept the Challenge!</button>
+    </div>
+    <div id="key" style="top:20px; left: 80%;">PRESS</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const message = document.getElementById('message');
+        const challengeButton = document.getElementById('challenge');
+        const flashingBox = document.createElement('div');
+        
+        let squares = [];
+        let squareCount = 50;
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+        let colors = ['#FF6347', '#ADFF2F', '#00BFFF', '#FFD700', '#FF69B4', '#8A2BE2'];
+        let animationFrameId;
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        flashingBox.id = "flashing-box";
+        document.body.appendChild(flashingBox);
+        moveFlashingBox();
+        placeRandomKey();
+
+        function resizeCanvas() {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+        }
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function createSquares() {
+            squares = [];
+            for(let i = 0; i < squareCount; i++) {
+                let size = random(20, 80);
+                squares.push({
+                    x: random(0, canvasWidth),
+                    y: random(0, canvasHeight),
+                    width: size,
+                    height: size,
+                    color: colors[Math.floor(random(0, colors.length))],
+                    dx: random(-3, 3),
+                    dy: random(-3, 3),
+                });
+            }
+        }
+
+        function drawSquares() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            squares.forEach(square => {
+                ctx.fillStyle = square.color;
+                ctx.save();
+                ctx.translate(square.x, square.y);
+                ctx.rotate(square.x / 20);
+                ctx.fillRect(-square.width / 2, -square.height / 2, square.width, square.height);
+                ctx.restore();
+
+                if (square.x + square.width / 2 > canvasWidth || square.x - square.width / 2 < 0) {
+                    square.dx *= -1;
+                }
+                if (square.y + square.height / 2 > canvasHeight || square.y - square.height / 2 < 0) {
+                    square.dy *= -1;
+                }
+
+                square.x += square.dx;
+                square.y += square.dy;
+            });
+
+            animationFrameId = requestAnimationFrame(drawSquares);
+        }
+
+        function moveFlashingBox() {
+            flashingBox.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            flashingBox.style.top = random(0, canvasHeight - 100) + 'px';
+            flashingBox.style.left = random(0, canvasWidth - 100) + 'px';
+
+            setTimeout(moveFlashingBox, 500);
+        }
+
+        function placeRandomKey() {
+            const keyElement = document.getElementById('key');
+            keyElement.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            keyElement.style.top = random(100, canvasHeight - 100) + 'px';
+            keyElement.style.left = random(100, canvasWidth - 100) + 'px';
+            setTimeout(placeRandomKey, 2000);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createSquares();
+        });
+
+        window.addEventListener('keypress', (e) => {
+            const keyElement = document.getElementById('key');
+            if (e.key.toUpperCase() === keyElement.textContent) {
+                alert('Congratulations! You discovered the hidden key!');
+            }
+        });
+
+        challengeButton.addEventListener('click', () => {
+            message.style.display = 'none';
+            resizeCanvas();
+            createSquares();
+            drawSquares();
+        });
+
+        createSquares();
+    </script>
+</body>
+</html>

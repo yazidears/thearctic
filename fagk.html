@@ -1,0 +1,125 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Blobiverse</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #00172d, #27496d, #e1f5c4);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #blobCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 5px solid #ff5733;
+            border-radius: 50%;
+        }
+        #controlPanel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #999;
+        }
+        button {
+            background: #ff5733;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:active {
+            background: #c70039;
+        }
+        h1 {
+            text-shadow: 2px 2px #ffcc00;
+            color: #ff5733;
+            text-align: center;
+            position: relative;
+            top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="controlPanel">
+    <button onclick="addBlob()">Add Blob</button>
+    <button onclick="removeBlob()">Remove Blob</button>
+    <button onclick="changeBackground()">Change Background</button>
+</div>
+<h1>Welcome to the Surreal Blobiverse</h1>
+<canvas id="blobCanvas" width="800" height="600"></canvas>
+
+<script>
+    const canvas = document.getElementById('blobCanvas');
+    const ctx = canvas.getContext('2d');
+    let blobs = [];
+    let colors = ['#e17055', '#d63031', '#fdcb6e', '#00b894', '#0984e3'];
+
+    class Blob {
+        constructor(x, y, r, dx, dy, color) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.dx = dx;
+            this.dy = dy;
+            this.color = color;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        update() {
+            if(this.x + this.r > canvas.width || this.x - this.r < 0) this.dx = -this.dx;
+            if(this.y + this.r > canvas.height || this.y - this.r < 0) this.dy = -this.dy;
+            this.x += this.dx;
+            this.y += this.dy;
+            this.draw();
+        }
+    }
+
+    function addBlob() {
+        const radius = Math.floor(Math.random() * 20) + 15;
+        const x = Math.random() * (canvas.width - radius * 2) + radius;
+        const y = Math.random() * (canvas.height - radius * 2) + radius;
+        const dx = (Math.random() - 0.5) * 4;
+        const dy = (Math.random() - 0.5) * 4;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        blobs.push(new Blob(x, y, radius, dx, dy, color));
+    }
+
+    function removeBlob() {
+        blobs.pop();
+    }
+
+    function changeBackground() {
+        const bgColor = `hsl(${Math.floor(Math.random() * 360)}, 80%, 50%)`;
+        document.body.style.background = `linear-gradient(to bottom, ${bgColor}, #27496d, #e1f5c4)`;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        blobs.forEach(blob => blob.update());
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
+```

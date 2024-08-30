@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Cacophony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffffff;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #message {
+            font-size: 3rem;
+            color: #ffb3ff;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        #controlPanel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 100;
+        }
+        button {
+            background-color: #29a3a3;
+            border: none;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #207d7d;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">Welcome to Cosmic Cacophony!</div>
+    <div id="controlPanel">
+        <button onclick="warp()">Warp Speed</button>
+        <button onclick="reverse()">Reverse</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 3 + 1,
+                    speedX: Math.random() * 2 - 1,
+                    speedY: Math.random() * 2 - 1,
+                    life: Math.random() * 100,
+                    color: 'hsl(' + Math.random() * 360 + ', 100%, 50%)'
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life--;
+
+                if (p.x > width) p.x = 0;
+                if (p.x < 0) p.x = width;
+                if (p.y > height) p.y = 0;
+                if (p.y < 0) p.y = height;
+
+                if (p.life <= 0) {
+                    p.x = Math.random() * width;
+                    p.y = Math.random() * height;
+                    p.size = Math.random() * 3 + 1;
+                    p.speedX = Math.random() * 2 - 1;
+                    p.speedY = Math.random() * 2 - 1;
+                    p.life = Math.random() * 100;
+                    p.color = 'hsl(' + Math.random() * 360 + ', 100%, 50%)';
+                }
+            });
+        }
+
+        function animate() {
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        function warp() {
+            particles.forEach(p => {
+                p.speedX *= 2;
+                p.speedY *= 2;
+            });
+        }
+
+        function reverse() {
+            particles.forEach(p => {
+                p.speedX *= -1;
+                p.speedY *= -1;
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        createParticles();
+        animate();
+    </script>
+</body>
+</html>

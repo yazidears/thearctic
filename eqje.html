@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #1c1c3c, #4b6584);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            cursor: pointer;
+        }
+        .jellyfish {
+            position: absolute;
+            width: 60px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 40px 40px 10px 10px;
+            box-shadow: 0 0 15px #fff, inset 0 0 15px #fff;
+            animation: float 3s ease-in-out infinite;
+        }
+        .tentacles {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            top: 110px;
+        }
+        .tentacle {
+            position: absolute;
+            bottom: 0;
+            width: 5px;
+            height: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: wave 2s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translatey(0);
+            }
+            50% {
+                transform: translatey(-10px);
+            }
+        }
+        @keyframes wave {
+            0%, 100% {transform: rotate(0deg);}
+            50% {transform: rotate(15deg);}
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const jellyfishes = 10;
+        const jellyColors = ['#a29bfe', '#81ecec', '#74b9ff', '#fd79a8'];
+
+        class Jellyfish {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.color = jellyColors[Math.floor(Math.random() * jellyColors.length)];
+                this.tentacles = 8;
+                this.speed = Math.random() * 2 + 1;
+                this.createJelly();
+            }
+        
+            createJelly() {
+                this.element = document.createElement('div');
+                this.element.className = 'jellyfish';
+                this.element.style.left = `${this.x}px`;
+                this.element.style.top = `${this.y}px`;
+                this.element.style.background = this.color;
+                document.body.appendChild(this.element);
+
+                const tentaclesContainer = document.createElement('div');
+                tentaclesContainer.className = 'tentacles';
+                this.element.appendChild(tentaclesContainer);
+
+                for (let i = 0; i < this.tentacles; i++) {
+                    const tentacle = document.createElement('div');
+                    tentacle.className = 'tentacle';
+                    tentacle.style.left = `${i * 10}px`;
+                    tentacle.style.background = this.color;
+                    tentaclesContainer.appendChild(tentacle);
+                }
+            }
+
+            update() {
+                this.y += Math.sin(Date.now() / 1000) * this.speed;
+                this.element.style.transform = `translateY(${Math.sin(Date.now() / 1000) * 10}px)`;
+            }
+        }
+
+        const jellylist = [];
+        for (let i = 0; i < jellyfishes; i++) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            jellylist.push(new Jellyfish(x, y));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            jellylist.forEach(jelly => jelly.update());
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neo-Surreal Aquarium</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d); }
+        #aquarium { position: relative; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.1); }
+        .fish { position: absolute; width: 50px; height: 30px; background: rgba(255, 255, 255, 0.3); border-radius: 50%; transform-origin: 50% 50%; animation: swim infinite linear; }
+        @keyframes swim { 0% { transform: translateX(-50px) rotate(0deg); } 50% { transform: translateX(50vw) rotate(360deg); } 100% { transform: translateX(-50px) rotate(0deg); } }
+        #controls { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; }
+        #slider { width: 300px; margin-right: 10px; }
+        #octopus { display: none; position: absolute; bottom: 0; left: 0; padding: 20px; background: rgba(0, 0, 0, 0.5); color: #fff; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div id="aquarium">
+        <div class="fish" style="top: 50%; animation-duration: 6s;"></div>
+        <div class="fish" style="top: 70%; animation-duration: 8s;"></div>
+        <div class="fish" style="top: 30%; animation-duration: 10s;"></div>
+        <div id="octopus">🐙 The Oracle Octopus is watching...</div>
+        <div id="controls">
+            <input type="range" id="slider" min="5" max="50" value="10">
+            <button id="toggleOctopus">Toggle Octopus</button>
+        </div>
+    </div>
+    <script>
+        const fishElements = document.querySelectorAll('.fish');
+        const slider = document.getElementById('slider');
+        const octopus = document.getElementById('octopus');
+        const toggleButton = document.getElementById('toggleOctopus');
+
+        slider.addEventListener('input', function() {
+            fishElements.forEach(fish => {
+                fish.style.width = `${this.value}px`;
+                fish.style.height = `${this.value * 0.6}px`;
+            });
+        });
+
+        toggleButton.addEventListener('click', function() {
+            if (octopus.style.display === 'none' || octopus.style.display === '') {
+                octopus.style.display = 'block';
+            } else {
+                octopus.style.display = 'none';
+            }
+        });
+
+        function randomizeFish() {
+            fishElements.forEach(fish => {
+                const randomY = Math.floor(Math.random() * 90) + 5;
+                fish.style.top = `${randomY}%`;
+                const randomDuration = Math.random() * 5 + 5;
+                fish.style.animationDuration = `${randomDuration}s`;
+            });
+        }
+
+        setInterval(randomizeFish, 3000);
+    </script>
+</body>
+</html>
+```

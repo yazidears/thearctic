@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wacky Whirlwind Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+        }
+        #canvas {
+            background: linear-gradient(135deg, #ff007f, #7f00ff);
+            width: 100vw;
+            height: 100vh;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            font-size: 3em;
+            animation: glow 1s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #ff007f, 0 0 30px #ff007f, 0 0 40px #7f00ff, 0 0 50px #7f00ff, 0 0 60px #7f00ff, 0 0 70px #7f00ff; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #ff007f, 0 0 40px #ff007f, 0 0 50px #7f00ff, 0 0 60px #7f00ff, 0 0 70px #7f00ff, 0 0 80px #7f00ff; } 
+        }
+        .ball {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: bounce 3s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-100px); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">Welcome to the Wacky World!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let balls = [];
+
+        function createBalls() {
+            for(let i = 0; i < 20; i++) {
+                let ball = document.createElement('div');
+                ball.classList.add('ball');
+                ball.style.width = ball.style.height = `${20 + Math.random() * 30}px`;
+                ball.style.left = `${Math.random() * 100}vw`;
+                ball.style.top = `${Math.random() * 100}vh`;
+                ball.style.animationDuration = `${1 + Math.random() * 2}s`;
+                ball.style.backgroundColor = randomColor();
+                document.body.appendChild(ball);
+                balls.push(ball);
+            }
+        }
+
+        function randomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 50%)`;
+        }
+
+        function drawCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 50; i++) {
+                ctx.beginPath();
+                let radius = Math.random() * 40;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let r = Math.random() * 255;
+                let g = Math.random() * 255;
+                let b = Math.random() * 255;
+                ctx.fillStyle = `rgba(${r},${g},${b},0.5)`;
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            drawCanvas();
+            balls.forEach(ball => {
+                ball.style.left = `${Math.random() * 100}vw`;
+                ball.style.top = `${Math.random() * 100}vh`;
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', drawCanvas);
+        createBalls();
+        animate();
+    </script>
+</body>
+</html>

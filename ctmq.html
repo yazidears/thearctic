@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Time Capsule</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Courier New', monospace;
+        background: linear-gradient(130deg, #99d9ea, #ef629f);
+        overflow: hidden;
+    }
+    #time-capsule {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+        text-align: center;
+    }
+    #time-capsule h1 {
+        font-size: 3em;
+        margin: 0;
+        text-shadow: 2px 2px #00000088;
+    }
+    #open-capsule {
+        background: #00000077;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        margin-top: 20px;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    #open-capsule:hover {
+        background: #333333aa;
+    }
+    #hidden-content {
+        display: none;
+        margin-top: 20px;
+    }
+    .illusion {
+        position: absolute;
+        animation: float 10s ease-in-out infinite;
+        pointer-events: none;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+    .cloud {
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0.8;
+    }
+    .sun {
+        background: #ffdb4d;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+    #game-area {
+        position: relative;
+        display: none;
+        width: 100vw;
+        height: 60vh;
+        border: 4px dashed #fff;
+        margin-top: 60px;
+    }
+    .target {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.5);
+        position: absolute;
+    }
+</style>
+</head>
+<body>
+    <div id="time-capsule">
+        <h1>Surreal Time Capsule</h1>
+        <button id="open-capsule">Open Capsule</button>
+        <div id="hidden-content">
+            <p>Welcome to an abstract playground of colors and shapes.</p>
+            <button id="start-game">Move Targets!</button>
+        </div>
+        <div id="game-area"></div>
+    </div>
+    <div class="illusion sun" style="top: 10px; left: 80%;"></div>
+    <div class="illusion cloud" style="top: 20px; width: 150px; height: 90px; left: 10%;"></div>
+    <div class="illusion cloud" style="top: 60px; width: 180px; height: 100px; left: 30%; animation-duration: 12s;"></div>
+    <div class="illusion cloud" style="top: 50px; width: 200px; height: 120px; left: 60%; animation-duration: 15s;"></div>
+<script>
+    document.getElementById('open-capsule').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('hidden-content').style.display = 'block';
+    });
+
+    document.getElementById('start-game').addEventListener('click', function() {
+        document.getElementById('game-area').style.display = 'block';
+        startGame();
+    });
+
+    function startGame() {
+        const gameArea = document.getElementById('game-area');
+        gameArea.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const target = document.createElement('div');
+            target.className = 'target';
+            randomizePosition(target);
+            gameArea.appendChild(target);
+        }
+    }
+
+    function randomizePosition(element) {
+        const x = Math.random() * (window.innerWidth - 50);
+        const y = Math.random() * (window.innerHeight * 0.6 - 50);
+        element.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    (function createIllusions(num = 25) {
+        for (let i = 0; i < num; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'illusion cloud';
+            cloud.style.width = (Math.random() * 100 + 100) + 'px';
+            cloud.style.height = (Math.random() * 60 + 50) + 'px';
+            cloud.style.top = Math.random() * window.innerHeight + 'px';
+            cloud.style.left = Math.random() * window.innerWidth + 'px';
+            cloud.style.animationDuration = (Math.random() * 5 + 10) + 's';
+            document.body.appendChild(cloud);
+        }
+    })();
+</script>
+</body>
+</html>

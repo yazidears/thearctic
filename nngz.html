@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whimsical Cloud Collector</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background: #87CEEB; font-family: 'Comic Sans MS', cursive, sans-serif; }
+  #sky { position: relative; width: 100vw; height: 100vh; }
+  .cloud { position: absolute; background: rgba(255, 255, 255, 0.7); border-radius: 50%; animation: float infinite; cursor: pointer; }
+  @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0); } }
+  #scoreboard { position: fixed; top: 10px; left: 10px; color: #333; background: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px; }
+  #poem { display: block; margin: 20px auto; width: 80%; padding: 10px; text-align: center; border: 1px solid #fff; border-radius: 10px; backdrop-filter: blur(3px); font-size: 1.2em; opacity: 0; transition: opacity 1s; }
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="scoreboard">Clouds collected: <span id="score">0</span></div>
+<pre id="poem">
+The clouds roll by,
+A dance in the sky,
+Catch them if you dare,
+These whispers of air.
+</pre>
+<script>
+  const sky = document.getElementById('sky');
+  let score = 0;
+  
+  function createCloud() {
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud';
+    const size = Math.random() * 80 + 20;
+    cloud.style.width = `${size}px`;
+    cloud.style.height = `${size}px`;
+    cloud.style.left = `${Math.random() * 100}vw`;
+    cloud.style.top = `${Math.random() * 80}vh`;
+    cloud.style.animationDuration = `${Math.random() * 5 + 5}s`;
+    cloud.style.transition = `transform 0.5s, opacity 0.5s`;
+    
+    cloud.addEventListener('click', function() {
+      cloud.style.transform = 'scale(0)';
+      cloud.style.opacity = '0';
+      setTimeout(() => sky.removeChild(cloud), 500);
+      score++;
+      document.getElementById('score').innerText = score;
+      if (score === 10) revealPoem();
+    });
+    
+    sky.appendChild(cloud);
+    setTimeout(createCloud, Math.random() * 3000);
+  }
+
+  function revealPoem() {
+    document.getElementById('poem').style.opacity = '1';
+  }
+
+  createCloud();
+</script>
+</body>
+</html>

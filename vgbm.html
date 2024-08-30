@@ -1,0 +1,116 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Surreal Space</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #001F54;
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        .orbit {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            filter: blur(1px);
+            animation: rotate 16s linear infinite;
+        }
+        .spaceship {
+            width: 40px;
+            height: 20px;
+            background: red;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            clip-path: polygon(0 50%, 100% 0, 100% 50%, 100% 100%, 0 50%);
+            animation: spaceshipHover 3s infinite;
+        }
+        @keyframes spaceshipHover {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-48%, -52%) rotate(3deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, -10px); }
+        }
+        @keyframes rotate {
+            to { transform: rotate(1turn); }
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.2; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    <script>
+        function createStarField(numStars) {
+            const universe = document.getElementById('universe');
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = (Math.random() * 100) + '%';
+                star.style.left = (Math.random() * 100) + '%';
+                star.style.animationDuration = (0.5 + Math.random() * 1.5) + 's';
+                universe.appendChild(star);
+            }
+        }
+        
+        function createPlanet(size, x, y, orbitRadius) {
+            const universe = document.getElementById('universe');
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            planet.style.width = planet.style.height = size + 'px';
+            planet.style.top = y + '%';
+            planet.style.left = x + '%';
+            planet.style.background = 'radial-gradient(circle, hsl(' + (Math.random() * 360) + ', 70%, 50%), #001F54)';
+            const orbit = document.createElement('div');
+            orbit.className = 'orbit';
+            orbit.style.width = orbit.style.height = orbitRadius + 'px';
+            orbit.style.top = -(orbitRadius / 2) + 'px';
+            orbit.style.left = -(orbitRadius / 2) + 'px';
+            orbit.appendChild(planet);
+            universe.appendChild(orbit);
+        }
+
+        function createSpaceship() {
+            const spaceship = document.createElement('div');
+            spaceship.className = 'spaceship';
+            spaceship.addEventListener('click', () => {
+                alert('Spaceship engaged!');
+            });
+            document.body.appendChild(spaceship);
+        }
+        
+        (function () {
+            createStarField(200);
+            createPlanet(50, 25, 20, 200);
+            createPlanet(70, 70, 60, 300);
+            createPlanet(40, 80, 10, 150);
+            createSpaceship();
+        })();
+    </script>
+</body>
+</html>
+```

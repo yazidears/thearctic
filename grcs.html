@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Symphonies: The Kaleidoscope Orchestra</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    background: #000033;
+    color: #ffffff;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+}
+#controls button {
+    background: #2222aa;
+    border: none;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+#controls button:hover {
+    background: #5555ff;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+.conductor {
+    animation: spin 5s linear infinite;
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+    font-size: 20px;
+    text-align: center;
+    opacity: 0.7;
+    animation-name: float; 
+    animation-duration: 3s; 
+    animation-iteration-count: infinite;
+}
+.instrument {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ff55ff;
+    position: absolute;
+}
+.piano {
+    background: linear-gradient(45deg, #ffffff 25%, transparent 25%),
+                linear-gradient(-45deg, #ffffff 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ffffff 75%),
+                linear-gradient(-45deg, transparent 75%, #ffffff 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    animation: spin 4s linear infinite reverse;
+}
+.drums {
+    background: radial-gradient(circle, #882288, #552255);
+    animation: float 2.5s ease-in-out infinite;
+}
+.violin {
+    background: linear-gradient(180deg, #bbbb44, #666622);
+    animation: spin 7s linear infinite alternate;
+}
+</style>
+</head>
+<body>
+<div id="controls">
+    <button onclick="playMusic()">Play</button>
+    <button onclick="stopMusic()">Stop</button>
+</div>
+<div class="conductor">
+    <div>&#127925; Maestro</div>
+    <div>of Chaos &#127925;</div>
+</div>
+<canvas id="artCanvas"></canvas>
+<script>
+const canvas = document.getElementById('artCanvas');
+const ctx = canvas.getContext('2d');
+let instruments = [];
+let audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+let isPlaying = false;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function createInstrument(type) {
+    const instrument = document.createElement('div');
+    instrument.className = `instrument ${type}`;
+    instrument.style.top = `${Math.random() * window.innerHeight}px`;
+    instrument.style.left = `${Math.random() * window.innerWidth}px`;
+    document.body.appendChild(instrument);
+    instruments.push(instrument);
+}
+
+['piano', 'drums', 'violin'].forEach(type => {
+    for (let i = 0; i < 5; i++) {
+        createInstrument(type);
+    }
+});
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    instruments.forEach(instrument => {
+        const x = parseFloat(instrument.style.left);
+        const y = parseFloat(instrument.style.top);
+        ctx.beginPath();
+        ctx.arc(x + 20, y + 20, 20, 0, Math.PI * 2);
+        ctx.fillStyle = '#8888ff';
+        ctx.fill();
+        ctx.closePath();
+    });
+    requestAnimationFrame(draw);
+}
+draw();
+
+function playMusic() {
+    if (!isPlaying) {
+        audio.play();
+        isPlaying = true;
+    }
+}
+
+function stopMusic() {
+    if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+    }
+}
+</script>
+</body>
+</html>

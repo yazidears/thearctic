@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Interactive Aquarium</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #001f3f; color: #ffffff; font-family: 'Comic Sans MS'; }
+        #aquarium { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; }
+        .fish { position: absolute; width: 50px; height: 30px; background-color: #f1c40f; border-radius: 50%; animation: swim 10s linear infinite; }
+        .fish:before { content: ''; position: absolute; top: 50%; left: 100%; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 25px solid #f1c40f; transform: translateY(-50%); }
+        @keyframes swim {
+            0% { transform: translateX(0) translateY(50vh); }
+            50% { transform: translateX(95vw) translateY(calc(50vh + 20px)); }
+            100% { transform: translateX(0) translateY(50vh); }
+        }
+        #bubbleCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #controlPanel { position: fixed; top: 10px; left: 10px; background: rgba(255,255,255,0.3); padding: 10px; border-radius: 8px; }
+        input[type=range] { width: 100px; }
+        #scoreBoard { position: fixed; bottom: 10px; left: 10px; font-size: 20px; }
+    </style>
+</head>
+<body>
+<div id="aquarium"></div>
+<canvas id="bubbleCanvas"></canvas>
+<div id="controlPanel">
+    Bubbles: <input type="range" id="bubbleSpeed" min="1" max="10" value="5"><br>
+    Fish Speed: <input type="range" id="fishSpeed" min="1" max="10" value="5"><br>
+    Fish Count: <input type="range" id="fishCount" min="1" max="20" value="10">
+</div>
+<div id="scoreBoard">Score: <span id="score">0</span></div>
+<script>
+    const aquarium = document.getElementById('aquarium');
+    const bubbleCanvas = document.getElementById('bubbleCanvas');
+    const scoreBoard = document.getElementById('score');
+    const ctx = bubbleCanvas.getContext('2d');
+    let bubbles = [];
+    let fishCount = 10;
+    let score = 0;
+
+    function spawnFish(count) {
+        for (let i = 0; i < count; i++) {
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.style.top = Math.random() * (window.innerHeight - 30) + 'px';
+            fish.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            aquarium.appendChild(fish);
+        }
+    }
+
+    function createBubble() {
+        return { x: Math.random() * window.innerWidth, y: window.innerHeight, r: Math.random() * 5 + 2 };
+    }
+
+    function drawBubble(b) {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+    }
+
+    function animateBubbles() {
+        ctx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
+        bubbles.forEach((b, idx) => {
+            b.y -= Math.random() * document.getElementById('bubbleSpeed').value;
+            drawBubble(b);
+            if (b.y + b.r < 0) bubbles[idx] = createBubble();
+        });
+        requestAnimationFrame(animateBubbles);
+    }
+
+    function updateFishSpeed() {
+        document.querySelectorAll('.fish').forEach(fish => {
+            fish.style.animationDuration = 11 - document.getElementById('fishSpeed').value + 's';
+        });
+    }
+
+    function updateFishCount() {
+        aquarium.innerHTML = '';
+        fishCount = document.getElementById('fishCount').value;
+        spawnFish(fishCount);
+    }
+
+    bubbleCanvas.width = window.innerWidth;
+    bubbleCanvas.height = window.innerHeight;
+
+    document.getElementById('bubbleSpeed').addEventListener('input', () => bubbles = Array(50).fill().map(createBubble));
+    document.getElementById('fishSpeed').addEventListener('input', updateFishSpeed);
+    document.getElementById('fishCount').addEventListener('input', updateFishCount);
+    aquarium.addEventListener('click', () => {
+        score++;
+        scoreBoard.innerText = score;
+    });
+
+    window.onresize = () => { bubbleCanvas.width = window.innerWidth; bubbleCanvas.height = window.innerHeight; };
+
+    bubbles = Array(50).fill().map(createBubble);
+    spawnFish(fishCount);
+    animateBubbles();
+    updateFishSpeed();
+</script>
+</body>
+</html>

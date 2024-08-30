@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quirky Space Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            background: radial-gradient(circle farthest-corner at center, #1b2735 0%, #090a0f 100%);
+            overflow: hidden;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+         }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+        }
+        #alien {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: green;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+            box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.5);
+        }
+        #alien::before, #alien::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            top: 30px;
+        }
+        #alien::before {
+            left: 25px;
+        }
+        #alien::after {
+            right: 25px;
+        }
+        #moon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(145deg, #f0f0f0, #bdbdbd);
+            border-radius: 50%;
+        }
+        #moon:hover {
+            background: linear-gradient(145deg, #ff9898, #ff5757);
+        }
+        #planet {
+            width: 250px;
+            height: 250px;
+            background: purple;
+            border-radius: 50%;
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            box-shadow: 0 0 100px purple;
+            animation: rotate 10s infinite linear;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg)}
+            100% { transform: rotate(360deg)}
+        }
+        #instruction {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="instruction">Hover over elements for a surreal experience!</div>
+    <div id="alien"></div>
+    <div id="moon"></div>
+    <div id="planet"></div>
+    <script>
+        const canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const drawStars = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 3;
+                const hue = 160 + Math.random() * 60;
+                ctx.fillStyle = `hsl(${hue}, 100%, 88%)`;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        drawStars();
+
+        let alienX = 50, alienY = 50;
+        const alienEl = document.getElementById('alien');
+
+        const moveAlien = () => {
+            alienX = Math.random() * (window.innerWidth - 100);
+            alienY = Math.random() * (window.innerHeight - 100);
+            alienEl.style.left = alienX + 'px';
+            alienEl.style.top = alienY + 'px';
+        };
+
+        alienEl.addEventListener('mouseover', () => {
+            alienEl.style.backgroundColor = 'purple';
+            moveAlien();
+        });
+
+        alienEl.addEventListener('mouseout', () => {
+            alienEl.style.backgroundColor = 'green';
+        });
+
+        const moonEl = document.getElementById('moon');
+        let moonClickCount = 0;
+
+        moonEl.addEventListener('click', () => {
+            moonClickCount++;
+            if (moonClickCount === 3) {
+                alert('You have discovered the alien\'s message!');
+                moonClickCount = 0;
+            }
+        });
+    </script>
+</body>
+</html>

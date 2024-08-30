@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Island Adventure</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background: linear-gradient(to bottom, #001f3f, #0074D9); font-family: 'Comic Sans MS', cursive, sans-serif; }
+  .popup { position: absolute; width: 300px; height: 200px; background: rgba(255, 255, 255, 0.8); border-radius: 10px; padding: 15px; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px 2px #aaa; animation: pulse 1s infinite; }
+  .popup h2 { text-align: center; color: #001f3f; }
+  #island { position: absolute; border-radius: 50%; background: #3D9970; transition: background-color 0.5s; }
+  #clouds { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+  .cloud { position: absolute; width: 150px; height: 60px; background: #fff; border-radius: 50%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); animation: float 10s linear infinite; }
+  #puzzle { position: absolute; bottom: 30px; right: 30px; color: white; font-size: 24px; cursor: pointer; text-shadow: 2px 2px 4px #000; }
+  #game-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; visibility: hidden; }
+  #game { width: 560px; height: 315px; background: #111; color: white; text-align: center; }
+  canvas { border: 1px solid #fff; background: #000; }
+  @keyframes float { from { transform: translateX(-200px); } to { transform: translateX(100vw); } }
+  @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
+</style>
+</head>
+<body>
+<div class="popup" id="intro">
+  <h2>Welcome to Quantum Island</h2>
+  <button onclick="startAdventure()">Start Adventure</button>
+</div>
+<div id="island"></div>
+<div id="clouds"></div>
+<div id="puzzle" onclick="showGame()">Solve the Digital Puzzle!</div>
+<div id="game-container">
+  <div id="game">
+    <canvas id="gameCanvas" width="500" height="300"></canvas>
+    <br>
+    <button onclick="closeGame()">Close Game</button>
+  </div>
+</div>
+<script>
+  document.body.onload = function() { createClouds(10); setRandomIsland(); };
+  function createClouds(num) {
+    const clouds = document.getElementById('clouds');
+    for (let i = 0; i < num; i++) {
+      const cloud = document.createElement('div');
+      cloud.className = 'cloud';
+      cloud.style.top = Math.random() * 50 + 'vh';
+      cloud.style.animationDelay = Math.random()*10+'s';
+      clouds.appendChild(cloud);
+    }
+  }
+  function setRandomIsland() {
+    const island = document.getElementById('island');
+    const size = Math.random() * 100 + 200;
+    island.style.width = size + 'px';
+    island.style.height = size + 'px';
+    island.style.left = Math.random() * (window.innerWidth - size) + 'px';
+    island.style.top = Math.random() * (window.innerHeight - size) + 'px';
+    island.style.backgroundColor = 'hsl(' + Math.random() * 360 + ', 50%, 50%)';
+  }
+  function startAdventure() {
+    document.getElementById('intro').style.display = 'none';
+    setTimeout(() => setRandomIsland(), 1000);
+  }
+  function showGame() {
+    document.getElementById('game-container').style.visibility = 'visible';
+    startGame();
+  }
+  function closeGame() {
+    document.getElementById('game-container').style.visibility = 'hidden';
+  }
+  function startGame() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let x = canvas.width / 2, y = canvas.height / 2;
+    ctx.fillStyle = 'lime';
+    ctx.font = '20px Arial';
+    ctx.fillText('Move with arrow keys', 140, 40);
+    window.onkeydown = function(event) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (event.key === 'ArrowLeft' && x > 0) x -= 10;
+      if (event.key === 'ArrowRight' && x < canvas.width - 50) x += 10;
+      if (event.key === 'ArrowUp' && y > 0) y -= 10;
+      if (event.key === 'ArrowDown' && y < canvas.height - 50) y += 10;
+      ctx.fillRect(x, y, 50, 50);
+    };
+  }
+</script>
+</body>
+</html>

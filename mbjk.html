@@ -1,0 +1,112 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dino Racing - Bizarre Adventure</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            overflow: hidden;
+        }
+        #race-track {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://placekitten.com/800/400');
+            background-size: cover;
+            overflow: hidden;
+            border: 10px dashed #fcba03;
+        }
+        .dinosaur {
+            position: absolute;
+            width: 50px;
+        }
+        #dino1 { top: 20%; }
+        #dino2 { top: 40%; }
+        #dino3 { top: 60%; }
+        @keyframes moveDino {
+            to { transform: translateX(100vw); }
+        }
+        @keyframes moveBackwards {
+            to { transform: translateX(-100vw); }
+        }
+        .moving {
+            animation: moveDino 10s linear infinite;
+        }
+        .backwards {
+            animation: moveBackwards 10s linear infinite;
+        }
+        #startBtn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: #9c88ff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 10;
+        }
+        #status {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: #ffcccc;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="race-track">
+        <img id="dino1" class="dinosaur" src="https://placekitten.com/50/50" alt="Dino 1">
+        <img id="dino2" class="dinosaur" src="https://placekitten.com/50/50" alt="Dino 2">
+        <img id="dino3" class="dinosaur" src="https://placekitten.com/50/50" alt="Dino 3">
+        <button id="startBtn">Start the Madness!</button>
+        <div id="status">Ready... Set... Go!</div>
+    </div>
+    <script>
+        const dinos = document.querySelectorAll('.dinosaur');
+        const startBtn = document.getElementById('startBtn');
+        const status = document.getElementById('status');
+
+        startBtn.addEventListener('click', () => {
+            dinos.forEach((dino, index) => {
+                dino.classList.remove('moving', 'backwards');
+                setTimeout(() => {
+                    dino.classList.add(index % 2 === 0 ? 'moving' : 'backwards');
+                }, index * 500);
+            });
+            let interval = setInterval(() => {
+                if (Math.random() < 0.1) {
+                    clearInterval(interval);
+                    declareWinner();
+                }
+            }, 1000);
+        });
+
+        function declareWinner() {
+            let winnerIndex = Math.floor(Math.random() * dinos.length);
+            let loserIndex = (winnerIndex + 1) % dinos.length;
+            dinos.forEach((dino, index) => {
+                dino.classList.remove('moving', 'backwards');
+                if (index === winnerIndex) {
+                    dino.style.transform = 'translateX(100vw)';
+                } else {
+                    dino.style.transform = 'translateX(0vw)';
+                }
+            });
+            status.innerHTML = `Dino ${winnerIndex + 1} wins! Get ready for the next race...`;
+            setTimeout(() => { status.innerHTML = 'Ready... Set... Go!'; }, 3000);
+        }
+    </script>
+</body>
+</html>
+```

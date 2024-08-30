@@ -1,0 +1,103 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Teapot</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #111;
+            color: #f2f2f2;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #teapot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 50% 50%, #FFDDC1, #FF6B6B);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: float 4s infinite ease-in-out;
+        }
+        #lid {
+            position: absolute;
+            top: -30px;
+            left: 30px;
+            width: 90px;
+            height: 30px;
+            background: #FFDDC1;
+            border-top-left-radius: 45px;
+            border-top-right-radius: 45px;
+        }
+        #spout {
+            position: absolute;
+            right: -50px;
+            top: 50px;
+            width: 50px;
+            height: 30px;
+            background: #FFDDC1;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+        #handle {
+            position: absolute;
+            left: -40px;
+            top: 40px;
+            width: 70px;
+            height: 130px;
+            background: transparent;
+            border: 15px solid #FFDDC1;
+            border-radius: 50%;
+        }
+        @keyframes float {
+            0% { transform: translate(-50%, -48%); }
+            50% { transform: translate(-50%, -52%); }
+            100% { transform: translate(-50%, -48%); }
+        }
+        #coordinates {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="teapot">
+        <div id="lid"></div>
+        <div id="spout"></div>
+        <div id="handle"></div>
+    </div>
+    <div id="coordinates">Move your mouse here!</div>
+    <script>
+        const teapot = document.getElementById('teapot');
+        const coordinates = document.getElementById('coordinates');
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = teapot.getBoundingClientRect();
+            const teapotCenter = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+            const angle = Math.atan2(e.pageY - teapotCenter.y, e.pageX - teapotCenter.x);
+            const distance = Math.sqrt((e.pageX - teapotCenter.x) ** 2 + (e.pageY - teapotCenter.y) ** 2);
+            teapot.style.transform = `translate(-50%, -50%) rotate(${angle}rad) scale(${1 + distance / 1000})`;
+            coordinates.innerHTML = `Mouse X: ${e.pageX} | Mouse Y: ${e.pageY}`;
+        });
+
+        teapot.addEventListener('click', () => {
+            alert('You have unlocked the secret of the Surreal Teapot!');
+            document.body.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        });
+    </script>
+</body>
+</html>
+```

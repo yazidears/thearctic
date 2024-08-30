@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Gadget World</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff0099, #493240);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        #galaxy {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 6px white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        #puzzle {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        #puzzle input {
+            padding: 10px;
+            font-size: 20px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        #bigCircle {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            bottom: -150px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.7), transparent);
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255,255,255,0.2);
+        }
+
+        #bigCircle:hover {
+            background: radial-gradient(circle, rgba(255,255,255,1), transparent);
+            animation: rotate 6s infinite linear;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #pet {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            bottom: 20%;
+            left: 10%;
+            animation: hop 2s infinite;
+        }
+
+        @keyframes hop {
+            0%, 100% {
+                bottom: 20%;
+            }
+            50% {
+                bottom: 30%;
+            }
+        }
+
+        #pet::before {
+            content: '🐙';
+            font-size: 70px;
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            animation: wave 1s infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(20deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="galaxy"></div>
+    <div id="puzzle">
+        <div>Solve me if you dare!</div>
+        <input type="text" placeholder="Type your answer here...">
+    </div>
+    <div id="bigCircle"></div>
+    <div id="pet"></div>
+
+    <script>
+        function createStars() {
+            const galaxy = document.getElementById('galaxy');
+            for (var i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                galaxy.appendChild(star);
+            }
+        }
+
+        createStars();
+
+        const answerInput = document.querySelector('#puzzle input');
+        const correctAnswer = 'Stars shine!';
+        
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (answerInput.value.trim() === correctAnswer) {
+                    alert('Congratulations! You solved the puzzle!');
+                } else {
+                    alert('Try again, dreamer!');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

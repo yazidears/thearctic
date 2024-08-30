@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>Quantum Codebreaker</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #f953c6, #b91d73);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            color: white;
+        }
+        #canvas {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        #output {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            opacity: 0.7;
+        }
+        button {
+            border: none;
+            background: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <div id="output">Welcome to the Quantum Realm! Solve the code...</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let code = [];
+        let userCode = [];
+        let attempts = 0;
+
+        function generateCode() {
+            code = [];
+            for(let i = 0; i < 6; i++) {
+                code.push(Math.floor(Math.random() * 10));
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#b2edc5';
+            ctx.font = "48px Courier";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(userCode.join(" "), canvas.width / 2, canvas.height / 2);
+
+            if (userCode.length == 6) {
+                attempts++;
+                if (userCode.join("") === code.join("")) {
+                    document.getElementById('output').innerText = `Congrats! Code cracked in ${attempts} attempts!`;
+                } else {
+                    userCode = [];
+                    document.getElementById('output').innerText = `Try again! Attempts: ${attempts}`;
+                }
+            }
+        }
+
+        function addNumber(num) {
+            if (userCode.length < 6) {
+                userCode.push(num);
+                draw();
+            }
+        }
+
+        window.onload = () => {
+            generateCode();
+            draw();
+            window.addEventListener('keypress', (e) => {
+                if (e.keyCode >= 48 && e.keyCode <= 57) {
+                    addNumber(e.key);
+                }
+            });
+        };
+    </script>
+</body>
+</html>

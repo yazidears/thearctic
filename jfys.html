@@ -1,0 +1,135 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Machine World</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f2f2f2;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(120deg, #c6ffdd, #fbd786, #f7797d);
+        }
+        #console {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 260px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+        #console.show {
+            display: block;
+        }
+        #toggleConsole {
+            position: fixed;
+            bottom: 20px;
+            left: 300px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+        #toggleConsole:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        @keyframes fly {
+            0% {transform: translateY(0px) rotate(0deg);}
+            50% {transform: translateY(-50px) rotate(10deg);}
+            100% {transform: translateY(0px) rotate(20deg);}
+        }
+        .flyer {
+            position: absolute;
+            animation: fly 3s infinite alternate ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="console"></div>
+    <button id="toggleConsole">Toggle Console</button>
+    <img src="https://via.placeholder.com/50" class="flyer" style="left:20%; top:20%; animation-duration: 4s;">
+    <img src="https://via.placeholder.com/50" class="flyer" style="left:50%; top:50%; animation-duration: 6s;">
+    <img src="https://via.placeholder.com/50" class="flyer" style="left:80%; top:30%; animation-duration: 5s;">
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        let consoleVisible = false;
+        const consoleDiv = document.getElementById('console');
+        const toggleButton = document.getElementById('toggleConsole');
+
+        function randomColor() {
+            return 'rgba(' + Math.floor(Math.random()*255) + ',' + Math.floor(Math.random()*255) + ',' + Math.floor(Math.random()*255) + ',0.6)';
+        }
+
+        function drawMachine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 150, 0, 2 * Math.PI);
+            ctx.fillStyle = randomColor();
+            ctx.fill();
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            ctx.fillStyle = randomColor();
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX + Math.cos(i * Math.PI / 3) * 100, centerY + Math.sin(i * Math.PI / 3) * 100, 40, 0, 2*Math.PI);
+                ctx.fill();
+            }
+        }
+        drawMachine();
+
+        function toggleConsole() {
+            consoleVisible = !consoleVisible;
+            if (consoleVisible) {
+                consoleDiv.classList.add('show');
+            } else {
+                consoleDiv.classList.remove('show');
+            }
+        }
+
+        function writeConsole(message) {
+            consoleDiv.innerHTML += message + '<br/>';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        setInterval(() => {
+            const messages = ['Machine running...', 'Parts turning...', 'Energy levels optimal...', 'Routine check...'];
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            writeConsole(message);
+        }, 2000);
+
+        toggleButton.addEventListener('click', toggleConsole);
+    </script>
+</body>
+</html>
+```

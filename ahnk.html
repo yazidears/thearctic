@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Jungle Adventure</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #222;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .title {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: 2em;
+        z-index: 2;
+    }
+    .tree {
+        position: absolute;
+        width: 20px;
+        height: 100px;
+        background: #154;
+    }
+    .treetop {
+        width: 50px;
+        height: 50px;
+        background: radial-gradient(circle at bottom, #282, #060);
+        border-radius: 25px;
+        position: absolute;
+        top: -25px;
+        left: -15px;
+    }
+    .interactive {
+        width: 100px;
+        height: 100px;
+        background-color: #f09;
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.5;
+        cursor: pointer;
+    }
+    #character {
+        width: 50px;
+        height: 50px;
+        background: url('https://source.unsplash.com/random/50x50') no-repeat center center;
+        background-size: cover;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: transform 0.5s;
+    }
+</style>
+</head>
+<body>
+    <div class="title">Wacky Jungle Adventure</div>
+    <div id="trees"></div>
+    <div id="character"></div>
+    <div id="interactive" class="interactive"></div>
+    <script>
+        const treeContainer = document.getElementById('trees');
+        const character = document.getElementById('character');
+        const interactive = document.getElementById('interactive');
+
+        function createTree() {
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            const top = document.createElement('div');
+            top.className = 'treetop';
+            tree.appendChild(top);
+            tree.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+            tree.style.bottom = '0';
+            treeContainer.appendChild(tree);
+        }
+
+        for (let i = 0; i < 30; i++) {
+            createTree();
+        }
+
+        function animateCharacter() {
+            character.style.transform = `translate(${Math.floor(Math.random() * window.innerWidth) - 25}px, ${-Math.floor(Math.random() * 100)}px)`;
+        }
+
+        function moveInteractive() {
+            interactive.style.left = Math.floor(Math.random() * (window.innerWidth - 100)) + 'px';
+            interactive.style.top = Math.floor(Math.random() * (window.innerHeight - 100)) + 'px';
+            interactive.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                character.style.left = `${parseInt(character.style.left) - 20}px`;
+            }
+            if (e.key === 'ArrowRight') {
+                character.style.left = `${parseInt(character.style.left) + 20}px`;
+            }
+            if (e.key === 'ArrowUp') {
+                animateCharacter();
+            }
+        });
+
+        setInterval(moveInteractive, 1500);
+
+        interactive.addEventListener('click', () => {
+            alert('You found a hidden spot!');
+            moveInteractive();
+        });
+
+        window.addEventListener('resize', () => {
+            if(treeContainer.innerHTML !== '') treeContainer.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                createTree();
+            }
+            animateCharacter();
+            moveInteractive();
+        });
+
+    </script>
+</body>
+</html>

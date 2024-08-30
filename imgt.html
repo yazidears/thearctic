@@ -1,0 +1,115 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Epic Blob Adventure</title>
+<style>
+    body, html { margin: 0; padding: 0; overflow: hidden; background: #000; color: #0ff; font-family: 'Arial', sans-serif; }
+    #canvas { display: block; background: #111; }
+    .info { position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0, 0, 0, 0.7); padding: 5px; border-radius: 5px; }
+    .characters { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); display: flex; gap: 20px; }
+    .character { background: #f09; width: 50px; height: 50px; border-radius: 50%; transition: transform 0.3s; cursor: pointer; }
+    .character:hover { transform: scale(1.2); background: #ff0; }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div class="info">Move the blobs with W, A, S, D or Arrow keys. Click to create chaos!</div>
+<div class="characters">
+  <div class="character"></div>
+  <div class="character"></div>
+  <div class="character"></div>
+  <div class="character"></div>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    
+    class Blob {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = Math.random() * 20 + 10;
+            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            this.xSpeed = Math.random() * 2 - 1;
+            this.ySpeed = Math.random() * 2 - 1;
+        }
+        
+        update() {
+            this.x += this.xSpeed;
+            this.y += this.ySpeed;
+            if (this.x - this.radius < 0 || this.x + this.radius > width) this.xSpeed *= -1;
+            if (this.y - this.radius < 0 || this.y + this.radius > height) this.ySpeed *= -1;
+        }
+        
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+    
+    const blobs = Array.from({ length: 100 }, () => new Blob(Math.random() * width, Math.random() * height));
+    
+    function gameLoop() {
+        ctx.clearRect(0, 0, width, height);
+        blobs.forEach(blob => {
+            blob.update();
+            blob.draw();
+        });
+        requestAnimationFrame(gameLoop);
+    }
+    
+    gameLoop();
+
+    const keyMap = {
+        'w': { x: 0, y: -1 },
+        'a': { x: -1, y: 0 },
+        's': { x: 0, y: 1 },
+        'd': { x: 1, y: 0 },
+        'ArrowUp': { x: 0, y: -1 },
+        'ArrowDown': { x: 0, y: 1 },
+        'ArrowLeft': { x: -1, y: 0 },
+        'ArrowRight': { x: 1, y: 0 },
+    };
+
+    function moveBlobs(e) {
+        let mover = keyMap[e.key.toLowerCase()];
+        if (!mover) return;
+        blobs.forEach(blob => {
+            blob.x += mover.x * 5;
+            blob.y += mover.y * 5;
+        });
+    }
+    
+    window.addEventListener('keydown', moveBlobs);
+
+    function createBlobChaos() {
+        const randomX = Math.random() * width;
+        const randomY = Math.random() * height;
+        for (let i = 0; i < 5; i++) {
+            blobs.push(new Blob(randomX, randomY));
+        }
+    }
+    
+    const characters = document.querySelectorAll('.character');
+    characters.forEach(character => {
+        character.addEventListener('click', createBlobChaos);
+    });
+    
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hallucinogenic Neon Jungle</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .creature {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, lime, transparent);
+            box-shadow: 0 0 20px lime;
+            animation: spin 10s linear infinite, float 5s ease-in-out infinite alternate;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+        .interaction {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #0ff;
+            font-size: 20px;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .hidden-message {
+            display: none;
+            color: magenta;
+            font-size: 24px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="creature" style="top:50px; left:30px;"></div>
+    <div class="creature" style="top:120px; left:200px; background:red; box-shadow: 0 0 20px red;"></div>
+    <div class="creature" style="top:300px; left:500px; background:blue; box-shadow: 0 0 20px blue;"></div>
+    <div class="interaction" id="interaction">Touch the creatures to find the hidden message</div>
+    <canvas id="artCanvas"></canvas>
+    <div id="hiddenMessage" class="hidden-message">You have discovered the secret of the Neon Jungle!</div>
+    <script>
+        const creatures = document.querySelectorAll('.creature');
+        creatures.forEach(creature => {
+            creature.addEventListener('click', () => {
+                creature.style.background = 'radial-gradient(circle at center, purple, transparent)';
+                creature.style.boxShadow = '0 0 20px purple';
+                const hiddenMessage = document.getElementById('hiddenMessage');
+                hiddenMessage.style.display = 'block';
+            });
+        });
+
+        const canvas = document.getElementById('artCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        function createPattern() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < 100; i++) {
+                ctx.fillStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.5)`;
+                ctx.fillRect(Math.random()*width, Math.random()*height, 50, 50);
+            }
+        }
+        createPattern();
+
+        setInterval(createPattern, 3000);
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            createPattern();
+        });
+    </script>
+</body>
+</html>

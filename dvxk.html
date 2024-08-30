@@ -1,0 +1,99 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Jellyfish Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001f3f;
+        }
+        .jellyfish {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            animation: float 5s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(20px);
+            }
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const jellyfishArray = [];
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function createJellyfish(x, y) {
+            const jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            jellyfish.style.left = x + 'px';
+            jellyfish.style.top = y - 50 + 'px';
+            document.body.appendChild(jellyfish);
+            setTimeout(() => jellyfish.remove(), 5000);
+        }
+
+        function drawGradientBackground() {
+            const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, canvas.width);
+            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
+            gradient.addColorStop(1, 'rgba(0, 31, 63, 0.5)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function addJellyfishWave() {
+            const randomX = Math.random() * window.innerWidth;
+            const randomSize = (Math.random() * 30) + 20;
+            ctx.beginPath();
+            ctx.arc(randomX, window.innerHeight + randomSize, randomSize, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 255, 0.7)`;
+            ctx.fill();
+            setTimeout(addJellyfishWave, 2000);
+        }
+
+        canvas.addEventListener('mousemove', function (e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            createJellyfish(mouseX, mouseY);
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGradientBackground();
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        animate();
+        addJellyfishWave();
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Time Travel Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #2b5876, #4e4376);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        #content {
+            position: relative;
+        }
+        .button {
+            cursor: pointer;
+            background: #ffcc00;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .character {
+            display: inline-block;
+            font-size: 20px;
+            animation: spin 10s infinite linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="button" onclick="toggleAdventure()">Start Time Travel Adventure</div>
+        <div id="scene"></div>
+        <div id="characters"></div>
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <script>
+        const scenes = [
+            { name: "Jurassic Era", elements: ["🦖", "🌋", "🦕"] },
+            { name: "Medieval Times", elements: ["👑", "⚔️", "🧙"] },
+            { name: "Future World", elements: ["🤖", "🚀", "🛸"] }
+        ];
+        let currentScene = 0;
+
+        function toggleAdventure() {
+            currentScene = (currentScene + 1) % scenes.length;
+            document.querySelector('.button').innerText = `Explore ${scenes[currentScene].name}`;
+            updateScene();
+            animateBackground();
+        }
+
+        function updateScene() {
+            const sceneDiv = document.getElementById('scene');
+            sceneDiv.innerText = scenes[currentScene].name;
+            const charactersDiv = document.getElementById('characters');
+            charactersDiv.innerHTML = '';
+            scenes[currentScene].elements.forEach(element => {
+                const charElem = document.createElement('div');
+                charElem.className = 'character';
+                charElem.innerText = element;
+                charactersDiv.appendChild(charElem);
+            });
+        }
+
+        function animateBackground() {
+            const ctx = document.getElementById('canvas').getContext('2d');
+            let posX = Math.random() * 800;
+            let posY = Math.random() * 600;
+            let hue = 0;
+            function draw() {
+                hue += 1;
+                ctx.fillStyle = `hsla(${hue % 360}, 70%, 50%, 0.1)`;
+                ctx.fillRect(0, 0, 800, 600);
+                ctx.beginPath();
+                ctx.arc(posX, posY, 50, 0, Math.PI * 2, false);
+                ctx.fillStyle = `hsla(${Math.random() * 360}, 70%, 50%, 1)`;
+                ctx.fill();
+                posX += (Math.random() - 0.5) * 10;
+                posY += (Math.random() - 0.5) * 10;
+                posX = posX > 800 ? 0 : posX < 0 ? 800 : posX;
+                posY = posY > 600 ? 0 : posY < 0 ? 600 : posY;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+        
+        toggleAdventure();
+    </script>
+</body>
+</html>

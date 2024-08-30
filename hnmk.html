@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Orb and Fizzing Potions</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #121212;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+            text-align: center;
+        }
+        #orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ffcc00, #ff8800);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            transform: translate(-50%, -50%);
+            animation: float 3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translate(-50%, -50%) translateY(-10px); }
+            100% { transform: translate(-50%, -50%) translateY(10px); }
+        }
+        #potionContainer {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+        }
+        .potion {
+            width: 60px;
+            height: 120px;
+            margin: 0 10px;
+            background: linear-gradient(to top, #8A2BE2, #4B0082);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bubble {
+            position: absolute;
+            bottom: 10px;
+            width: 15px;
+            height: 15px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: rise 3s infinite;
+        }
+        .bubble:nth-child(odd) { background-color: #87CEEB; }
+        .bubble:nth-child(even) { background-color: #7FFF00; }
+        @keyframes rise {
+            0% { bottom: -20px; opacity: 1; }
+            100% { bottom: 110px; opacity: 0; }
+        }
+        #incantation {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            font-size: 2rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div id="orb"></div>
+    <div id="incantation">✨ Whisper a Magical Word ✨</div>
+    <div id="potionContainer">
+        <div class="potion" data-spell="Levioso"></div>
+        <div class="potion" data-spell="Invisiblis"></div>
+        <div class="potion" data-spell="Aguamenti"></div>
+        <div class="potion" data-spell="Firebolt"></div>
+    </div>
+
+    <script>
+        const orb = document.getElementById('orb');
+        const potionContainer = document.getElementById('potionContainer');
+        const incantation = document.getElementById('incantation');
+
+        setInterval(() => {
+            const potions = document.querySelectorAll('.potion');
+            potions.forEach(potion => {
+                potion.innerHTML = '';
+                const numBubbles = Math.floor(Math.random() * 5) + 5;
+                for (let i = 0; i < numBubbles; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    bubble.style.left = `${Math.random() * 45}px`;
+                    bubble.style.animationDelay = `${Math.random() * 3}s`;
+                    potion.appendChild(bubble);
+                }
+            });
+        }, 5000);
+
+        potionContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('potion')) {
+                const spell = e.target.getAttribute('data-spell');
+                incantation.textContent = `✨ Casting: ${spell} ✨`;
+                flashOrb();
+            }
+        });
+
+        function flashOrb() {
+            orb.style.transition = 'none';
+            orb.style.background = radialGradient(randomColor(), randomColor());
+            setTimeout(() => {
+                orb.style.transition = 'background 0.5s ease-out';
+                orb.style.background = radialGradient('#ffcc00', '#ff8800');
+            }, 200);
+        }
+
+        function randomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        
+        function radialGradient(color1, color2) {
+            return `radial-gradient(circle, ${color1}, ${color2})`;
+        }
+    </script>
+</body>
+</html>

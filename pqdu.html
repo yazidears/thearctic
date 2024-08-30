@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Carnival of Colors</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: black;
+            color: white;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            cursor: pointer;
+        }
+        #color-wheel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            margin-top: -200px;
+            margin-left: -200px;
+            border-radius: 50%;
+            background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+            filter: blur(10px);
+            animation: spin 10s linear infinite;
+            transform-origin: center center;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+        .popup {
+            position: absolute;
+            font-size: 24px;
+            color: black;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            transform: scale(0.5);
+            transform-origin: center center;
+        }
+        .popup.bounce {
+            opacity: 1;
+            transform: scale(1);
+            animation: popupBounce 2s ease infinite;
+        }
+        @keyframes popupBounce {
+            0%, 100% {transform: translateY(0);}
+            50% {transform: translateY(-20px);}
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phrases = [
+                "A Dance of Whimsy", "Curious Twists and Turns", 
+                "Expect the Unexpected", "A Mirage of Possibilities",
+                "Float into Imagination", "Colors of the Unknown",
+                "A Waltz with Dreams", "Chase the Illusion"
+            ];
+
+            const createPopup = () => {
+                const popup = document.createElement('div');
+                popup.className = 'popup';
+                popup.innerHTML = phrases[Math.floor(Math.random() * phrases.length)];
+                popup.style.top = `${Math.random() * window.innerHeight}px`;
+                popup.style.left = `${Math.random() * window.innerWidth}px`;
+                document.body.appendChild(popup);
+
+                requestAnimationFrame(() => {
+                    popup.classList.add('bounce');
+                });
+
+                setTimeout(() => {
+                    popup.classList.remove('bounce');
+                    popup.style.opacity = '0';
+                    setTimeout(() => document.body.removeChild(popup), 500);
+                }, 3000);
+            };
+
+            const spawnPopupsPeriodically = () => {
+                setInterval(createPopup, 2000);
+            };
+
+            spawnPopupsPeriodically();
+        });
+    </script>
+</head>
+<body>
+    <div id="color-wheel"></div>
+    <script>
+        // Handle body click to create new popups
+        document.body.addEventListener('click', function(event) {
+            const newPopup = document.createElement('div');
+            newPopup.className = 'popup bounce';
+            newPopup.innerHTML = 'Interactive Click!';
+            newPopup.style.top = `${event.clientY}px`;
+            newPopup.style.left = `${event.clientX}px`;
+            document.body.appendChild(newPopup);
+            setTimeout(() => {
+                newPopup.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(newPopup), 500);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

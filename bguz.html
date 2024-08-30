@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Alien Aquarium</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2b1055, #7597de);
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffffff;
+        }
+        #aquarium {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: floatUp 10s infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        .alienFish {
+            position: absolute;
+            fill: #ff1050;
+            animation: swim 4s infinite alternate;
+        }
+        @keyframes swim {
+            0% { transform: translate(20px, 0) scaleX(1); }
+            100% { transform: translate(-20px, 0) scaleX(-1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="aquarium"></div>
+    <svg id="alienFishSVG" width="50" height="50" viewBox="0 0 50 50" style="display:none;">
+        <path d="M25,2 A23,23 0 1,0 25,48 Q20,36 25,30 Q30,24 25,12 Q30,12 25,2 Z"></path>
+    </svg>
+    <script>
+        const aquarium = document.getElementById('aquarium');
+        const fishSVG = document.getElementById('alienFishSVG').innerHTML;
+        
+        // Random Bubbles Creator
+        function createBubble() {
+            let bubble = document.createElement('div');
+            let size = Math.random() * 10 + 10;
+            bubble.className = 'bubble';
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${Math.random() * window.innerWidth}px`;
+            bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            aquarium.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 15000);
+        }
+        setInterval(createBubble, 500);
+
+        // Alien Fish Creator
+        function createAlienFish() {
+            let fish = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            fish.setAttribute("width", 50);
+            fish.setAttribute("height", 50);
+            fish.setAttribute("viewBox", "0 0 50 50");
+            fish.innerHTML = fishSVG;
+            fish.classList.add('alienFish');
+            fish.style.left = `${Math.random() * window.innerWidth * 0.9}px`;
+            fish.style.top = `${Math.random() * window.innerHeight * 0.9}px`;
+            aquarium.appendChild(fish);
+            setTimeout(() => fish.remove(), 10000);
+        }
+        setInterval(createAlienFish, 2000);
+
+        // Interactive Event: Click to Change Colors
+        aquarium.addEventListener('click', () => {
+            document.body.style.background = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
+        });
+    </script>
+</body>
+</html>

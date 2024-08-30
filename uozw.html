@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical World of Bouncing Bananas</title>
+    <style>
+        body, html { margin: 0; height: 100%; overflow: hidden; background: #222; color: #fff; font-family: 'Comic Sans MS', cursive; }
+        #container { position: relative; width: 100%; height: 100%; }
+        .banana { width: 50px; height: 120px; position: absolute; background: url('https://i.imgur.com/A2a1iSy.png') center/contain no-repeat; animation: bounce infinite 2s ease-in-out; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+        }
+        #juiceButton { position: fixed; bottom: 10px; right: 10px; padding: 10px 20px; font-size: 18px; background-color: #ff6; color: #222; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        #juiceButton:hover { background-color: #ffa; }
+        #popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: #444; border-radius: 10px; text-align: center; }
+        #closePopup { margin-top: 15px; padding: 10px 20px; background-color: #f66; border: none; border-radius: 5px; cursor: pointer; }
+        canvas { display: block; margin: 0 auto; border: 1px solid #fff; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <button id="juiceButton">Make Banana Juice</button>
+    <div id="popup">
+        <h2>Congratulations!</h2>
+        <p>You successfully made a banana smoothie!</p>
+        <button id="closePopup">Close</button>
+    </div>
+    <canvas id="canvas" width="400" height="200"></canvas>
+
+    <script>
+        function randomPosition(max) {
+            return Math.floor(Math.random() * max);
+        }
+        
+        const container = document.getElementById('container');
+        for (let i = 0; i < 20; i++) {
+            const banana = document.createElement('div');
+            banana.className = 'banana';
+            banana.style.left = randomPosition(window.innerWidth - 50) + 'px';
+            banana.style.top = randomPosition(window.innerHeight - 120) + 'px';
+            let delay = Math.random() * 2;
+            banana.style.animationDelay = delay + 's';
+            container.appendChild(banana);
+        }
+
+        let generateJuice = () => {
+            document.getElementById('popup').style.display = 'block';
+        };
+
+        document.getElementById('juiceButton').onclick = generateJuice;
+
+        document.getElementById('closePopup').onclick = () => {
+            document.getElementById('popup').style.display = 'none';
+        };
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'yellow';
+        const leafCoordinates = [[200, 75], [150, 40], [165, 90], [200, 50], [235, 90], [250, 40]];
+
+        let drawBananaSketch = () => {
+            ctx.strokeStyle = 'yellow';
+
+            ctx.beginPath();
+            ctx.arc(200, 100, 20, 0, Math.PI, true); 
+            ctx.lineTo(180, 70);
+            ctx.lineTo(200, 100);
+            ctx.closePath();
+            ctx.fill();
+
+            drawLeaf();
+        };
+
+        function drawLeaf() {
+            ctx.beginPath();
+            ctx.moveTo(leafCoordinates[0][0], leafCoordinates[0][1]);
+            for (let i = 1; i < leafCoordinates.length; i++) {
+                ctx.lineTo(leafCoordinates[i][0], leafCoordinates[i][1]);
+            }
+            ctx.closePath();
+            ctx.fillStyle = '#228B22';
+            ctx.fill();
+        }
+
+        drawBananaSketch();
+    </script>
+</body>
+</html>

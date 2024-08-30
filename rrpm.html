@@ -1,0 +1,75 @@
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                background-color: #000;
+            }
+            .star {
+                position: absolute;
+                border-radius: 50%;
+            }
+            #shooting-star {
+                position: absolute;
+                opacity: 0;
+                transform: rotate(45deg);
+                transition: all 1s ease-out;
+            }
+            .star-field {
+                pointerevents: none;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            .title {
+                text-align: center;
+                color: #fff;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="star-field" id="starField"></div>
+        <div class="title"><h1>A Night Full of Stars</h1></div>
+        <div class="star" id="shooting-star"></div>
+
+        <script>
+            const colors = ['red', 'blue', 'green', 'yellow', 'white', 'purple'];
+            const starField = document.querySelector('#starField');
+
+            function createStar() {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = `${Math.random() * 4}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * window.innerWidth}px`;
+                star.style.top = `${Math.random() * window.innerHeight}px`;
+                star.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                starField.appendChild(star);
+            }
+
+            for(let i = 0; i < 400; i++) {
+                createStar();
+            }
+
+            const shootingStar = document.querySelector('#shooting-star');
+            window.setInterval(() => {
+                shootingStar.style.width = '3px';
+                shootingStar.style.height = '100px';
+                shootingStar.style.backgroundColor = 'white';
+                shootingStar.style.left = `${Math.random() * window.innerWidth}px`;
+                shootingStar.style.top = `${Math.random() * window.innerHeight}px`;
+                shootingStar.style.opacity = 1;
+                setTimeout(() => {
+                    shootingStar.style.opacity = 0;
+                }, 1000);
+            }, 3000);
+        </script>
+    </body>
+</html>
+```
+This is an HTML document that creates a night scene full of stars. The sizes and colors of stars are randomly generated along with their positions on the screen. There is also a shooting star that shoots across the screen intermittently.

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Maze: A Journey Through Stars</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to right, #020024, #090979, #00d4ff);
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        #galacticMaze {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.8);
+            animation: twinkle 2s infinite linear;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.2; }
+        }
+        #instructions {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+        #instructions h1 {
+            font-size: 2em;
+            text-shadow: 2px 2px 8px black;
+        }
+        #spaceship {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #ffcc00;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: translateZ(0);
+            transition: transform 0.1s linear;
+        }
+    </style>
+</head>
+<body>
+    <div id="galacticMaze">
+        <div id="spaceship"></div>
+    </div>
+    <div id="instructions">
+        <h1>Navigate the Galactic Maze!</h1>
+        <p>Use arrow keys to move your spaceship.</p>
+    </div>
+    <script>
+        const starsCount = 100;
+        const maze = document.getElementById('galacticMaze');
+        const spaceship = document.getElementById('spaceship');
+        let posX = window.innerWidth / 2;
+        let posY = window.innerHeight / 2;
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = `${Math.random() * 3 + 2}px`;
+            star.style.height = `${Math.random() * 3 + 2}px`;
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+            maze.appendChild(star);
+        }
+
+        function moveSpaceship(e) {
+            const step = 15;
+            switch (e.key) {
+                case 'ArrowUp':
+                    posY = Math.max(0, posY - step);
+                    break;
+                case 'ArrowDown':
+                    posY = Math.min(window.innerHeight - 30, posY + step);
+                    break;
+                case 'ArrowLeft':
+                    posX = Math.max(0, posX - step);
+                    break;
+                case 'ArrowRight':
+                    posX = Math.min(window.innerWidth - 60, posX + step);
+                    break;
+            }
+            spaceship.style.transform = `translateX(${posX}px) translateY(${posY}px)`;
+        }
+
+        for (let i = 0; i < starsCount; i++) {
+            createStar();
+        }
+
+        document.addEventListener('keydown', moveSpaceship);
+    </script>
+</body>
+</html>

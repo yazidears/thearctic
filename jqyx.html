@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Cube Exploratorium</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #100e1d; color: #ffffff; font-family: 'Courier New', Courier, monospace; }
+        #canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .button { position: absolute; top: 10px; right: 10px; background-color: #6366f1; border: none; border-radius: 5px; padding: 10px 20px; color: white; cursor: pointer; transition: background-color 0.5s; }
+        .button:hover { background-color: #4f46e5; }
+        @keyframes rainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="button" onclick="randomize()">Randomize</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const CUBE_COUNT = 100;
+        const cubes = [...Array(CUBE_COUNT)].map(() => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            size: Math.random() * 20 + 10,
+            color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+            speedX: (Math.random() - 0.5) * 3,
+            speedY: (Math.random() - 0.5) * 3
+        }));
+
+        window.addEventListener('resize', () => resizeCanvas());
+        resizeCanvas();
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            cubes.forEach(cube => drawCube(cube));
+            window.requestAnimationFrame(draw);
+        }
+
+        function drawCube({ x, y, size, color, speedX, speedY }) {
+            ctx.save();
+            ctx.translate(x + size / 2, y + size / 2);
+            ctx.rotate((Math.sin(Date.now() / 500) + 1) / 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fillRect(-size / 2, -size / 2, size, size);
+            ctx.restore();
+
+            // Update position
+            x += speedX;
+            y += speedY;
+
+            // Boundaries
+            if (x > window.innerWidth || x < 0) speedX *= -1;
+            if (y > window.innerHeight || y < 0) speedY *= -1;
+
+            // Update cube properties
+            cube.x = x;
+            cube.y = y;
+            cube.speedX = speedX;
+            cube.speedY = speedY;
+        }
+
+        function randomize() {
+            cubes.forEach(cube => {
+                cube.color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+                cube.speedX = (Math.random() - 0.5) * 3;
+                cube.speedY = (Math.random() - 0.5) * 3;
+            });
+        }
+
+        draw();
+
+        const exploreText = document.createElement('div');
+        exploreText.textContent = "Explore the Cube Realm!";
+        exploreText.style.position = 'absolute';
+        exploreText.style.bottom = '10px';
+        exploreText.style.left = '50%';
+        exploreText.style.transform = 'translateX(-50%)';
+        exploreText.style.fontSize = '24px';
+        exploreText.style.animation = 'rainbow 5s infinite';
+        exploreText.style.fontWeight = 'bold';
+        document.body.appendChild(exploreText);
+    </script>
+</body>
+</html>

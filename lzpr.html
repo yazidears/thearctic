@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Circus</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a2e;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        .tent {
+            position: absolute;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 200px solid #e94560;
+            top: 30%;
+            left: 0;
+            right: 0;
+            margin: auto;
+            animation: tentDance 5s infinite alternate;
+        }
+        @keyframes tentDance {
+            0% { transform: translateX(-100px) rotate(0deg); }
+            100% { transform: translateX(100px) rotate(360deg); }
+        }
+        .floating-balloon {
+            position: fixed;
+            width: 50px;
+            height: 70px;
+            background-color: #4caf50;
+            border-radius: 25px 25px 50px 50px;
+            left: 50%;
+            top: 100%;
+            animation: floatBalloon 6s infinite ease-in;
+        }
+        .floating-balloon:before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #4caf50;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+        @keyframes floatBalloon {
+            0% { top: 100%; transform: scale(1); }
+            50% { top: 10%; transform: scale(1.1); }
+            100% { top: 0; transform: scale(1); }
+        }
+        .carousel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .carousel div {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: rotate 12s linear infinite;
+        }
+        .carousel div:nth-child(1) { top: 50%; left: 30%; animation-delay: 0s; }
+        .carousel div:nth-child(2) { top: 10%; left: 10%; animation-delay: 4s; }
+        .carousel div:nth-child(3) { top: 80%; left: 60%; animation-delay: 8s; }
+        @keyframes rotate {
+            0% { transform: rotate(0deg) translateX(0); }
+            100% { transform: rotate(360deg) translateX(200px); }
+        }
+        .funhouse-mirror {
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            right: 10%;
+            height: 20px;
+            background-image: linear-gradient(to right, #e94560, #0f3460, #e94560);
+            animation: wobble 3s infinite alternate;
+        }
+        @keyframes wobble {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(1.5); }
+            100% { transform: scaleX(1); }
+        }
+        .puzzle-game {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #16213e;
+            border: 3px solid #fff;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .puzzle-game span {
+            color: #f1f1f1;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="tent"></div>
+    <div class="floating-balloon"></div>
+    <div class="carousel">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="funhouse-mirror"></div>
+    <div class="puzzle-game" onclick="solvePuzzle(this)"><span>Click Me!</span></div>
+    <script>
+        let colors = ['#e94560', '#0f3460', '#a52a2a', '#ffb400', '#4caf50', '#1a2a6c', '#ff8c00'];
+        
+        function solvePuzzle(element) {
+            element.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            alert('The puzzle is now vibrant!');
+        }
+
+        setInterval(function() {
+            const newBalloon = document.createElement('div');
+            newBalloon.classList.add('floating-balloon');
+            newBalloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(newBalloon);
+            setTimeout(() => document.body.removeChild(newBalloon), 6000);
+        }, 2000);
+    </script>
+</body>
+</html>

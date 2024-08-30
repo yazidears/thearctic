@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Time Puzzle</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle, #000428, #004e92);
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #controlPanel {
+            z-index: 1;
+            text-align: center;
+        }
+        .button {
+            background: #ff4e50;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background: #fc913a;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controlPanel">
+        <h1>Surreal Time Puzzle</h1>
+        <button class="button" onclick="spinColors()">Spin Colors</button>
+        <button class="button" onclick="resetColors()">Reset</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let colors = [
+            'rgba(255,99,71,0.5)', 'rgba(144,238,144,0.5)', 
+            'rgba(30,144,255,0.5)', 'rgba(255,105,180,0.5)'
+        ];
+        let offset = 0;
+
+        function drawSwirls(time) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.arc(canvas.width / 2, canvas.height / 2, 200 + Math.sin(time / 200 + i) * 15, 0, Math.PI * 2);
+                ctx.fillStyle = colors[(i + offset) % colors.length];
+                ctx.fill();
+            }
+        }
+
+        function animationLoop(time) {
+            drawSwirls(time);
+            requestAnimationFrame(animationLoop);
+        }
+        requestAnimationFrame(animationLoop);
+
+        function spinColors() {
+            offset++;
+        }
+
+        function resetColors() {
+            offset = 0;
+        }
+
+        document.body.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            colors[0] = `rgba(${Math.floor(x * 255)},99,71,0.5)`;
+            colors[1] = `rgba(144,${Math.floor(y * 255)},144,0.5)`;
+            colors[2] = `rgba(30,144,${Math.floor(255 - x * 255)},0.5)`;
+            colors[3] = `rgba(${Math.floor(255 - y * 255)},105,180,0.5)`;
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

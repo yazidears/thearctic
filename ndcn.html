@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Gearbox</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #1e1e1e;
+    font-family: 'Courier New', Courier, monospace;
+    color: #e4fffe;
+  }
+  .gearbox {
+    position: relative;
+    width: 50vw;
+    height: 50vw;
+    max-width: 300px;
+    max-height: 300px;
+    margin: 100px auto;
+  }
+  .gear {
+    position: absolute;
+    border: 4px solid #e4fffe;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: spin 5s infinite linear;
+  }
+  .gear:after, .gear:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: #e4fffe;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .gear:nth-child(1) {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+  .gear:nth-child(2) {
+    width: 70%;
+    height: 70%;
+    left: 15%;
+    top: 15%;
+    animation-direction: reverse;
+  }
+  .gear:nth-child(3) {
+    width: 40%;
+    height: 40%;
+    left: 30%;
+    top: 30%;
+  }
+  .gear .tooth {
+    position: absolute;
+    width: 10%;
+    height: 3%;
+    background-color: #e4fffe;
+    transform-origin: center;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .gear .marker {
+    position: absolute;
+    width: 3px;
+    height: 50%;
+    background-color: #ff2d55;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    transform: rotate(0deg) translateX(-50%);
+    animation: pointer-spin 3s infinite ease-in-out;
+  }
+  @keyframes pointer-spin {
+    0% { transform: rotate(0deg) translateX(-50%); }
+    50% { transform: rotate(360deg) translateX(-50%); }
+    100% { transform: rotate(0deg) translateX(-50%); }
+  }
+  .surreal-text {
+    position: absolute;
+    top: calc(50vh + 250px);
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: transform 2s;
+  }
+  .surreal-text:hover {
+    transform: scale(1.3) rotate(5deg);
+    color: #ff2d55;
+  }
+</style>
+</head>
+<body>
+<div class="gearbox">
+  <div class="gear">
+    <div class="marker"></div>
+    <div class="tooth" style="transform: rotate(0deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(45deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(90deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(135deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(180deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(225deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(270deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(315deg) translateX(150%);"></div>
+  </div>
+  <div class="gear">
+    <div class="marker"></div>
+    <div class="tooth" style="transform: rotate(0deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(45deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(90deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(135deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(180deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(225deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(270deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(315deg) translateX(150%);"></div>
+  </div>
+  <div class="gear">
+    <div class="marker"></div>
+    <div class="tooth" style="transform: rotate(0deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(45deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(90deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(135deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(180deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(225deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(270deg) translateX(150%);"></div>
+    <div class="tooth" style="transform: rotate(315deg) translateX(150%);"></div>
+  </div>
+</div>
+<div class="surreal-text" onclick="warpReality()">Click to Warp Reality</div>
+<script>
+  function warpReality() {
+    const text = document.querySelector('.surreal-text');
+    const gearbox = document.querySelector('.gearbox');
+    const colors = ['#ff2d55', '#4cd964', '#3456e9', '#ffcc00', '#ff3b30'];
+    setInterval(() => {
+      let color = colors[Math.floor(Math.random()

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interstellar Jelly Juggle</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #1a2a6c, #b21f1f, #fdbb2d);
+            font-family: 'Courier New', monospace;
+            cursor: none;
+            user-select: none;
+        }
+        #universe {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .planet {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            transition: transform 0.3s ease;
+        }
+        #jelly {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4);
+            background-size: 150% 150%;
+            border-radius: 50%;
+            position: absolute;
+            animation: dribble 0.6s infinite linear, jellyAnimation 3s infinite alternate ease-in-out;
+            will-change: transform;
+        }
+        @keyframes dribble {
+            0%, 100% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+        }
+        @keyframes jellyAnimation {
+            0% { left: 5%; top: 5%; }
+            100% { left: 95%; top: 95%; }
+        }
+        #message {
+            color: white;
+            font-size: 24px;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            animation: messageAnimation 4s infinite;
+        }
+        @keyframes messageAnimation {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    <div id="message">Catch the Jelly!</div>
+    <script>
+        const planets = 50;
+        const universe = document.getElementById('universe');
+        const jelly = document.createElement('div');
+        jelly.id = 'jelly';
+        let score = 0;
+        let mouseX = 0, mouseY = 0;
+
+        for (let i = 0; i < planets; i++) {
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            planet.style.left = `${Math.random() * 100}vw`;
+            planet.style.top = `${Math.random() * 100}vh`;
+            universe.appendChild(planet);
+        }
+
+        universe.appendChild(jelly);
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            jelly.style.transform = `translate(${mouseX - 25}px, ${mouseY - 25}px)`;
+        });
+
+        setInterval(() => {
+            let closestPlanet = null;
+            let closestDistance = Infinity;
+            document.querySelectorAll('.planet').forEach(planet => {
+                const rect = planet.getBoundingClientRect();
+                const distance = Math.sqrt(Math.pow(rect.x - mouseX, 2) + Math.pow(rect.y - mouseY, 2));
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestPlanet = planet;
+                }
+            });
+            if (closestPlanet) {
+                closestPlanet.style.transform = 'scale(1.5)';
+                setTimeout(() => {
+                    closestPlanet.style.transform = '';
+                }, 300);
+            }
+        }, 100);
+
+        jelly.addEventListener('click', () => {
+            score++;
+            document.getElementById('message').innerText = `Score: ${score}`;
+            jelly.style.animationDuration = Math.max(0.5, 3 - score * 0.1) + 's';
+        });
+    </script>
+</body>
+</html>

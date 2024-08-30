@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galactic Melody</title>
+<style>
+  body { margin: 0; overflow: hidden; font-family: 'Courier New', monospace; }
+  #space { background: black; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+  .star { position: absolute; border-radius: 50%; background: white; }
+  #alien { position: absolute; width: 120px; height: 120px; transition: transform 0.2s; }
+  .eye { position: absolute; background: white; border-radius: 50%; width: 20px; height: 20px; }
+  .eye::after { content: ''; position: absolute; background: black; width: 10px; height: 10px; border-radius: 50%; transition: 0.1s; }
+  #eye-left { top: 30px; left: 30px; }
+  #eye-right { top: 30px; right: 30px; }
+  #messages { position: absolute; top: 10px; right: 10px; color: white; }
+</style>
+</head>
+<body>
+<canvas id="space"></canvas>
+<div id="alien">
+  <div id="eye-left" class="eye"><div></div></div>
+  <div id="eye-right" class="eye"><div></div></div>
+</div>
+<div id="messages"></div>
+<script>
+  const canvas = document.getElementById('space');
+  const context = canvas.getContext('2d');
+  const alien = document.getElementById('alien');
+  const messages = document.getElementById('messages');
+  let stars = [];
+  
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  
+  window.addEventListener('resize', resize);
+  resize();
+  
+  function createStars() {
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1
+      });
+    }
+  }
+  
+  createStars();
+  
+  function updateStars() {
+    for (let star of stars) {
+      star.x += 0.5;
+      if (star.x > canvas.width) {
+        star.x = 0;
+        star.y = Math.random() * canvas.height;
+      }
+    }
+  }
+
+  function drawStars() {
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'white';
+    for (let star of stars) {
+      context.beginPath();
+      context.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      context.fill();
+    }
+  }
+
+  function animate() {
+    updateStars();
+    drawStars();
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+
+  let aliensX = 0;
+  let aliensY = 0;
+
+  function moveAlien(e) {
+    aliensX = e.clientX;
+    aliensY = e.clientY;
+    alien.style.transform = `translate(${aliensX - 60}px, ${aliensY - 60}px)`;
+    const leftEye = document.getElementById('eye-left');
+    const rightEye = document.getElementById('eye-right');
+    const leftEyePupil = leftEye.querySelector('div');
+    const rightEyePupil = rightEye.querySelector('div');
+   
+    leftEyePupil.style.transform = `translate(${(aliensX - 60 - leftEye.offsetLeft - 10) / 10}px, ${(aliensY - 60 - leftEye.offsetTop - 10) / 10}px)`;
+    rightEyePupil.style.transform = `translate(${(aliensX - 60 - rightEye.offsetLeft - 10) / 10}px, ${(aliensY - 60 - rightEye.offsetTop - 10) / 10}px)`;
+  }
+
+  let messageIndex = 0;
+  const alienMessages = [
+    "Welcome to the Galaxy!",
+    "Catch a star!",
+    "Move me with your cursor!",
+    "Look into my eyes!",
+    "Let's wander through the stars!"
+  ];
+
+  function showMessage() {
+    messages.textContent = alienMessages[messageIndex];
+    messageIndex = (messageIndex + 1) % alienMessages.length;
+  }
+
+  setInterval(showMessage, 2000);
+
+  document.addEventListener('mousemove', moveAlien);
+</script>
+</body>
+</html>

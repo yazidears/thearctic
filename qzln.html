@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alien Among Us!</title>
+  <style>  
+    body {
+      background-color: #000000;
+      color: #ffffff;
+    }
+  
+    #alien {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      left: 50%;
+      transition: all 1s;
+    }
+
+    #alien:hover {
+      opacity: 0.5;
+    }
+ 
+    .planet {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      animation: move 5s infinite linear;
+    }
+  
+    @keyframes move {
+      0% { transform: translateX(-50vw); }
+      100% { transform: translateX(50vw); }
+    }
+  </style>
+</head>
+<body>  
+  <img id="alien" src="https://via.placeholder.com/200" alt="Alien">
+  
+  <div id="space"></div>
+  
+  <script>  
+    const alien = document.getElementById('alien');
+    const space = document.getElementById('space');
+  
+    window.addEventListener('mousemove', (event) => {
+      alien.style.left = event.clientX - 50 + 'px';
+      alien.style.top = event.clientY - 50 + 'px';
+    });
+  
+    setInterval(() => {
+      const planet = document.createElement('div');
+      const size = Math.random() * 30;
+    
+      planet.classList.add('planet');
+      planet.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      planet.style.left = Math.random() * window.innerWidth + 'px';
+      planet.style.bottom = -size + 'px';
+      planet.style.width = size + 'px';
+      planet.style.height = size + 'px';
+    
+      space.appendChild(planet);
+    
+      setTimeout(() => {
+        planet.remove();
+      }, 5000);
+    }, 500);
+  </script>
+</body>
+</html> 
+
+The website presents an animation of an alien following the user's mouse cursor, with colored planets traveling from one side of the window to the other. The alien's image is reduced to half opacity when hovered. Every half second, a new planet is generated at a random horizontal position along the bottom of the window, with a random color and size up to 30px, and moves toward the top of the window over five seconds before being removed.

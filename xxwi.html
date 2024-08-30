@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Flipbook</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #1d2b64, #f8cdda);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .scene {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            transition: transform 1s;
+        }
+        .scene:nth-child(1) {
+            background-color: rgba(255, 94, 98, 0.8);
+        }
+        .scene:nth-child(2) {
+            background-color: rgba(98, 255, 218, 0.8);
+        }
+        .scene:nth-child(3) {
+            background-color: rgba(255, 217, 98, 0.8);
+        }
+        .ring {
+            position: absolute;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            animation: ring-animation 2s infinite;
+        }
+        @keyframes ring-animation {
+            0% { transform: scale(0); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<button class="button hidden" id="start">Start the Flipbook</button>
+
+<div id="scene1" class="scene"></div>
+<div id="scene2" class="scene"></div>
+<div id="scene3" class="scene"></div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const button = document.getElementById('start');
+    const scenes = [document.getElementById('scene1'), document.getElementById('scene2'), document.getElementById('scene3')];
+    let sceneIndex = 0;
+    let particles = [];
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    class Particle {
+        constructor(x, y, radius, color) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.dx = Math.random() * 4 - 2;
+            this.dy = Math.random() * 4 - 2;
+        }
+
+        update() {
+            this.x += this.dx;
+            this.y += this.dy;
+            if (this.x < 0 || this.x > canvas.width) this.dx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.dy *= -1;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
+    function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+        }
+        requestAnimationFrame(loop);
+    }
+
+    button.addEventListener('click', () => {
+        button.classList.add('hidden');
+        switchScenes(sceneIndex);
+    });
+
+    function switchScenes(index) {
+        scenes.forEach((scene, i) => scene.style.transform = `translateX(${(i - index) * 100}%)`);
+        createRings();
+        setTimeout(() => {
+            sceneIndex = (sceneIndex + 1) % scenes.length;
+            particles = generateParticles();
+            if (sceneIndex === 0) {
+                button.classList.remove('hidden');
+            } else {
+                switchScenes(sceneIndex);
+            }
+        }, 2000);
+    }
+
+    function createRings() {
+        for (let i = 0; i < 5; i++) {
+            const ring = document.createElement('div');
+            ring.className = 'ring';
+            ring.style.width = ring.style.height = `${Math.random() * 100 + 20}px`;
+            ring.style.top = `${Math.random() * 100}%`;
+            ring.style.left = `${Math.random() * 100}%`;
+            scenes[sceneIndex].appendChild(ring);
+            setTimeout(() => ring.remove(), 2000);
+        }
+    }
+
+    function generateParticles() {
+        let result = [];
+        for (let i = 0; i < 100; i++) {
+            const size = Math.random() * 4 + 2;
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const color = `rgba(0, 0, 0, ${Math.random()})`;
+            result.push(new Particle(x, y, size, color));
+        }
+        return result;
+    }
+
+    generateParticles();
+    loop();
+</script>
+
+</body>
+</html>

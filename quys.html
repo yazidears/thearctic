@@ -1,0 +1,85 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fantastic Jellybean Construct</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #282c34; }
+        #canvas { display: block; background: linear-gradient(145deg, #4e4376, #2b5876); }
+        #wrapper { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #fff; text-align: center; }
+        h1 { font-family: 'Comic Sans MS', cursive, sans-serif; font-size: 3em; }
+        #jelly-container { margin-top: 10px; }
+        .jellybean { position: absolute; width: 50px; height: 30px; background: radial-gradient(circle, #fff, #f06d06); border-radius: 20px; animation: float 8s infinite ease-in-out; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-100px); }
+            100% { transform: translateY(0px); }
+        }
+        .interactive-zone { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 200px; background: rgba(255, 255, 255, 0.1); border: dashed 2px #fff; animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        #info { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 14px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="wrapper">
+        <h1>The Fantastic Jellybean Construct</h1>
+        <div id="jelly-container"></div>
+        <div class="interactive-zone"></div>
+        <div id="info">Click the jellybeans for a surprise!</div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            drawBackground();
+        }
+        
+        function drawBackground() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#282c34';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+            
+            for (let i = 0; i < 100; i++) {
+                let x = Math.random() * width;
+                let y = Math.random() * height;
+                let size = Math.random() * 3;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        const jellyContainer = document.getElementById('jelly-container');
+        for (let i = 0; i < 20; i++) {
+            let jelly = document.createElement('div');
+            jelly.className = 'jellybean';
+            jelly.style.left = Math.random() * window.innerWidth + 'px';
+            jelly.style.top = Math.random() * window.innerHeight + 'px';
+            let randomDuration = Math.random() * 4 + 4;
+            jelly.style.animationDuration = randomDuration + 's';
+            jelly.addEventListener('click', () => {
+                jelly.textContent = '🎉';
+                setTimeout(() => { jelly.textContent = ''; }, 2000);
+            });
+            jellyContainer.appendChild(jelly);
+        }
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; }
+        body { background-color: #2A2A40; font-family: 'Comic Sans MS', cursive, sans-serif; }
+        canvas { display: block; background: radial-gradient(circle at bottom, #FFD700, #FF8C00, #DC143C); }
+        #nonsense {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: white; font-size: 24px; text-align: center; width: 300px; padding: 20px;
+            background: rgba(0, 0, 0, 0.5); border-radius: 10px; display: none;
+        }
+        #toggleNonsense {
+            position: absolute; top: 20px; right: 20px; padding: 10px 20px;
+            background-color: #40E0D0; border: none; cursor: pointer; color: white;
+            font-size: 16px; border-radius: 5px;
+        }
+        #toggleNonsense:hover { background-color: #20B2AA; }
+    </style>
+</head>
+<body>
+    <canvas id="artCanvas"></canvas>
+    <div id="nonsense">Welcome to the Wonderland! Are the rabbits blue today?</div>
+    <button id="toggleNonsense">Unleash Nonsense</button>
+    <script>
+        const canvas = document.getElementById('artCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const drawCircle = (x, y, radius) => {
+            ctx.fillStyle = `rgba(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)}, 0.7)`;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        const createRandomArt = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i = 0; i < 100; i++) {
+                drawCircle(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 50);
+            }
+        };
+
+        setInterval(createRandomArt, 500);
+
+        const toggleButton = document.getElementById('toggleNonsense');
+        const nonsenseDiv = document.getElementById('nonsense');
+        let isNonsenseVisible = false;
+
+        toggleButton.addEventListener('click', () => {
+            isNonsenseVisible = !isNonsenseVisible;
+            nonsenseDiv.style.display = isNonsenseVisible ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', (event) => {
+            drawCircle(event.clientX, event.clientY, Math.floor(Math.random() * 30 + 10));
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createRandomArt();
+        });
+
+    </script>
+</body>
+</html>

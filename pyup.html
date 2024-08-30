@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Dance Paradox</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #ffafbd, #ffc3a0);
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .hidden {
+            display: none;
+        }
+        #btnToggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #ffffffab;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <button id="btnToggle">Toggle Bubble Dance</button>
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="bubbleCanvas"></canvas>
+    <script>
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bubbleCanvas = document.getElementById('bubbleCanvas');
+        const toggleButton = document.getElementById('btnToggle');
+        const ctxBg = bgCanvas.getContext('2d');
+        const ctxBubble = bubbleCanvas.getContext('2d');
+        let bubbles = [];
+        let isAnimating = true;
+
+        function resizeCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+            bubbleCanvas.width = window.innerWidth;
+            bubbleCanvas.height = window.innerHeight;
+        }
+
+        function createBubbles() {
+            for (let i = 0; i < 50; i++) {
+                bubbles.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    radius: Math.random() * 4 + 2,
+                    dx: (Math.random() - 0.5) * 2,
+                    dy: (Math.random() - 0.5) * 3
+                });
+            }
+        }
+
+        function bubbleDance() {
+            ctxBubble.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            for (let bubble of bubbles) {
+                ctxBubble.beginPath();
+                ctxBubble.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+                ctxBubble.fillStyle = 'rgba(255,255,255,0.7)';
+                ctxBubble.fill();
+                bubble.x += bubble.dx;
+                bubble.y += bubble.dy;
+                if (bubble.x + bubble.radius > window.innerWidth || bubble.x - bubble.radius < 0) {
+                    bubble.dx *= -1;
+                }
+                if (bubble.y + bubble.radius > window.innerHeight || bubble.y - bubble.radius < 0) {
+                    bubble.dy *= -1;
+                }
+            }
+            if (isAnimating) {
+                requestAnimationFrame(bubbleDance);
+            }
+        }
+
+        function drawBackground() {
+            ctxBg.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            ctxBg.beginPath();
+            ctxBg.arc(window.innerWidth / 2, window.innerHeight / 2, 100, 0, Math.PI * 2);
+            ctxBg.fillStyle = 'rgba(0,0,0,0.2)';
+            ctxBg.fill();
+            requestAnimationFrame(drawBackground);
+        }
+
+        toggleButton.addEventListener('click', () => {
+            isAnimating = !isAnimating;
+            if (isAnimating) {
+                bubbleDance();
+            }
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+        
+        resizeCanvas();
+        createBubbles();
+        drawBackground();
+        bubbleDance();
+    </script>
+</body>
+</html>

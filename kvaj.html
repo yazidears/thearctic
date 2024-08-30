@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #f7f8ff, #c0dff7);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        #control-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #control-panel button {
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="control-panel">
+        <button onclick="toggleRainbows()">Toggle Rainbows</button>
+        <button onclick="toggleButterflies()">Toggle Butterflies</button>
+        <button onclick="toggleMusic()">Play Music 🎵</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <audio id="background-music" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-littleidea.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rainbows = [];
+        const butterflies = [];
+        let rainbowActive = false;
+        let butterflyActive = false;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        canvas.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (rainbowActive) {
+                rainbows.push(createRainbow());
+            }
+            if (butterflyActive) {
+                butterflies.push(createButterfly());
+            }
+        });
+
+        function toggleRainbows() {
+            rainbowActive = !rainbowActive;
+        }
+
+        function toggleButterflies() {
+            butterflyActive = !butterflyActive;
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('background-music');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function createRainbow() {
+            const colors = ['#ff5f6d', '#ffc371', '#f9f586', '#9cff2e', '#24ff9c', '#31d4ff', '#ab59ff'];
+            return {
+                x: mouseX,
+                y: mouseY,
+                colors: colors.sort(() => Math.random() - 0.5),
+                radius: 20 + Math.random() * 50,
+                angle: Math.random() * Math.PI
+            };
+        }
+
+        function createButterfly() {
+            const size = 20 + Math.random() * 30;
+            return {
+                x: mouseX,
+                y: mouseY,
+                size: size,
+                angle: 0,
+                speed: 0.02 + Math.random() * 0.05
+            };
+        }
+
+        function drawRainbow(rainbow) {
+            ctx.save();
+            ctx.translate(rainbow.x, rainbow.y);
+            ctx.rotate(rainbow.angle);
+            for (let i = 0; i < rainbow.colors.length; i++) {
+                ctx.beginPath();
+                ctx.arc(0, 0, rainbow.radius - i * (rainbow.radius / rainbow.colors.length), 0, Math.PI * 2);
+                ctx.strokeStyle = rainbow.colors[i];
+                ctx.lineWidth = 5;
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawButterfly(butterfly) {
+            ctx.save();
+            const wingspan = butterfly.size;
+            const offset = Math.sin(butterfly.angle) * wingspan / 2;
+            ctx.translate(butterfly.x, butterfly.y);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-wingspan, -offset, -wingspan, offset, 0, 0);
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(wingspan, -offset, wingspan, offset, 0, 0);
+            ctx.fillStyle = 'rgba(255,165,0,0.5)';
+            ctx.fill();
+            ctx.restore();
+            butterfly.angle += butterfly.speed;
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = rainbows.length - 1; i >= 0; i--) {
+                drawRainbow(rainbows[i]);
+                rainbows[i].x += Math.cos(rainbows[i].angle) * 2;
+                rainbows[i].y += Math.sin(rainbows[i].angle) * 2;
+                if (rainbows[i].x < -100 || rainbows[i].x > canvas.width + 100 || rainbows[i].y < -100 || rainbows[i].y > canvas.height + 100) {
+                    rainbows.splice(i, 1);
+                }
+            }
+
+            for (let i = butterflies.length - 1; i >= 0; i--) {
+                drawButterfly(butterflies[i]);
+                butterflies[i].x += Math.cos(butterflies[i].angle) * 1;
+                butterflies[i].y += Math.sin(butterflies[i].angle) * 1;
+                if (butterflies[i].x < -100 || butterflies[i].x > canvas.width + 100 || butterflies[i].y < -100 || butterflies[i].y > canvas.height + 100) {
+                    butterflies.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+    </script>
+</body>
+</html>

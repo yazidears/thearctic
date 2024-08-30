@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Jellyfish Symphony</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0f0f2d;
+        }
+        canvas {
+            display: block;
+        }
+        #mute {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+        .jellyfish {
+            position: absolute;
+            opacity: 0.8;
+        }
+        .tentacle {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: absolute;
+            animation: float infinite alternate;
+        }
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(20px); }
+        }
+    </style>
+</head>
+<body>
+    <button id="mute">Mute</button>
+    <canvas id="canvas"></canvas>
+    <audio id="ambientSound" loop>
+        <source src="https://www.fesliyanstudios.com/play-mp3/416" type="audio/mp3">
+    </audio>
+    <script>
+        const btnMute = document.getElementById('mute');
+        const sound = document.getElementById('ambientSound');
+        sound.play();
+        let isMuted = false;
+
+        btnMute.addEventListener('click', () => {
+            isMuted = !isMuted;
+            sound.muted = isMuted;
+            btnMute.textContent = isMuted ? 'Unmute' : 'Mute';
+        });
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function randomFloat(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        class Jellyfish {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = randomFloat(30, 60);
+                this.speedX = randomFloat(-0.5, 0.5);
+                this.speedY = randomFloat(-0.5, 0.5);
+                this.tentacles = Array.from({length: 8}, () => ({
+                    length: randomFloat(30, 70),
+                    angleOffset: randomFloat(0, 2 * Math.PI)
+                }));
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.speedX *= -1;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.speedY *= -1;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(${Math.floor(255 - this.radius)}, ${Math.floor(255 - this.radius / 2)}, 255, 0.2)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                ctx.fill();
+
+                this.tentacles.forEach(t => {
+                    ctx.fillStyle = `rgba(255, 255, 255, 0.1)`;
+                    ctx.beginPath();
+                    let tipX = this.x + (this.radius + t.length) * Math.cos(t.angleOffset);
+                    let tipY = this.y + (this.radius + t.length) * Math.sin(t.angleOffset);
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(tipX, tipY);
+                    ctx.stroke();
+                });
+            }
+        }
+
+        const jellyfishCount = 20;
+        const jellyfishArray = [];
+
+        for(let i = 0; i < jellyfishCount; i++) {
+            jellyfishArray.push(new Jellyfish());
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            jellyfishArray.forEach(jellyfish => {
+                jellyfish.update();
+                jellyfish.draw();
+            });
+        }
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #222; color: #fff; }
+        #canvas { display: block; }
+        #weirdCircle { position: absolute; top: 50%; left: 50%; background: radial-gradient(circle, #ff9a9e, #fad0c4); 
+                      border-radius: 50%; width: 100px; height: 100px; animation: growShrink 4s infinite alternate; }
+        @keyframes growShrink {
+            0% { transform: scale(1) translate(-50%, -50%); }
+            100% { transform: scale(3) translate(-50%, -50%); }
+        }
+        #randomText { position: absolute; top: 10px; left: 10px; font-family: 'Comic Sans MS', cursive; 
+                     font-size: 20px; mix-blend-mode: difference; animation: rotate 7s infinite linear; }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .interactiveTile { width: 50px; height: 50px; background-color: #1e90ff; position: absolute; 
+                          transition: transform 0.5s; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="weirdCircle"></div>
+    <div id="randomText">Everything is strange!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawBackground() {
+            const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#333');
+            gradient.addColorStop(1, '#666');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        const tiles = [];
+        for(let i = 0; i < 50; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'interactiveTile';
+            tile.style.top = Math.random() * window.innerHeight + 'px';
+            tile.style.left = Math.random() * window.innerWidth + 'px';
+            tile.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 50%)`;
+            tile.addEventListener('mouseover', () => {
+                tile.style.transform = 'scale(1.5)';
+            });
+            tile.addEventListener('mouseleave', () => {
+                tile.style.transform = 'scale(1)';
+            });
+            document.body.appendChild(tile);
+            tiles.push(tile);
+        }
+
+        function animate() {
+            drawBackground();
+            tiles.forEach((tile, index) => {
+                tile.style.top = (parseFloat(tile.style.top) + Math.sin(index) * 5) % window.innerHeight + 'px';
+                tile.style.left = (parseFloat(tile.style.left) + Math.cos(index) * 5) % window.innerWidth + 'px';
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const randomText = document.getElementById('randomText');
+        setInterval(() => {
+            randomText.textContent = Math.random() > 0.5 ? 'Stay curious!' : 'Unexpected joy!';
+        }, 2000);
+    </script>
+</body>
+</html>
+```

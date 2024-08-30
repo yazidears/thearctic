@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Creature Interaction</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #fff;
+        }
+        .creature {
+            width: 100px;
+            height: 100px;
+            background-color: #e63946;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(-10px); }
+            50% { transform: translate(-50%, -50%) translateY(10px); }
+        }
+        .bubble {
+            width: 20px;
+            height: 20px;
+            background-color: #f1faee;
+            border-radius: 50%;
+            position: absolute;
+            animation: rise infinite linear;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+        .thought {
+            position: absolute;
+            width: 200px;
+            padding: 10px;
+            background-color: #457b9d;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .button {
+            background-color: #a8dadc;
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        .button:hover {
+            background-color: #457b9d;
+        }
+    </style>
+</head>
+<body>
+    <div class="creature" id="creature"></div>
+    <div class="thought" id="thought" style="display: none;">Hello! I am a mystical creature. Click around me for surprises!</div>
+    <button class="button" onclick="generateBubbles()">Create Bubbles</button>
+    <button class="button" onclick="changeShape()">Transform Me</button>
+    <script>
+        const creature = document.getElementById('creature');
+        const thought = document.getElementById('thought');
+        let bubbleCount = 0;
+
+        creature.addEventListener('mouseover', () => {
+            thought.style.display = 'block';
+            setTimeout(() => thought.style.opacity = 1, 0);
+        });
+
+        creature.addEventListener('mouseout', () => {
+            thought.style.opacity = 0;
+            setTimeout(() => thought.style.display = 'none', 500);
+        });
+
+        function generateBubbles() {
+            for (let i = 0; i < 10; i++) {
+                createBubble(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+            }
+        }
+
+        function createBubble(x, y) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
+            bubble.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), bubble.style.animationDuration.split('s')[0] * 1000);
+        }
+
+        function changeShape() {
+            const shapes = ['circle', 'square', 'triangle'];
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            switch(shape) {
+                case 'circle':
+                    creature.style.borderRadius = '50%';
+                    break;
+                case 'square':
+                    creature.style.borderRadius = '0';
+                    break;
+                case 'triangle':
+                    creature.style.width = '0';
+                    creature.style.height = '0';
+                    creature.style.borderLeft = '50px solid transparent';
+                    creature.style.borderRight = '50px solid transparent';
+                    creature.style.borderBottom = '100px solid #e63946';
+                    creature.style.backgroundColor = 'transparent';
+                    break;
+            }
+        }
+
+        window.onload = function() {
+            generateBubbles();
+        }
+    </script>
+</body>
+</html>

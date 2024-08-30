@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Time-Warped Jellyfish Carnival</title>
+<style>
+  body { margin: 0; font-family: 'Comic Sans MS', cursive; background-color: #1a1a2e; overflow: hidden; }
+  #ocean { position: relative; width: 100vw; height: 100vh; overflow: hidden;}
+  .jellyfish { position: absolute; border-radius: 50%; width: 60px; height: 60px; animation: float infinite; background: radial-gradient(circle at 30% 30%, #ff8c42, #ff3c38, #ff2366); }
+  @keyframes float { 
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-50px) rotate(180deg); }
+    100% { transform: translateY(0) rotate(360deg); }
+  }
+  .tentacle { position: absolute; width: 5px; height: 30px; background: linear-gradient(#ff3c38, #ff2366); animation: octo infinite linear; }
+  @keyframes octo { 
+    0% { transform: rotate(0); }
+    50% { transform: rotate(30deg); }
+    100% { transform: rotate(60deg); }
+  }
+  #time-machine { position: absolute; top: 40%; left: 45%; width: 120px; height: 120px; background-color: #1f4068; border-radius: 50%; animation: spin 12s infinite linear; }
+  #time-machine:hover { animation-play-state: paused; cursor: pointer; }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  #time-machine:after { 
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    border: 10px dashed #1b1b2f;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+  }
+  #message { position: absolute; top: 80%; left: 50%; transform: translateX(-50%); color: #e94560; font-size: 24px; white-space: nowrap; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="ocean">
+  <div id="message">Explore the hidden mysteries of jellyfish and time!</div>
+  <div id="time-machine"></div>
+</div>
+<script>
+  const ocean = document.getElementById('ocean');
+  const colors = ['#ff3c38', '#46cdcf', '#ab83d6', '#99f443'];
+  const numJellyfish = 10;
+
+  for (let i = 0; i < numJellyfish; i++) {
+    const jelly = document.createElement('div');
+    jelly.className = 'jellyfish';
+    jelly.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    jelly.style.top = Math.random() * 80 + 'vh';
+    jelly.style.left = Math.random() * 80 + 'vw';
+    let deg = Math.random() * 360;
+    jelly.style.transform = `rotate(${deg}deg)`;
+    let delay = Math.random() * 5;
+    jelly.style.animationDelay = delay + 's';
+    jelly.style.opacity = Math.random() * 0.5 + 0.5;
+
+    for (let j = 0; j < 6; j++) {
+      const tentacle = document.createElement('div');
+      tentacle.className = 'tentacle';
+      tentacle.style.left = 40 + Math.cos(j * 60) * 30 + 'px';
+      tentacle.style.top = 40 + Math.sin(j * 60) * 30 + 'px';
+      jelly.appendChild(tentacle);
+    }
+
+    ocean.appendChild(jelly);
+  }
+
+  document.getElementById('time-machine').addEventListener('click', function() {
+    alert("You've activated time-warp! Close your eyes and imagine your favorite place.");
+    const hiddenMessage = document.createElement('div');
+    hiddenMessage.style.position = 'absolute';
+    hiddenMessage.style.top = Math.random() * 90 + 'vh';
+    hiddenMessage.style.left = Math.random() * 90 + 'vw';
+    hiddenMessage.style.color = '#f2e863';
+    hiddenMessage.style.fontSize = '18px';
+    hiddenMessage.innerText = "You've discovered a secret place!";
+    hiddenMessage.style.whiteSpace = 'nowrap';
+    document.body.appendChild(hiddenMessage);
+  });
+
+</script>
+</body>
+</html>

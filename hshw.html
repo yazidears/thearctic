@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal, Interactive Smiley Factory</title>
+    <style>
+        body {
+            margin: 0;
+            background: #222;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+        }
+        .controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        .btn {
+            background-color: #555;
+            color: #eee;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #777;
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn" onclick="startGame()">Start Game</button>
+        <button class="btn" onclick="generateSmiley()">Generate Smiley</button>
+        <div id="score">Score: 0</div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let smilies = [];
+        let score = 0;
+
+        function randomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        function drawSmiley(x, y, radius, ctx) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2, true); // Outer circle
+            ctx.fillStyle = randomColor();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x, y, radius * 0.7, 0, Math.PI, false);  // Mouth (clockwise)
+            ctx.strokeStyle = randomColor();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x - (radius / 3), y - (radius / 3), radius / 7, 0, Math.PI * 2, true);  // Left eye
+            ctx.arc(x + (radius / 3), y - (radius / 3), radius / 7, 0, Math.PI * 2, true);  // Right eye
+            ctx.fillStyle = randomColor();
+            ctx.fill();
+        }
+
+        function generateSmiley() {
+            const x = Math.random() * width;
+            const y = Math.random() * height;
+            const radius = 20 + Math.random() * 30;
+            drawSmiley(x, y, radius, ctx);
+            smilies.push({x, y, radius});
+        }
+
+        function clearScreen() {
+            ctx.clearRect(0, 0, width, height);
+            smilies = [];
+        }
+
+        function startGame() {
+            document.getElementById('score').style.display = "block";
+            score = 0;
+            document.getElementById('score').innerText = `Score: ${score}`;
+            clearScreen();
+            generateSmiley();
+            setInterval(() => {
+                if (Math.random() > 0.5) generateSmiley();
+            }, 1000);
+        }
+
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            smilies = smilies.filter(smiley => {
+                const dist = Math.hypot(x - smiley.x, y - smiley.y);
+                if (dist < smiley.radius) {
+                    score++;
+                    document.getElementById('score').innerText = `Score: ${score}`;
+                    return false;
+                }
+                return true;
+            });
+            clearScreen();
+            smilies.forEach(smiley => drawSmiley(smiley.x, smiley.y, smiley.radius, ctx));
+        });
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            clearScreen();
+        });
+    </script>
+</body>
+</html>

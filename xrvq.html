@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Dreamscape Adventure</title>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    background: linear-gradient(135deg, #f0e4d7 0%, #f5f7fa 100%);
+    font-family: 'Courier New', Courier, monospace;
+    color: #333;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#interactiveCanvas {
+    border: 3px solid #333;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    cursor: crosshair;
+    background: #fff;
+}
+#message {
+    position: absolute;
+    top: 5%;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.actions {
+    position: absolute;
+    bottom: 5%;
+}
+button {
+    background-color: #ff7851;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+button:hover {
+    transform: scale(1.1);
+}
+</style>
+</head>
+<body>
+<h1 id="message">Welcome to the Surreal Dreamscape Adventure!</h1>
+<canvas id="interactiveCanvas" width="800" height="600"></canvas>
+<div class="actions">
+    <button onclick="resetDream()">Reset Dream</button>
+    <button onclick="changeTheme()">Change Theme</button>
+</div>
+<script>
+const canvas = document.getElementById('interactiveCanvas');
+const ctx = canvas.getContext('2d');
+
+let colors = ['#ff6358', '#ffa700', '#23b5d3', '#96c93d', '#ab47bc'];
+let shapes = ['circle', 'square', 'triangle', 'hexagon', 'star'];
+let dreamElements = [];
+
+function getRandomColor() {
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function getRandomShape() {
+    return shapes[Math.floor(Math.random() * shapes.length)];
+}
+
+function drawElement(x, y, shape, color) {
+    ctx.fillStyle = color;
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (shape === 'circle') {
+        ctx.arc(x, y, 20, 0, 2 * Math.PI);
+    } else if (shape === 'square') {
+        ctx.rect(x - 20, y - 20, 40, 40);
+    } else if (shape === 'triangle') {
+        ctx.moveTo(x, y - 20);
+        ctx.lineTo(x + 20, y + 20);
+        ctx.lineTo(x - 20, y + 20);
+        ctx.closePath();
+    } else if (shape === 'hexagon') {
+        for (let i = 0; i < 6; i++) {
+            ctx.lineTo(x + 20 * Math.cos(i * Math.PI / 3), y + 20 * Math.sin(i * Math.PI / 3));
+        }
+    } else if (shape === 'star') {
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(x + 20 * Math.cos(2 * Math.PI * i / 5), y - 20);
+            ctx.lineTo(x + 8 * Math.cos(2 * Math.PI * (i + 1) / 5), y - 8);
+        }
+    }
+    ctx.fill();
+    ctx.stroke();
+}
+
+canvas.addEventListener('click', (e) => {
+    const { offsetX: x, offsetY: y } = e;
+    const color = getRandomColor();
+    const shape = getRandomShape();
+    drawElement(x, y, shape, color);
+    dreamElements.push({ x, y, shape, color });
+});
+
+function resetDream() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dreamElements = [];
+}
+
+function changeTheme() {
+    colors = colors.map(color => '#' + Math.floor(Math.random()*16777215).toString(16));
+    document.body.style.background = `linear-gradient(135deg, ${colors[0]} 0%, ${colors[4]} 100%)`;
+    resetDream();
+    document.getElementById('message').style.background = `rgba(255,255,255,0.8)`;
+}
+
+setInterval(() => {
+    if (dreamElements.length > 0) {
+        const element = dreamElements[Math.floor(Math.random() * dreamElements.length)];
+        ctx.clearRect(element.x - 22, element.y - 22, 44, 44);
+        const newColor = getRandomColor();
+        drawElement(element.x, element.y, element.shape, newColor);
+    }
+}, 5000);
+</script>
+</body>
+</html>

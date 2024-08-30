@@ -1,0 +1,108 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Lanterns Festival</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .lantern {
+            position: absolute;
+            width: 20px;
+            height: 50px;
+            background: radial-gradient(circle, white, yellow);
+            border-radius: 50% 50% 70% 70%;
+            animation: floatAway linear infinite;
+            box-shadow: 0 0 20px 5px white;
+        }
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            animation: flicker 3s infinite;
+        }
+        @keyframes floatAway {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-10vh); }
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="message">Release your wishes to the Quantum Lanterns</div>
+    <script>
+        const createLantern = () => {
+            const lantern = document.createElement('div');
+            lantern.className = 'lantern';
+            lantern.style.left = `${Math.random() * 100}vw`;
+            lantern.style.transitionDuration = `${5 + Math.random() * 10}s`;
+            document.body.appendChild(lantern);
+
+            lantern.addEventListener('animationend', () => {
+                lantern.remove();
+                createLantern();
+            });
+        };
+
+        for (let i = 0; i < 100; i++) {
+            setTimeout(createLantern, i * 100);
+        }
+
+        let wishInput;
+        const createWishInput = () => {
+            wishInput = document.createElement('input');
+            wishInput.placeholder = "Type your wish...";
+            wishInput.style.position = 'fixed';
+            wishInput.style.bottom = '20px';
+            wishInput.style.left = '50%';
+            wishInput.style.transform = 'translateX(-50%)';
+            wishInput.style.fontSize = '1.5em';
+            wishInput.style.padding = '10px';
+            wishInput.style.border = '2px solid white';
+            wishInput.style.background = 'transparent';
+            wishInput.style.color = 'white';
+            document.body.appendChild(wishInput);
+
+            wishInput.addEventListener('change', releaseWish);
+        };
+
+        const releaseWish = () => {
+            const wishText = document.createElement('div');
+            wishText.textContent = wishInput.value;
+            wishText.style.position = 'absolute';
+            wishText.style.bottom = '20px';
+            wishText.style.left = `${Math.random() * 100}vw`;
+            wishText.style.fontSize = '1.5em';
+            wishText.style.opacity = 0;
+            wishText.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+            wishText.style.padding = '5px 10px';
+            wishText.style.borderRadius = '5px';
+            wishText.style.transition = `bottom 10s linear, opacity 10s linear`;
+            document.body.appendChild(wishText);
+
+            setTimeout(() => {
+                wishText.style.bottom = '100vh';
+                wishText.style.opacity = 1;
+            }, 100);
+
+            setTimeout(() => wishText.remove(), 10000);
+            wishInput.value = '';
+        };
+
+        createWishInput();
+    </script>
+</body>
+</html>
+```

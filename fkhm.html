@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Journey of Blob & Squiggle</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #181818;
+            color: #ffffff;
+            text-align: center;
+        }
+        canvas {
+            display: block;
+        }
+        #message {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            margin-left: -50px;
+            font-size: 20px;
+        }
+        .interaction {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="message">Guide Blob & Squiggle on their surreal journey! Click to create magical gates!</div>
+    <div class="interaction">Press 'A' to change Blob color, 'S' for squiggles, and arrow keys to move the creatures!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let blobColor = '#72d6c9';
+        let squiggles = [];
+        let blobs = [
+            { x: canvas.width / 2, y: canvas.height / 2, dx: 3, dy: 2 }
+        ];
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') { blobs[0].x -= 5; }
+            if (event.key === 'ArrowRight') { blobs[0].x += 5; }
+            if (event.key === 'ArrowUp') { blobs[0].y -= 5; }
+            if (event.key === 'ArrowDown') { blobs[0].y += 5; }
+            if (event.key === 'a' || event.key === 'A') { changeBlobColor(); }
+            if (event.key === 's' || event.key === 'S') { addSquiggle(); }
+        });
+
+        canvas.addEventListener('click', (event) => {
+            blobs.push({
+                x: event.clientX,
+                y: event.clientY,
+                dx: Math.random() * 4 - 2,
+                dy: Math.random() * 4 - 2
+            });
+        });
+
+        function changeBlobColor() {
+            blobColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        function addSquiggle() {
+            squiggles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(24, 24, 24, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < blobs.length; i++) {
+                let blob = blobs[i];
+                ctx.beginPath();
+                ctx.arc(blob.x, blob.y, 20, 0, Math.PI * 2, false);
+                ctx.fillStyle = blobColor;
+                ctx.fill();
+
+                blob.x += blob.dx;
+                blob.y += blob.dy;
+
+                if (blob.x + 20 > canvas.width || blob.x - 20 < 0) { blob.dx *= -1; }
+                if (blob.y + 20 > canvas.height || blob.y - 20 < 0) { blob.dy *= -1; }
+            }
+
+            for (let i = 0; i < squiggles.length; i++) {
+                let squiggle = squiggles[i];
+                ctx.beginPath();
+                ctx.moveTo(squiggle.x, squiggle.y);
+                for (let j = 0; j < 20; j++) {
+                    ctx.quadraticCurveTo(
+                        Math.random() * canvas.width, Math.random() * canvas.height,
+                        Math.random() * canvas.width, Math.random() * canvas.height
+                    );
+                }
+                ctx.strokeStyle = squiggle.color;
+                ctx.stroke();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            draw();
+        }
+
+        animate();
+    </script>
+</body>
+</html>

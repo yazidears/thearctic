@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Legumes: The Great Bean Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(180deg, #f5d5d1, #f7f7a1);
+        }
+        #gameCanvas {
+            background-color: #ffeeaa;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+            border-radius: 8px;
+        }
+        .bean {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #7dcca3;
+            transition: transform 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score">Score: 0</div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let score = 0;
+        let beans = [];
+        let animations = ['bounce', 'shake', 'spin'];
+
+        class Bean {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = Math.random() * 2 - 1;
+                this.vy = Math.random() * 2 - 1;
+                this.element = document.createElement('div');
+                this.element.className = 'bean';
+                this.update();
+                canvas.parentElement.appendChild(this.element);
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+                this.element.onclick = () => {
+                    score++;
+                    scoreDisplay.textContent = 'Score: ' + score;
+                    this.element.classList.add(animations[Math.floor(Math.random() * animations.length)]);
+                    setTimeout(() => { this.element.classList.remove('bounce', 'shake', 'spin'); }, 300);
+                };
+            }
+        }
+
+        function spawnBeans(num) {
+            for (let i = 0; i < num; i++) {
+                beans.push(new Bean());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            beans.forEach(bean => bean.update());
+            requestAnimationFrame(animate);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        spawnBeans(15);
+        animate();
+    </script>
+</body>
+</html>

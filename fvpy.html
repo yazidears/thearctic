@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Landscape Exploration</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #FABD16, #EC813D, #3D51B3, #93C2EC);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        #character {
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            border: 5px solid #000;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+        }
+        #dialogue {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .landscape {
+            position: absolute;
+            bottom: 0;
+            width: 200%;
+            height: 30vh;
+            background-image: url('https://www.publicdomainpictures.net/pictures/320000/velka/background-image.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: moveLandscape 10s linear infinite;
+        }
+        @keyframes moveLandscape {
+            0% {transform: translateX(0%);}
+            100% {transform: translateX(-50%);}
+        }
+    </style>
+</head>
+<body>
+    <div id="character"></div>
+    <div id="dialogue">Welcome to the surreal landscape. Tap the circle to explore more.</div>
+    <div class="landscape"></div>
+    <script>
+        const character = document.getElementById('character');
+        const dialogue = document.getElementById('dialogue');
+        let dialogues = ["Watch as the horizon dances", "Time doesn't flow here", "Feel the cosmic vibes", "Every step reveals a new wonder", "Dreams take form"];
+        let currentIndex = 0;
+        
+        function showDialogue() {
+            dialogue.style.display = "block";
+            dialogue.innerText = dialogues[currentIndex];
+            currentIndex = (currentIndex + 1) % dialogues.length;
+            setTimeout(() => {
+                dialogue.style.display = "none";
+            }, 3000);
+        }
+
+        character.addEventListener('click', showDialogue);
+
+        function shakeCharacter() {
+            character.style.animation = "shake 0.5s";
+            setTimeout(() => character.style.animation = "", 500);
+        }
+
+        setInterval(shakeCharacter, 5000); // Shake every 5 seconds to mimic a pulse
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            20%, 60% { transform: translateX(-48%); }
+            40%, 80% { transform: translateX(-52%); }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Bubble Symphonies</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0e0e0e;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #music-buttons {
+            position: fixed;
+            bottom: 10%;
+            right: 5%;
+            z-index: 1;
+        }
+        .button {
+            background-color: #ff9190;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #ff6460;
+        }
+        #quote-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="music-buttons">
+        <button class="button" onclick="playBubbleSymphony()">Bubble Symphony</button>
+        <button class="button" onclick="playRandomVerse()">Random Verse</button>
+    </div>
+    <div id="quote-container"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const bubbles = Array.from({length: 50}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 50 + 10,
+            color: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.5)`
+        }));
+
+        function drawBubbles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(bubble => {
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+                ctx.fillStyle = bubble.color;
+                ctx.fill();
+            });
+        }
+
+        function animateBubbles() {
+            bubbles.forEach(bubble => {
+                bubble.y -= Math.random() * 2;
+                if (bubble.y + bubble.radius < 0) bubble.y = canvas.height + bubble.radius;
+            });
+            drawBubbles();
+            requestAnimationFrame(animateBubbles);
+        }
+        animateBubbles();
+
+        const bubbleSounds = [new Audio('https://www.soundjay.com/button/sounds/button-4.mp3'), new Audio('https://www.soundjay.com/button/sounds/button-09.mp3')];
+        function playBubbleSymphony() {
+            bubbleSounds.forEach(sound => {
+                sound.currentTime = 0;
+                sound.play();
+            });
+        }
+
+        const quotes = [
+            "Life is like a bubble, float and be free.",
+            "Dance with the wind, find your rhythm.",
+            "Let the colors of life paint your world.",
+            "A mind full of curiosity, a world full of wonder."
+        ];
+
+        function playRandomVerse() {
+            const quote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote-container').textContent = quote;
+            playBubbleSymphony();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Amazing Blob World</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #6B73FF, #000DFF);
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: blobFloat 10s infinite ease-in-out;
+        }
+        @keyframes blobFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+            }
+        }
+        canvas {
+            display: block;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let blobs = [];
+        for (let i = 0; i < 20; i++) {
+            const size = Math.random() * 100 + 30;
+            blobs.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size,
+                speed: Math.random() * 2 + 1,
+                color: `hsla(${Math.random() * 360}, 100%, 70%, 0.7)`
+            });
+        }
+
+        function drawBlobs() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach(blob => {
+                ctx.beginPath();
+                ctx.arc(blob.x, blob.y, blob.size, 0, Math.PI * 2);
+                ctx.fillStyle = blob.color;
+                ctx.fill();
+                update(blob);
+            });
+        }
+
+        function update(blob) {
+            blob.y += blob.speed;
+            if (blob.y - blob.size > canvas.height) {
+                blob.y = 0 - blob.size;
+                blob.x = Math.random() * canvas.width;
+            }
+        }
+
+        function loop() {
+            drawBlobs();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+
+        function createRandomBlob(e) {
+            const size = Math.random() * 100 + 30;
+            blobs.push({
+                x: e.clientX,
+                y: e.clientY,
+                size,
+                speed: Math.random() * 2 + 1,
+                color: `hsla(${Math.random() * 360}, 100%, 70%, 0.7)`
+            });
+            if (e.clientY > window.innerHeight / 2) {
+                console.log("You found the secret blue zone!");
+            }
+        }
+
+        document.addEventListener('click', createRandomBlob);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        setTimeout(() => {
+            alert("Welcome to the Amazing Blob World! \n\n Click to create more blobs. \n\n Try to find the secret zone!");
+        }, 1000);
+
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Garden</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            color: lime;
+        }
+        #garden {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(circle, rgba(235, 249, 249, 0.2) 0%, transparent 60%);
+            overflow: hidden;
+        }
+        .particle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, cyan, magenta);
+            position: absolute;
+            animation: drift 4s infinite ease-in-out;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(var(--drift-x), var(--drift-y)); }
+        }
+        #quantum-control {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: lime;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="garden"></div>
+    <div id="quantum-control">
+        Unleash Creativity: <button onclick="changeMode()">Activate Warp</button>
+    </div>
+    <script>
+        const garden = document.getElementById('garden');
+        const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        const modeEvents = ['rotate', 'expand', 'glitch'];
+
+        for (let i = 0; i < 200; i++) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.setProperty('--drift-x', (Math.random() * 2 - 1) * 10 + 'vw');
+            particle.style.setProperty('--drift-y', (Math.random() * 2 - 1) * 10 + 'vh');
+            garden.appendChild(particle);
+        }
+
+        let warpActive = false;
+
+        function changeMode() {
+            warpActive = !warpActive;
+            garden.style.transition = 'transform 1s';
+            garden.style.transform = warpActive ? 'scale(1.1) rotate(360deg)' : 'scale(1) rotate(0deg)';
+            [...garden.children].forEach(particle => {
+                if (warpActive) {
+                    let randomAction = modeEvents[Math.floor(Math.random() * modeEvents.length)];
+                    if (randomAction === 'rotate') {
+                        particle.style.animation = 'drift 2s infinite linear';
+                    } else if (randomAction === 'expand') {
+                        particle.style.width = '20px';
+                        particle.style.height = '20px';
+                    } else if (randomAction === 'glitch') {
+                        particle.style.setProperty('background', colors[Math.floor(Math.random() * colors.length)]);
+                    }
+                } else {
+                    particle.style.animation = 'drift 4s infinite ease-in-out';
+                    particle.style.width = '10px';
+                    particle.style.height = '10px';
+                    particle.style.setProperty('background', 'linear-gradient(45deg, cyan, magenta)');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

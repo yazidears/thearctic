@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Kaleidoscope</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffcccc, #ffe6e6, #ccffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        #kaleidoscope {
+            position: relative;
+            width: 80vmin;
+            height: 80vmin;
+            clip-path: circle();
+            border: 5px dashed #000;
+        }
+        .triangle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent, #0000ff);
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+            animation: spin 3s linear infinite, colorShift 5s linear infinite;
+        }
+        @keyframes spin {
+            from {transform: rotate(0deg);}
+            to {transform: rotate(360deg);}
+        }
+        @keyframes colorShift {
+            0% {background: radial-gradient(circle, transparent, #ff0000);}
+            33% {background: radial-gradient(circle, transparent, #00ff00);}
+            66% {background: radial-gradient(circle, transparent, #0000ff);}
+            100% {background: radial-gradient(circle, transparent, #ff0000);}
+        }
+        @keyframes floatRight {
+            to {transform: translateX(90%);}
+        }
+        @keyframes floatLeft {
+            to {transform: translateX(-90%);}
+        }
+        .creature {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .creature:hover {
+            transform: scale(1.3) rotate(30deg);
+        }
+        #creature1 {animation: floatRight 5s ease infinite alternate;}
+        #creature2 {animation: floatLeft 5s ease infinite alternate;}
+        #creature3 {animation: floatRight 7s ease infinite alternate;}
+        #creature4 {animation: floatLeft 7s ease infinite alternate;}
+    </style>
+</head>
+<body>
+    <div id="kaleidoscope">
+        <div class="triangle"></div>
+        <div class="triangle" style="transform: rotate(60deg);"></div>
+        <div class="triangle" style="transform: rotate(120deg);"></div>
+        <div class="triangle" style="transform: rotate(180deg);"></div>
+        <div class="triangle" style="transform: rotate(240deg);"></div>
+        <div class="triangle" style="transform: rotate(300deg);"></div>
+    </div>
+    <img src="https://www.w3schools.com/html/pic_trulli.jpg" id="creature1" class="creature" width="60" style="top:10%; left:5%;"/>
+    <img src="https://www.w3schools.com/html/img_the_scream.jpg" id="creature2" class="creature" width="60" style="bottom:10%; right:5%;"/>
+    <img src="https://www.w3schools.com/html/img_chania.jpg" id="creature3" class="creature" width="60" style="top:10%; right:5%;"/>
+    <img src="https://www.w3schools.com/html/img_forest.jpg" id="creature4" class="creature" width="60" style="bottom:10%; left:5%;"/>
+
+    <script>
+        document.querySelectorAll('.creature').forEach(creature => {
+            creature.addEventListener('click', function() {
+                alert('You clicked a mystical creature!');
+            });
+            let x = Math.random() * window.innerWidth;
+            let y = Math.random() * window.innerHeight;
+            creature.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+        });
+    </script>
+</body>
+</html>

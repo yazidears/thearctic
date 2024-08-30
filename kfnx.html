@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Sound Garden</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #364f6b;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #garden {
+            position: relative;
+            width: 80vmin;
+            height: 80vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 40%, #f2e9e4);
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+        }
+        .flower {
+            position: absolute;
+            width: 4vmin;
+            height: 4vmin;
+            background: radial-gradient(circle, #f6cd61, #ff6f69);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, opacity 0.3s;
+            opacity: 0.8;
+            animation: float 6s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .flower:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        #controlPanel {
+            position: fixed;
+            bottom: 2vmin;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #364f6b;
+            padding: 1vmin 2vmin;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .button {
+            width: 3vmin;
+            height: 3vmin;
+            margin: 0 1vmin;
+            background: #f2e9e4;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #ff6f69;
+        }
+    </style>
+</head>
+<body>
+    <div id="garden"></div>
+    <div id="controlPanel">
+        <div class="button" onclick="changeTheme('#f6cd61', '#ff6f69', 1)"></div>
+        <div class="button" onclick="changeTheme('#88d8b0', '#036564', 0.9)"></div>
+        <div class="button" onclick="changeTheme('#ffcc5c', '#ff6f69', 1.1)"></div>
+    </div>
+    <audio id="note" preload="auto">
+        <source src="https://freesound.org/data/previews/523/523789_6671468-lq.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        const garden = document.getElementById('garden');
+        const note = document.getElementById('note');
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function createFlower(x, y) {
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            flower.style.left = `${x}%`;
+            flower.style.top = `${y}%`;
+            flower.addEventListener('mouseenter', () => {
+                note.currentTime = 0;
+                note.play();
+            });
+            garden.appendChild(flower);
+        }
+
+        for (let i = 0; i < 30; i++) {
+            createFlower(getRandomInt(5, 95), getRandomInt(5, 95));
+        }
+
+        function changeTheme(color1, color2, scale) {
+            garden.style.background = `radial-gradient(circle, ${color1} 40%, ${color2})`;
+            document.querySelectorAll('.flower').forEach(flower => {
+                flower.style.transform = `scale(${scale})`;
+            });
+        }
+    </script>
+</body>
+</html>

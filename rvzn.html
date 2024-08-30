@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Nebula Playground</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .floating-text {
+            position: absolute;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 24px;
+            color: white;
+            opacity: 0.8;
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="floating-text" style="top: 20%; left: 50%;">🌈 Magic Awaits!</div>
+    <div class="floating-text" style="top: 70%; left: 20%;">✨ Surreal Wonders!</div>
+    <div class="floating-text" style="top: 50%; left: 80%;">🪐 Cosmic Dance!</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        class NebulaBlob {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.r = Math.random() * 100 + 50;
+                this.dx = (Math.random() - 0.5) * 5;
+                this.dy = (Math.random() - 0.5) * 5;
+                this.color = 'hsl(' + Math.random() * 360 + ', 100%, 50%)';
+            }
+
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+
+                if (this.x + this.r > canvas.width || this.x - this.r < 0) {
+                    this.dx *= -1;
+                }
+                if (this.y + this.r > canvas.height || this.y - this.r < 0) {
+                    this.dy *= -1;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        let blobs = [];
+        for (let i = 0; i < 20; i++) {
+            blobs.push(new NebulaBlob());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach(blob => {
+                blob.update();
+                blob.draw();
+            });
+            drawAbstractArt();
+            requestAnimationFrame(animate);
+        }
+
+        function drawAbstractArt() {
+            const numberOfLines = 50;
+            for (let i = 0; i < numberOfLines; i++) {
+                ctx.beginPath();
+                const startX = Math.random() * canvas.width;
+                const startY = Math.random() * canvas.height;
+                const endX = Math.random() * canvas.width;
+                const endY = Math.random() * canvas.height;
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = 'hsla(' + Math.random() * 360 + ', 80%, 50%, 0.3)';
+                ctx.lineWidth = Math.random() * 3;
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+
+        function speakMagic() {
+            const phrases = [
+                "Mystical forces are brewing...",
+                "The stars sing in harmony...",
+                "Nebulous dreams take shape...",
+                "A world beyond your wildest imagination..."
+            ];
+            const utterance = new SpeechSynthesisUtterance(phrases[Math.floor(Math.random() * phrases.length)]);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        document.addEventListener('click', speakMagic);
+
+        animate();
+    </script>
+</body>
+</html>

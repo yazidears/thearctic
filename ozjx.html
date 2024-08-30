@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Peculiar Physics of Floating Squiggles</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #83a4d4, #b6fbff);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .squiggle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ff6f61;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            animation: float 6s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-100px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+        .portal {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: conic-gradient(from 0deg, #ffdd57, #e91e63, #ff5722, #ffdd57);
+            border-radius: 50%;
+            animation: spin 5s linear infinite;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        @keyframes spin {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg); }
+        }
+        .tooltip {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            visibility: hidden;
+        }
+        .styled-text {
+            font-size: 20px;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="styled-text" id="styledText">Catch the Squiggles!</div>
+    <div class="portal" onclick="catchSquiggles()"></div>
+    <div class="tooltip" id="tooltip">You caught!</div>
+
+    <script>
+        function createSquiggle() {
+            const squiggle = document.createElement('div');
+            squiggle.classList.add('squiggle');
+            const randomX = Math.random() * window.innerWidth;
+            const randomY = Math.random() * window.innerHeight;
+            squiggle.style.left = `${randomX}px`;
+            squiggle.style.top = `${randomY}px`;
+            document.body.appendChild(squiggle);
+        }
+
+        for (let i = 0; i < 30; i++) {
+            createSquiggle();
+        }
+
+        function catchSquiggles() {
+            const squiggles = document.querySelectorAll('.squiggle');
+            squiggles.forEach(squiggle => squiggle.remove());
+            document.getElementById('tooltip').style.visibility = 'visible';
+            document.getElementById('tooltip').style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('tooltip').style.visibility = 'hidden';
+                document.getElementById('tooltip').style.opacity = '0';
+                for (let i = 0; i < 30; i++) {
+                    createSquiggle();
+                }
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>

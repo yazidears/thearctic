@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Clockwork Orchestra</title>
+</head>
+<body style="margin:0; overflow:hidden; font-family: 'Courier New', Courier, monospace; background-color: #0e0e0e;">
+    <div id="stage" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #ffffff;">
+        <canvas id="artCanvas" width="800" height="600" style="border: 2px solid #ffffff; background-color:#1a1a1a;"></canvas>
+        <div id="controlPanel" style="margin-top: 15px;">
+            <button id="startButton" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Start Symphony</button>
+            <button id="resetButton" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; margin-left: 10px; cursor: pointer;">Reset</button>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('artCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const shapes = [];
+        const colors = ['#ff0055', '#35a9ff', '#a3ff3a', '#ff7f00', '#ffdb58', '#e0e0e0'];
+        const sounds = [
+            new Audio('https://www.soundjay.com/button/sounds/button-1.mp3'),
+            new Audio('https://www.soundjay.com/button/sounds/button-2.mp3'),
+            new Audio('https://www.soundjay.com/button/sounds/button-3.mp3'),
+            new Audio('https://www.soundjay.com/button/sounds/button-4.mp3'),
+            new Audio('https://www.soundjay.com/button/sounds/button-5.mp3')
+        ];
+
+        function randomRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function Shape(x, y, size, color) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.angle = 0;
+            this.spin = randomRange(-0.05, 0.05);
+            
+            this.update = function() {
+                this.angle += this.spin;
+                ctx.fillStyle = this.color;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function createShapes(count) {
+            for (let i = 0; i < count; i++) {
+                let size = randomRange(10, 100);
+                let xPos = randomRange(size, canvas.width - size);
+                let yPos = randomRange(size, canvas.height - size);
+                let color = colors[Math.floor(randomRange(0, colors.length))];
+                shapes.push(new Shape(xPos, yPos, size, color));
+            }
+        }
+
+        function playSound() {
+            let index = Math.floor(Math.random() * sounds.length);
+            if (!sounds[index].paused) sounds[index].currentTime = 0;
+            sounds[index].play();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => {
+                shape.update();
+                playSound();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('startButton').onclick = function() {
+            createShapes(10);
+            this.disabled = true;
+            animate();
+        };
+
+        document.getElementById('resetButton').onclick = function() {
+            shapes.length = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('startButton').disabled = false;
+        };
+    </script>
+</body>
+</html>

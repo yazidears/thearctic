@@ -1,0 +1,132 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whimsical Bubble Voyage</title>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #002f4b;
+    font-family: Arial, sans-serif;
+}
+@keyframes float {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-50px) rotate(45deg); }
+    100% { transform: translateY(0) rotate(0); }
+}
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    animation: float 4s ease-in-out infinite;
+}
+#info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    color: white;
+    background: rgba(0, 47, 75, 0.8);
+    border-bottom-right-radius: 10px;
+}
+#info h1 {
+    font-size: 20px;
+    margin: 0 0 5px 0;
+}
+#info p {
+    margin: 0;
+}
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    opacity: 0.5;
+    animation: star-twinkle 1.5s infinite alternate;
+}
+@keyframes star-twinkle {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
+.gear {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #f39c12 25%, transparent 25%), 
+                linear-gradient(135deg, #f39c12 25%, transparent 25%);
+    background-color: #e74c3c;
+    background-size: 40px 40px;
+    border-radius: 50%;
+    animation: rotate 3s linear infinite;
+}
+
+</style>
+</head>
+<body>
+<div id="info">
+    <h1>Whimsical Bubble Voyage</h1>
+    <p>Dive into the whimsical world of floating bubbles and twinkling stars!</p>
+</div>
+<div class="stars"></div>
+<script>
+function createBubble() {
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    const size = Math.random() * 50 + 20;
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
+    bubble.style.left = Math.random() * window.innerWidth + 'px';
+    bubble.style.bottom = '-' + size + 'px';
+    bubble.style.animationDuration = Math.random() * 2 + 2 + 's';
+    bubble.style.animationDelay = Math.random() * 2 + 's';
+    document.body.appendChild(bubble);
+
+    setTimeout(() => {
+        bubble.remove();
+    }, 5000);
+}
+
+function createStars() {
+    for (let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        document.querySelector('.stars').appendChild(star);
+    }
+}
+
+document.body.onclick = function (e) {
+    const newGear = document.createElement('div');
+    newGear.classList.add('gear');
+    newGear.style.left = e.pageX + 'px';
+    newGear.style.top = e.pageY + 'px';
+    document.body.appendChild(newGear);
+    setTimeout(() => {
+        newGear.remove();
+    }, 3000);
+}
+
+createStars();
+setInterval(createBubble, 500);
+</script>
+</body>
+</html>
+```

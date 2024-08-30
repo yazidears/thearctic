@@ -1,0 +1,83 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape Arcade</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(160deg, #3b0079, #ffcc33, #0099ff);
+            background-size: 600% 600%;
+            animation: GradientShift 10s ease infinite;
+        }
+        @keyframes GradientShift {
+            0%, 100% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+        }
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #fff;
+            border-radius: 15px;
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">Move the cursor and watch the chaos unfold - Click to toggle madness!</div>
+    <canvas id="magicCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('magicCanvas');
+        const ctx = canvas.getContext('2d');
+        let isRunning = true;
+        
+        function randomColor() {
+            return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        }
+
+        function draw(randomize = false) {
+            if (!isRunning) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = randomColor();
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const numShapes = randomize ? Math.random() * 20 + 5 : 15;
+            for (let i = 0; i < numShapes; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                for (let j = 0; j < 5; j++) {
+                    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                }
+                ctx.closePath();
+                ctx.fillStyle = randomColor();
+                ctx.fill();
+            }
+            requestAnimationFrame(() => draw(randomize));
+        }
+        
+        canvas.addEventListener('mousemove', () => draw(true));
+        canvas.addEventListener('click', () => isRunning = !isRunning);
+
+        draw();
+    </script>
+</body>
+</html>
+```

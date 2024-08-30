@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Chronicles of Bounce: A Surreal Exploration</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #1e1e2a;
+            color: #ffffff;
+            font-family: "Comic Sans MS", sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .subtitle {
+            position: absolute;
+            top: 5%;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            color: #fceafc;
+        }
+        .footer {
+            position: absolute;
+            bottom: 5%;
+            width: 100%;
+            text-align: center;
+            color: #fceafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="subtitle">The Bouncing Chronicles</div>
+    <canvas id="bouncingWorld"></canvas>
+    <div class="footer">Discover hidden secrets as you bounce!</div>
+    <script>
+        const canvas = document.getElementById('bouncingWorld');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let balls = [];
+        
+        class Ball {
+            constructor(x, y, vx, vy, size, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.size = size;
+                this.color = color;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.vx = -this.vx;
+                }
+                
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.vy = -this.vy;
+                }
+                
+                this.draw();
+            }
+        }
+        
+        function spawnBalls() {
+            for (let i = 0; i < 10; i++) {
+                let size = Math.random() * 20 + 10;
+                let x = Math.random() * (canvas.width - size * 2) + size;
+                let y = Math.random() * (canvas.height - size * 2) + size;
+                let vx = (Math.random() - 0.5) * 4;
+                let vy = (Math.random() - 0.5) * 4;
+                let color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                balls.push(new Ball(x, y, vx, vy, size, color));
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            balls.forEach(ball => ball.update());
+            requestAnimationFrame(animate);
+        }
+        
+        function secretHandler(event) {
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+            balls.forEach(ball => {
+                if (Math.abs(ball.x - mouseX) < 50 && Math.abs(ball.y - mouseY) < 50) {
+                    ball.size += 10;
+                    ball.vx += (Math.random() - 0.5) * 2;
+                    ball.vy += (Math.random() - 0.5) * 2;
+                    ball.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                }
+            });
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        window.addEventListener('click', secretHandler);
+        
+        spawnBalls();
+        animate();
+    </script>
+</body>
+</html>

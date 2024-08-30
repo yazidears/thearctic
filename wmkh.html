@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>The Surreal Aquarium Experience</title>
+<style>
+body {
+  margin: 0;
+  background-color: #001f3f;
+  overflow: hidden;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  color: white;
+  text-align: center;
+  user-select: none;
+}
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+h1 {
+  margin-top: 20px;
+  font-size: 3em;
+}
+.button {
+  background-color: #0074D9;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.5em;
+  transition: background 0.3s;
+}
+.button:hover {
+  background-color: #39CCCC;
+}
+#fishCounter {
+  margin-top: 20px;
+  font-size: 2em;
+}
+</style>
+</head>
+<body>
+<h1>Welcome to the Surreal Aquarium</h1>
+<button class="button" onclick="addFish()">Add more fish!</button>
+<div id="fishCounter">Fish Count: 0</div>
+<canvas id="canvas"></canvas>
+<script>
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
+let fishCount = 0;
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const fishImages = [
+  'https://i.imgur.com/4ZbTfFs.png',
+  'https://i.imgur.com/KlMpQPU.png',
+  'https://i.imgur.com/je7xPoQ.png'
+];
+
+class Fish {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.speed = Math.random() * 3 + 2;
+    this.image = new Image();
+    this.image.src = fishImages[Math.floor(Math.random() * fishImages.length)];
+  }
+
+  move() {
+    this.x += this.speed;
+    if (this.x > canvas.width) {
+      this.x = -100;
+      this.y = Math.random() * canvas.height;
+    }
+  }
+
+  draw() {
+    context.drawImage(this.image, this.x, this.y, 100, 50);
+  }
+}
+
+let fishes = [];
+
+function addFish() {
+  const fish = new Fish(-100, Math.random() * canvas.height);
+  fishes.push(fish);
+  fishCount++;
+  document.getElementById('fishCounter').innerText = `Fish Count: ${fishCount}`;
+}
+
+function update() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  fishes.forEach(fish => {
+    fish.move();
+    fish.draw();
+  });
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+</body>
+</html>

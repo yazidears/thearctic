@@ -1,0 +1,146 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>The Surreal Clockwork Beach</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(to top right, #ffefd5, #ffe4e1);
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .sun {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #fff29b, #ffcc33);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffcc33;
+            animation: float 5s infinite alternate ease-in-out;
+        }
+        @keyframes float {
+            from {transform: translate(0, 50px);}
+            to {transform: translate(0, 0);}
+        }
+        .wave {
+            position: absolute;
+            left: 0;
+            width: 200%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.5);
+            top: 80vh;
+            animation: wave-animation 10s infinite linear;
+        }
+        .wave:nth-child(2) { animation-delay: -5s; }
+        @keyframes wave-animation {
+            from {transform: translateX(0);}
+            to {transform: translateX(-50%);}
+        }
+        .clock {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #222;
+            color: #ddd;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            box-shadow: 0 0 20px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .clock-face {
+            width: 90%;
+            height: 90%;
+            position: relative;
+            background: #333;
+            border-radius: 50%;
+        }
+        .clock-hand {
+            position: absolute;
+            width: 2px;
+            background: #fff;
+            transform-origin: bottom;
+            bottom: 50%;
+            left: 50%;
+            transform: rotate(0deg) translateX(-50%);
+        }
+        .clock-hand.hour { height: 30%; }
+        .clock-hand.minute { height: 40%; }
+        .clock-hand.second { height: 45%; background-color: red; }
+        .bizarreFish {
+            position: absolute;
+            background: #f6d36b;
+            border-radius: 50%;
+            transition: transform 0.5s;
+            animation: swim 4s infinite linear;
+        }
+        @keyframes swim {
+            from {transform: translate(0, 0);}
+            to {transform: translate(300px, -50px);}
+        }
+        .beach {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 20vh;
+            width: 100vw;
+            background: #dcdcdc;
+            box-shadow: inset 0 0 50px 10px #c0c0c0;
+        }
+        .shell {
+            position: absolute;
+            background: #ffafaf;
+            width: 30px;
+            height: 20px;
+            border-radius: 15px 15px 0 0;
+            transform: rotate(-15deg) scale(1);
+            animation: shell-twist 3s infinite alternate ease-in-out;
+        }
+        @keyframes shell-twist {
+            from {transform: rotate(-15deg) scale(1);}
+            to {transform: rotate(15deg) scale(1.1);}
+        }
+    </style>
+</head>
+<body>
+    <div class="sun" style="top: 10%; left: 20%;"></div>
+    <div class="clock">
+        <div class="clock-face">
+            <div class="clock-hand hour" id="hour-hand"></div>
+            <div class="clock-hand minute" id="minute-hand"></div>
+            <div class="clock-hand second" id="second-hand"></div>
+        </div>
+    </div>
+    <div class="bizarreFish" style="width: 50px; height: 30px; top: 60%; left: -50px;"></div>
+    <div class="bizarreFish" style="width: 30px; height: 20px; top: 30%; left: -70px; animation-direction: reverse;"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="beach"></div>
+    <div class="shell" style="bottom: 5px; left: 10%;"></div>
+    <div class="shell" style="bottom: 10px; left: 30%;"></div>
+    <div class="shell" style="bottom: 8px; left: 60%;"></div>
+    <div class="shell" style="bottom: 6px; left: 80%;"></div>
+    <script>
+        function setClock() {
+            const date = new Date();
+            const seconds = date.getSeconds() / 60;
+            const minutes = (seconds + date.getMinutes()) / 60;
+            const hours = (minutes + date.getHours()) / 12;
+            document.getElementById('second-hand').style.transform = `rotate(${seconds * 360}deg)`;
+            document.getElementById('minute-hand').style.transform = `rotate(${minutes * 360}deg)`;
+            document.getElementById('hour-hand').style.transform = `rotate(${hours * 360}deg)`;
+        }
+        setInterval(setClock, 1000);
+        setClock();
+
+        document.querySelectorAll('.bizarreFish').forEach(fish => {
+            fish.addEventListener('click', () => {
+                fish.style.transform = `scale(${Math.random() * 2 + 0.5}) rotate(${Math.random() * 360}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>

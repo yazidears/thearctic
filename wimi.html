@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Abode of Floating Dreams</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #222;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  .floatingSquare {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    animation: floatUpDown 5s infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes floatUpDown {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-20px);}
+  }
+  .hoverMessage {
+    color: #f0f0f0;
+    font-size: 16px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  #interactiveElement {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(45deg, #ff007f, #2a7ffe);
+    top: 40vh;
+    left: 40vw;
+    border-radius: 50%;
+    animation: rotateCircle 8s infinite linear;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  @keyframes rotateCircle {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
+  .innerDot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    animation: growShrink 2s infinite alternate;
+  }
+  @keyframes growShrink {
+    from {transform: scale(1);}
+    to {transform: scale(1.5);}
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="hoverMessage" id="message">Keep Exploring the Floating Dreams!</div>
+<div id="interactiveElement">
+  <div class="innerDot"></div>
+</div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  function drawStaticBackground() {
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#eeeeee';
+    for(let i = 0; i < 20; i++) {
+      ctx.beginPath();
+      ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 30, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  
+  drawStaticBackground();
+
+  const hoverMessage = document.getElementById('message');
+  const interactiveElement = document.getElementById('interactiveElement');
+  
+  interactiveElement.addEventListener('mouseenter', function() {
+    hoverMessage.style.opacity = 1;
+    setTimeout(() => hoverMessage.style.opacity = 0, 3000);
+  });
+
+  function createFloatingSquares(num) {
+    for(let i = 0; i < num; i++) {
+      const square = document.createElement('div');
+      square.classList.add('floatingSquare');
+      square.style.left = Math.random() * 100 + 'vw';
+      square.style.top = Math.random() * 100 + 'vh';
+      document.body.appendChild(square);
+    }
+  }
+
+  createFloatingSquares(25);
+
+  let mouseX = 0, mouseY = 0, prevX = 0, prevY = 0, hue = 0;
+  
+  canvas.addEventListener('mousemove', (e) => {
+    mouseX = e.offsetX;
+    mouseY = e.offsetY;
+    hue = (hue + 2) % 360;
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(mouseX, mouseY);
+    ctx.stroke();
+    prevX = mouseX;
+    prevY = mouseY;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    prevX = 0;
+    prevY = 0;
+  });
+
+  function animate() {
+    ctx.globalAlpha = 0.05;
+    ctx.fillStyle = '#322';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawStaticBackground();
+  });
+</script>
+</body>
+</html>

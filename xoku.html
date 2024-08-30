@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Universe</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001f33, #004466);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            cursor: crosshair;
+        }
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .control-panel button {
+            background: #ff5722;
+            border: none;
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .control-panel button:hover {
+            background: #e64a19;
+        }
+        .control-panel h3 {
+            margin: 0 0 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="control-panel">
+        <h3>Bubble Universe</h3>
+        <button onclick="launchParticles()">Launch Bubbles</button>
+        <button onclick="changeColor()">Surprise Colors</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const bubbles = [];
+        let hue = 0;
+
+        function random(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        function createBubble(x, y, dy, radius) {
+            bubbles.push({
+                x: x,
+                y: y,
+                dy: dy,
+                radius: radius,
+                color: `hsl(${hue}, 100%, 50%)`
+            });
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach((bubble, index) => {
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = bubble.color;
+                ctx.fill();
+                bubble.y -= bubble.dy;
+
+                if (bubble.radius > 0.2) {
+                    bubble.radius -= 0.1;
+                }
+
+                if (bubble.y + bubble.radius < 0) {
+                    bubbles.splice(index, 1);
+                }
+            });
+        }
+
+        function launchParticles() {
+            const x = random(canvas.width);
+            const y = random(canvas.height / 2) + canvas.height / 2;
+            const radius = random(30) + 10;
+            const dy = random(4) + 1;
+            for (let i = 0; i < 10; i++) {
+                createBubble(x, y, dy, radius);
+            }
+        }
+
+        function changeColor() {
+            hue = random(360);
+        }
+
+        canvas.addEventListener('mousemove', (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+            const dy = random(4) + 1;
+            const radius = random(20) + 5;
+            createBubble(x, y, dy, radius);
+        });
+
+        animate();
+    </script>
+</body>
+</html>

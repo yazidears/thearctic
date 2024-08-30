@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Creature Rescuer</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #2C2F33;
+            color: #E1E8ED;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        #gameArea {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .creature {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://via.placeholder.com/50');
+            background-size: cover;
+            cursor: pointer;
+            animation: creatureMove 5s infinite alternate ease-in-out;
+        }
+        @keyframes creatureMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+        #net {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 4px dashed #FFD700;
+            border-radius: 50%;
+            cursor: grab;
+        }
+        #scoreBoard {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            font-size: 20px;
+            border-radius: 5px;
+        }
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="scoreBoard">Rescued: 0</div>
+        <div id="net"></div>
+    </div>
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const net = document.getElementById('net');
+        const scoreBoard = document.getElementById('scoreBoard');
+        let score = 0;
+        const creatureCount = 10;
+        const creatures = [];
+
+        function createCreature() {
+            const creature = document.createElement('div');
+            creature.className = 'creature';
+            creature.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            creature.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            creature.onclick = function() {
+                rescueCreature(creature);
+            };
+            gameArea.appendChild(creature);
+            creatures.push(creature);
+        }
+
+        function rescueCreature(creature) {
+            creature.style.transition = 'transform 0.4s, opacity 0.4s';
+            creature.style.transform = 'scale(0)';
+            creature.style.opacity = '0';
+            setTimeout(() => {
+                gameArea.removeChild(creature);
+                score++;
+                scoreBoard.textContent = 'Rescued: ' + score;
+            }, 400);
+        }
+
+        for (let i = 0; i < creatureCount; i++) {
+            createCreature();
+        }
+
+        let netActive = false;
+        document.addEventListener('mousemove', (e) => {
+            if (netActive) {
+                net.style.left = e.pageX - net.offsetWidth / 2 + 'px';
+                net.style.top = e.pageY - net.offsetHeight / 2 + 'px';
+            }
+        });
+
+        net.addEventListener('mousedown', () => {
+            netActive = true;
+        });
+
+        net.addEventListener('mouseup', () => {
+            netActive = false;
+        });
+    </script>
+</body>
+</html>

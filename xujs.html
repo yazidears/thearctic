@@ -1,0 +1,116 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Interactive Jellyfish Aquarium</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        body { 
+            background: linear-gradient(to bottom, #001f3f, #0074D9);
+            font-family: 'Courier New', Courier, monospace; 
+        }
+        #ocean {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .jellyfish {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #39CCCC, #001f3f);
+            opacity: 0.9;
+            box-shadow: 0 0 50px rgba(57, 204, 204, 0.5);
+            animation: float 10s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(15deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .light {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #FFDC00;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: pulse 5s infinite alternate;
+        }
+        @keyframes pulse {
+            from { opacity: 0.1; }
+            to { opacity: 0.3; }
+        }
+        #output {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFFFFF;
+            font-size: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ocean"></div>
+    <div id="output">Click on a jellyfish to uncover a secret message!</div>
+    <script>
+        const messages = [
+            "Believe in the magic of the ocean.",
+            "Let your dreams set sail!",
+            "Explore the depths of imagination.",
+            "You are a treasure, shine brightly.",
+            "The sea of tranquility is within you."
+        ];
+        const ocean = document.getElementById('ocean');
+        const output = document.getElementById('output');
+
+        function createJellyfish() {
+            const jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            const x = Math.floor(Math.random() * window.innerWidth);
+            const y = Math.floor(Math.random() * window.innerHeight);
+            jellyfish.style.left = `${x}px`;
+            jellyfish.style.top = `${y}px`;
+            jellyfish.addEventListener('click', () => {
+                const message = messages[Math.floor(Math.random() * messages.length)];
+                output.innerText = message;
+                output.style.opacity = 1;
+                setTimeout(() => { output.style.opacity = 0; }, 3000);
+            });
+            ocean.appendChild(jellyfish);
+        }
+
+        function createLight() {
+            const light = document.createElement('div');
+            light.className = 'light';
+            const x = Math.floor(Math.random() * window.innerWidth);
+            const y = Math.floor(Math.random() * window.innerHeight);
+            light.style.left = `${x}px`;
+            light.style.top = `${y}px`;
+            ocean.appendChild(light);
+        }
+
+        for (let i = 0; i < 15; i++) {
+            createJellyfish();
+            createLight();
+        }
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.jellyfish').forEach(e => e.remove());
+            document.querySelectorAll('.light').forEach(e => e.remove());
+            for (let i = 0; i < 15; i++) {
+                createJellyfish();
+                createLight();
+            }
+        });
+    </script>
+</body>
+</html>
+```

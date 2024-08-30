@@ -1,0 +1,120 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaotic Chameleon Chronicles</title>
+    <style>
+        body, html {
+            margin: 0;
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #2f084b, #120c4f);
+            overflow: hidden;
+        }
+        #chameleon {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: url('https://i.imgur.com/FbzPSfF.png') no-repeat center;
+            background-size: contain;
+            transition: background-color 0.5s, transform 0.5s;
+        }
+        #facts {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 300px;
+        }
+        #facts h1 {
+            font-size: 2em;
+            margin: 0 0 10px;
+        }
+        #facts p {
+            font-size: 1.2em;
+        }
+        #morphButton, #randomColorButton {
+            cursor: pointer;
+            border: none;
+            background-color: #ff4b4b;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            box-shadow: 0 5px #d83939;
+            transition: all 0.2s ease;
+        }
+        #morphButton:active, #randomColorButton:active {
+            box-shadow: 0 2px #d83939;
+            transform: translateY(2px);
+        }
+        #morphButton:hover, #randomColorButton:hover {
+            background-color: #ff8888;
+        }
+    </style>
+</head>
+<body>
+    <div id="chameleon"></div>
+    <div id="facts">
+        <h1>Chameleon Chronicles</h1>
+        <p id="factDisplay">Did you know?<br>Chameleons can move their eyes independently.</p>
+        <button id="morphButton">Morph!</button>
+        <button id="randomColorButton">Random Color!</button>
+    </div>
+    <script>
+        const facts = [
+            "Chameleons can move their eyes independently.",
+            "Some chameleons can change color in 20 seconds.",
+            "Chameleons have a 360-degree view.",
+            "Their tongues can be twice their body length.",
+            "Chameleons are mostly found in Madagascar."
+        ];
+        
+        const colors = ["#f4d03f", "#a3e4d7", "#f1948a", "#a569bd", "#edbb99"];
+
+        const chameleonElement = document.getElementById('chameleon');
+        const factDisplay = document.getElementById('factDisplay');
+        const morphButton = document.getElementById('morphButton');
+        const randomColorButton = document.getElementById('randomColorButton');
+
+        function randomPosition() {
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 150);
+            chameleonElement.style.transform = `translate(${x}px, ${y}px)`;
+        }
+        
+        function randomFact() {
+            const randomFactIndex = Math.floor(Math.random() * facts.length);
+            factDisplay.textContent = "Did you know?\n" + facts[randomFactIndex];
+        }
+
+        function randomColor() {
+            const randomColorIndex = Math.floor(Math.random() * colors.length);
+            chameleonElement.style.backgroundColor = colors[randomColorIndex];
+        }
+
+        morphButton.addEventListener('click', () => {
+            randomPosition();
+            randomFact();
+        });
+
+        randomColorButton.addEventListener('click', () => {
+            randomColor();
+        });
+
+        // Initialize with random values
+        randomPosition();
+        randomColor();
+    </script>
+</body>
+</html>
+```

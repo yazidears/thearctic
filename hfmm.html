@@ -1,0 +1,121 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellyfish Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        #jellyfish {
+            position: absolute;
+            bottom: 10%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #8fc0f1, #0e1f4f);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+            overflow: hidden;
+            box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.1);
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(-10px);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+        .tentacle {
+            position: absolute;
+            bottom: 0;
+            width: 5px;
+            height: 60px;
+            background: #18a085;
+            border-radius: 10px;
+            animation: wave 2s infinite ease-in-out;
+        }
+        .tentacle:nth-child(1) { left: 20px; animation-delay: 0.1s; }
+        .tentacle:nth-child(2) { left: 40px; animation-delay: 0.3s; }
+        .tentacle:nth-child(3) { left: 60px; animation-delay: 0.5s; }
+        .tentacle:nth-child(4) { left: 80px; animation-delay: 0.7s; }
+        @keyframes wave {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+        }
+        #title {
+            position: absolute;
+            top: 5%;
+            text-align: center;
+            width: 100%;
+            animation: fade 3s infinite alternate;
+        }
+        @keyframes fade {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 6px 2px white;
+            animation: twinkle 4s infinite alternate;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.4); }
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <h1>Quantum Jellyfish Odyssey</h1>
+        <p>Explore the Mysteries of the Deep Cosmos</p>
+    </div>
+    <div id="jellyfish">
+        <div class="tentacle"></div>
+        <div class="tentacle"></div>
+        <div class="tentacle"></div>
+        <div class="tentacle"></div>
+    </div>
+    <script>
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            const duration = Math.random() * 2 + 2 + 's';
+            star.style.animationDuration = duration;
+            document.body.appendChild(star);
+        }
+        for (let i = 0; i < 100; i++) {
+            createStar();
+        }
+
+        let direction = 1;
+        document.body.addEventListener('click', (e) => {
+            direction *= -1;
+            document.body.style.background = direction > 0 
+                ? 'linear-gradient(135deg, #1e3c72, #2a5298)'
+                : 'linear-gradient(135deg, #2a5298, #1e3c72)';
+            document.querySelectorAll('.star').forEach(star => {
+                star.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+            });
+        });
+
+    </script>
+</body>
+</html>
+```

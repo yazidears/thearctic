@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Automaton Symphony</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle, #2e0249, #570077, #8900a1, #cf49b0, #ff99d9);
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #570077;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+  }
+  .button:hover {
+    background-color: #8900a1;
+  }
+  @keyframes swing {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(20deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .swinging {
+    animation: swing 2s infinite;
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<button class="button" onclick="randomizeChaos()">Unleash Chaos</button>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  class Automaton {
+    constructor(x, y, size, color) {
+      this.x = x;
+      this.y = y;
+      this.size = size;
+      this.color = color;
+      this.directionX = Math.random() * 4 - 2;
+      this.directionY = Math.random() * 4 - 2;
+    }
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fill();
+    }
+    update() {
+      if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+        this.directionX = -this.directionX;
+      }
+      if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+        this.directionY = -this.directionY;
+      }
+      this.x += this.directionX;
+      this.y += this.directionY;
+      this.draw();
+    }
+  }
+
+  let automatonArray = [];
+  function init() {
+    automatonArray = [];
+    for (let i = 0; i < 50; i++) {
+      let size = Math.random() * 20 + 10;
+      let x = Math.random() * (canvas.width - size * 2) + size;
+      let y = Math.random() * (canvas.height - size * 2) + size;
+      let color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      automatonArray.push(new Automaton(x, y, size, color));
+    }
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    automatonArray.forEach(automaton => automaton.update());
+  }
+
+  function randomizeChaos() {
+    automatonArray.forEach(automaton => {
+      automaton.directionX = Math.random() * 4 - 2;
+      automaton.directionY = Math.random() * 4 - 2;
+    });
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(el => el.classList.toggle('swinging'));
+  }
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+  });
+
+  init();
+  animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FF6B6B, #FFD93D, #09E85E, #3A48F8);
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .cloud {
+            position: absolute;
+            background: #fff;
+            border-radius: 100px;
+            transition: all 0.5s ease;
+            opacity: 0.8;
+        }
+        @keyframes float {
+            0% { transform: translateY(-10px); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(-10px); }
+        }
+        #infotext {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 18px;
+            mix-blend-mode: difference;
+        }
+        #strangeInput {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 40px;
+            margin-left: -100px;
+            border: 2px dashed #fff;
+            background: transparent;
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+        }
+        #mysteryButton {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background: #fff;
+            color: #FF6B6B;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            top: 50%;
+            left: 50%;
+            margin-top: 100px;
+            margin-left: -40px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        #mysteryButton:hover {
+            background: #FFD93D;
+            color: #3A48F8;
+        }
+        #bizarreResult {
+            position: absolute;
+            top: 10%;
+            right: 2%;
+            color: #fff;
+            font-size: 24px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="bizarreResult">?????</div>
+    <input type="text" id="strangeInput" placeholder="Mystery Code..." />
+    <button id="mysteryButton" onclick="revealMystery()">Click Me!</button>
+    <div id="infotext">Enter secret codes to see surprises!</div>
+    
+    <script>
+        function generateClouds() {
+            for (let i = 0; i < 10; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.style.width = `${50 + Math.random() * 150}px`;
+                cloud.style.height = `${30 + Math.random() * 80}px`;
+                cloud.style.top = `${Math.random() * 100}%`;
+                cloud.style.left = `${Math.random() * 100}%`;
+                cloud.style.animation = `float ${3 + Math.random() * 7}s infinite alternate`;
+                document.body.appendChild(cloud);
+            }
+        }
+        function revealMystery() {
+            const input = document.getElementById('strangeInput').value.toLowerCase();
+            const result = document.getElementById('bizarreResult');
+            if (input === 'rainbow') {
+                result.textContent = '🌈 Enjoy the Rainbow!';
+                result.style.fontSize = '48px';
+            } else if (input === 'unicorn') {
+                result.textContent = '🦄 A Unicorn Appears!';
+                result.style.fontSize = '48px';
+            } else {
+                result.textContent = '😕 Try Again!';
+                result.style.fontSize = '24px';
+            }
+            document.getElementById('strangeInput').value = '';
+        }
+        generateClouds();
+    </script>
+</body>
+</html>

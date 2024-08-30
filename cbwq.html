@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Space Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+        }
+        #spaceship {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background: linear-gradient(45deg, blue, cyan);
+            clip-path: polygon(0 100%, 50% 0, 100% 100%);
+            animation: shipPulse 2s infinite alternate;
+        }
+        @keyframes shipPulse {
+            to {
+                transform: scale(1.2);
+            }
+        }
+        #controlPanel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 2px solid lime;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            background: lime;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border: 2px solid cyan;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Neon Space Odyssey</h1>
+        <p>Dodge stars, collect energy!</p>
+    </div>
+    <div id="spaceship"></div>
+    <div id="controlPanel">
+        <button class="button" onclick="moveShip('left')">⬅️</button>
+        <button class="button" onclick="moveShip('right')">➡️</button>
+    </div>
+    <script>
+        const spaceship = document.getElementById('spaceship');
+        let spaceshipX = window.innerWidth / 2;
+        spaceship.style.left = spaceshipX + 'px';
+        spaceship.style.top = (window.innerHeight - 60) + 'px';
+
+        function moveShip(direction) {
+            if (direction === 'left' && spaceshipX > 0) spaceshipX -= 20;
+            if (direction === 'right' && spaceshipX < window.innerWidth - 50) spaceshipX += 20;
+            spaceship.style.left = spaceshipX + 'px';
+        }
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = '0px';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(star);
+
+            function fall() {
+                if (parseInt(star.style.top) < window.innerHeight) {
+                    star.style.top = (parseInt(star.style.top) + 4) + 'px';
+                    requestAnimationFrame(fall);
+                } else {
+                    document.body.removeChild(star);
+                }
+            }
+            fall();
+        }
+        
+        setInterval(createStar, 200);
+    </script>
+</body>
+</html>

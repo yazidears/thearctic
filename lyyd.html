@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bizarre World of Squiggleland</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: linear-gradient(to bottom, #ff9a9e 0%, #fad0c4 100%);
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        color: white;
+    }
+    .cloud {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+    }
+    #squiggle-garden {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+    #garden-header {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        font-size: 2rem;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+    .squiggle {
+        position: absolute;
+        color: white;
+        font-size: 3rem;
+        animation: squiggleDance 5s infinite;
+    }
+    .squiggle:hover {
+        color: #ffeaec;
+        cursor: pointer;
+        animation: wave 0.5s infinite alternate;
+    }
+    @keyframes wave {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(20deg); }
+    }
+    @keyframes squiggleDance {
+        0% { top: 0; left: 0; transform: rotate(-10deg); }
+        25% { top: 10vh; left: 40vw; transform: rotate(10deg); }
+        50% { top: 30vh; left: 80vw; transform: rotate(-10deg); }
+        75% { top: 60vh; left: 20vw; transform: rotate(10deg); }
+        100% { top: 100vh; left: 60vw; transform: rotate(-10deg); }
+    }
+    #pond {
+        position: absolute;
+        top: 85vh;
+        left: 50vw;
+        width: 20vw;
+        height: 10vh;
+        background: rgba(0, 191, 255, 0.5);
+        border-radius: 50%;
+        animation: ripple 3s infinite ease-out;
+    }
+    @keyframes ripple {
+        0% { transform: scale(0.9); background-color: rgba(0, 191, 255, 0.3); }
+        50% { transform: scale(1.1); background-color: rgba(0, 191, 255, 0.7); }
+        100% { transform: scale(0.9); background-color: rgba(0, 191, 255, 0.3); }
+    }
+</style>
+</head>
+<body>
+<div id="squiggle-garden">
+    <div id="garden-header">Welcome to the Surreal Squiggleland! Hover on squiggles to wave!</div>
+    <div id="pond"></div>
+    <script>
+        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink', 'yellow'];
+        const emojis = ['💫', '🌟', '✨', '⚡', '⚙️', '🎶', '🔮'];
+        for (let i = 0; i < 50; i++) {
+            const squiggle = document.createElement('div');
+            squiggle.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            squiggle.className = 'squiggle';
+            squiggle.style.left = Math.random() * 100 + 'vw';
+            squiggle.style.top = Math.random() * 100 + 'vh';
+            squiggle.style.color = colors[Math.floor(Math.random() * colors.length)];
+            squiggle.style.animationDelay = Math.random() * 5 + 's';
+            document.getElementById('squiggle-garden').appendChild(squiggle);
+        }
+        
+        for (let i = 0; i < 10; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.style.width = Math.random()*10 + 10 + 'vw';
+            cloud.style.height = Math.random()*3 + 5 + 'vh';
+            cloud.style.left = Math.random() * 100 + 'vw';
+            cloud.style.top = Math.random() * 50 + 'vh';
+            cloud.style.opacity = Math.random() * 0.5 + 0.3;
+            document.body.appendChild(cloud);
+        }
+
+        setInterval(() => {
+            document.querySelectorAll('.cloud').forEach(cloud => {
+                let left = parseFloat(cloud.style.left);
+                left += 0.1;
+                if(left > 100) left = 0;
+                cloud.style.left = left + 'vw';
+            });
+        }, 50);
+
+    </script>
+</div>
+</body>
+</html>

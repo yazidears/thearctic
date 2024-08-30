@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderscape</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; }
+        body { background-color: #1a1a1a; color: #ffffff; font-family: 'Comic Sans MS', cursive, sans-serif; }
+        #canvas { position: absolute; left: 0; top: 0; background: linear-gradient(#6a00f4, #110022); z-index: 1; }
+        .button { position: absolute; padding: 10px; background-color: #22aa22; cursor: pointer; border-radius: 5px; }
+        #clickMe { top: 10px; left: 10px; }
+        #reset { top: 50px; left: 10px; }
+        #info { position: absolute; top: 90px; left: 10px; max-width: 250px; line-height: 1.6; }
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        #planet, #moon { fill: #f47a00; }
+        #moon { animation: orbit 4s infinite linear reverse; transform-origin: 50px 50px; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="clickMe" class="button">Add a Shape</div>
+    <div id="reset" class="button">Reset</div>
+    <div id="info">Welcome to the Whimsical Wonderscape! Click "Add a Shape" to populate this universe with unique forms. Reset to start anew.</div>
+
+    <svg id="svgContainer" width="100" height="100" style="position: absolute; bottom: 20px; right: 20px;">
+        <circle id="planet" cx="50" cy="50" r="30"></circle>
+        <circle id="moon" cx="70" cy="50" r="10"></circle>
+    </svg>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const shapes = [];
+        function random(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        function createShape() {
+            const x = random(0, canvas.width);
+            const y = random(0, canvas.height);
+            const size = random(10, 50);
+            const dx = random(-3, 3);
+            const dy = random(-3, 3);
+            const color = `rgba(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)}, 0.7)`;
+            shapes.push({ x, y, size, dx, dy, color });
+        }
+
+        function drawShapes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => {
+                ctx.beginPath();
+                ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
+                ctx.fillStyle = shape.color;
+                ctx.fill();
+                shape.x += shape.dx;
+                shape.y += shape.dy;
+                if (shape.x + shape.size > canvas.width || shape.x - shape.size < 0) shape.dx *= -1;
+                if (shape.y + shape.size > canvas.height || shape.y - shape.size < 0) shape.dy *= -1;
+            });
+        }
+
+        function animate() {
+            drawShapes();
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('clickMe').onclick = createShape;
+        document.getElementById('reset').onclick = () => shapes.length = 0;
+
+        animate();
+    </script>
+</body>
+</html>

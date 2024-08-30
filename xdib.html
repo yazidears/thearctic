@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Kaleidoscope</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        body {
+            background: radial-gradient(circle, #ffafbd 0%, #ffc3a0 100%);
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 230, 230, 0.8);
+        }
+        .crystal {
+            position: absolute;
+            border-radius: 50%;
+            background: conic-gradient(from 30deg at 50% 50%, #e4e5e6, #004e92, #e4e5e6);
+            animation: spin 3s linear infinite;
+            opacity: 0.5;
+        }
+        #button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #004e92;
+            color: #e4e5e6;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        #button:hover {
+            background: #003366;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="button">Twist Reality</button>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const crystals = [];
+        
+        function createCrystal() {
+            const size = Math.random() * 50 + 10;
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const dx = (Math.random() - 0.5) * 4;
+            const dy = (Math.random() - 0.5) * 4;
+            const rotation_speed = (Math.random() - 0.5) * 0.02;
+
+            const crystal = { x, y, dx, dy, size, rotation: 0, rotation_speed };
+            crystals.push(crystal);
+        }
+
+        function animateCrystals() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            crystals.forEach((crystal, index) => {
+                crystal.x += crystal.dx;
+                crystal.y += crystal.dy;
+                crystal.rotation += crystal.rotation_speed;
+
+                if (crystal.x + crystal.size > canvas.width || crystal.x - crystal.size < 0) crystal.dx = -crystal.dx;
+                if (crystal.y + crystal.size > canvas.height || crystal.y - crystal.size < 0) crystal.dy = -crystal.dy;
+
+                context.save();
+                context.translate(crystal.x, crystal.y);
+                context.rotate(crystal.rotation);
+                context.beginPath();
+                context.arc(0, 0, crystal.size, 0, Math.PI * 2, false);
+                context.fillStyle = `hsl(${crystal.size * 6}, 100%, 50%)`;
+                context.fill();
+                context.restore();
+            });
+
+            requestAnimationFrame(animateCrystals);
+        }
+
+        setInterval(createCrystal, 200);
+        animateCrystals();
+        
+        document.getElementById("button").addEventListener("click", function() {
+            crystals.forEach(crystal => {
+                crystal.dx *= Math.random() * 2 - 1;
+                crystal.dy *= Math.random() * 2 - 1;
+                crystal.rotation_speed *= Math.random() * 2;
+            });
+        });
+    </script>
+</body>
+</html>

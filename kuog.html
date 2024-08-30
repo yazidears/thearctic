@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Whirl</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #222, #111);
+            color: #ffde6a;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #message {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 3em;
+            top: 30%;
+            animation: fadeIn ease 5s infinite alternate;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="message">✨ Welcome to the Cosmic Whirl! ✨</div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+
+        let stars = [];
+        const numStars = 800;
+        const focalLength = canvas.width * 2;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                z: Math.random() * canvas.width,
+                o: '0.' + Math.floor(Math.random() * 99) + 1
+            });
+        }
+
+        function moveStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach((star) => {
+                star.z -= 2;
+                if (star.z <= 0) {
+                    star.z = canvas.width;
+                }
+                let k = focalLength / star.z;
+                let px = star.x * k + centerX;
+                let py = star.y * k + centerY;
+
+                ctx.beginPath();
+                ctx.fillStyle = "rgba(255, 222, 106, " + star.o + ")";
+                ctx.arc(px, py, k / 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(moveStars);
+        }
+
+        moveStars();
+
+        let interactions = {
+            x: 0,
+            y: 0,
+            rippleEffect: function (event) {
+                const ripple = document.createElement("div");
+                document.body.appendChild(ripple);
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 222, 106, 0.5)';
+                ripple.style.left = (event.pageX - 10) + 'px';
+                ripple.style.top = (event.pageY - 10) + 'px';
+                ripple.style.animation = 'ripple-animation 1s linear';
+                ripple.style.pointerEvents = 'none';
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            }
+        };
+
+        document.addEventListener('mousemove', event => {
+            interactions.x = event.pageX;
+            interactions.y = event.pageY;
+            interactions.rippleEffect(event);
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                document.getElementById('message').textContent = `✨ Explore the Stars! Slide to Clear! ✨`;
+            }
+        });
+
+        var mousePressed = false;
+        canvas.addEventListener('mousedown', () => { mousePressed = true; });
+        canvas.addEventListener('mouseup',   () => { mousePressed = false; });
+        canvas.addEventListener('mousemove', (e) => {
+            if (mousePressed) {
+                ctx.clearRect(e.pageX - 10, e.pageY - 10, 20, 20);
+            }
+        });
+
+    </script>
+</body>
+</html>

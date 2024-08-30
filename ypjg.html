@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Kaleidoscope Experience</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; }
+        canvas { display: block; }
+        #controlPanel {
+            position: absolute; top: 20px; left: 20px; background: rgba(255, 255, 255, 0.8); border-radius: 8px; padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); z-index: 10;
+        }
+        #controlPanel input[type="range"] {
+            width: 100%; margin: 10px 0;
+        }
+        #controlPanel label { font-size: 14px; font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controlPanel">
+        <label for="speed">Animation Speed</label>
+        <input id="speed" type="range" min="1" max="30" value="10">
+        <label for="color">Base Color</label>
+        <input id="color" type="color" value="#ff4081">
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let patternSpeed = document.getElementById('speed').value;
+        let colorValue = document.getElementById('color').value;
+        let numShapes = 12;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawShape(x, y, radius, points, style) {
+            ctx.fillStyle = style;
+            ctx.beginPath();
+            ctx.moveTo(x + radius * Math.cos(0), y + radius * Math.sin(0));
+
+            for (let i = 1; i <= points; i++) {
+                ctx.lineTo(x + radius * Math.cos(i * 2 * Math.PI / points), y + radius * Math.sin(i * 2 * Math.PI / points));
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        let angle = 0;
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            angle += parseFloat(patternSpeed) / 100;
+            for (let i = 0; i < numShapes; i++) {
+                let theta = i * 2 * Math.PI / numShapes + angle;
+                let x = canvas.width / 2 + (canvas.width / 4) * Math.cos(theta);
+                let y = canvas.height / 2 + (canvas.height / 4) * Math.sin(theta);
+                let radius = Math.abs(30 * Math.sin(theta * 3));
+                drawShape(x, y, radius, 7, colorValue);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('speed').addEventListener('input', function () {
+            patternSpeed = this.value;
+        });
+
+        document.getElementById('color').addEventListener('input', function () {
+            colorValue = this.value;
+        });
+
+        animate();
+    </script>
+</body>
+</html>

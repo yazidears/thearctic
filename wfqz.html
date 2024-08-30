@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Voyage</title>
+<style>
+  body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(45deg, #222, #4b0082, #222);
+      font-family: 'Courier New', Courier, monospace;
+      color: #fff;
+  }
+  
+  .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite alternate;
+  }
+  
+  @keyframes twinkle {
+      from { opacity: 0.2; }
+      to { opacity: 1; }
+  }
+  
+  #spaceship {
+      position: absolute;
+      bottom: 10%;
+      width: 60px;
+      height: 60px;
+      background: gray;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      transition: transform 0.2s;
+  }
+  
+  #alien {
+      position: absolute;
+      top: 20%;
+      left: 10%;
+      width: 50px;
+      height: 50px;
+      background: green;
+      border-radius: 50%;
+  }
+  
+  #alien:after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      width: 20px;
+      height: 10px;
+      background: green;
+      border-radius: 50%;
+  }
+  
+  #ufo {
+      position: absolute;
+      top: 10%;
+      left: 70%;
+      width: 100px;
+      height: 50px;
+      background: silver;
+      border-radius: 50px/25px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+  
+  #beam {
+      position: absolute;
+      width: 10px;
+      height: 300px;
+      background: rgba(255, 255, 0, 0.3);
+      top: 50px;
+      left: 45px;
+      display: none;
+  }
+  
+  #message {
+      position: absolute;
+      bottom: 20%;
+      left: 10%;
+      font-size: 1.5em;
+      color: #ff0;
+      display: none;
+  }
+  
+  @keyframes moveSpaceship {
+      from { left: 10%; }
+      to { left: 70%; }
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const starCount = 100;
+      const body = document.body;
+      
+      for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.left = Math.random() * 100 + 'vw';
+          star.style.top = Math.random() * 100 + 'vh';
+          star.style.animationDuration = Math.random() * 5 + 3 + 's';
+          body.appendChild(star);
+      }
+      
+      const spaceship = document.getElementById('spaceship');
+      const message = document.getElementById('message');
+      let movingLeft = true;
+
+      document.addEventListener('keydown', (e) => {
+          const currentPos = parseInt(getComputedStyle(spaceship).left);
+
+          if (e.code === 'ArrowRight' && movingLeft) {
+              spaceship.style.transform = 'rotateY(180deg)';
+              movingLeft = false;
+          } else if (e.code === 'ArrowLeft' && !movingLeft) {
+              spaceship.style.transform = 'rotateY(0deg)';
+              movingLeft = true;
+          }
+
+          spaceship.style.left = movingLeft ? Math.max(currentPos - 20, 0) + 'px' : Math.min(currentPos + 20, window.innerWidth - 60) + 'px';
+      });
+
+      spaceship.addEventListener('animationiteration', () => {
+          const alien = document.getElementById('alien');
+          const ufo = document.getElementById('ufo');
+          const beam = document.getElementById('beam');
+
+          if (parseInt(getComputedStyle(spaceship).left) > parseInt(getComputedStyle(alien).left) - 50 && 
+              parseInt(getComputedStyle(spaceship).left) < parseInt(getComputedStyle(alien).left) + 50) {
+              beam.style.display = 'block';
+              setTimeout(() => {
+                  alien.style.display = 'none';
+                  message.style.display = 'block';
+                  beam.style.display = 'none';
+              }, 2000);
+          }
+      });
+  });
+</script>
+</head>
+<body>
+<div id="spaceship"></div>
+<div id="alien"></div>
+<div id="ufo">
+    <div id="beam"></div>
+</div>
+<div id="message">You've been abducted! Journey to the stars!</div>
+</body>
+</html>

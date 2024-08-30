@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Cosmic Circus</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; font-family: 'Comic Sans MS', cursive;}
+        #canvas { background: linear-gradient(135deg, #000428, #004e92);}
+        .tentacle { fill: #afeeee; animation: wiggle 5s infinite;}
+        .balloon { fill: #ff69b4; animation: float 3s infinite;}
+        .alien { fill: #32cd32; stroke: #006400; stroke-width: 2px; }
+        @keyframes wiggle {0%, 100% { transform: rotate(0deg);} 50% { transform: rotate(15deg);}}
+        @keyframes float {0%, 100% { transform: translateY(0px);} 50% { transform: translateY(-20px);}}
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600"></canvas>
+<script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let stars = [];
+    let aliens = [];
+    for (let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2
+        });
+    }
+    function drawStars() {
+        context.fillStyle = 'white';
+        stars.forEach(star => {
+            context.beginPath();
+            context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            context.fill();
+        });
+    }
+    function drawTentacle(x, y) {
+        context.fillStyle = '#afeeee';
+        context.beginPath();
+        context.ellipse(x, y, 10, 50, Math.PI / 4, 0, Math.PI * 2);
+        context.fill();
+    }
+    function drawBalloon(x, y) {
+        context.fillStyle = '#ff69b4';
+        context.beginPath();
+        context.ellipse(x, y, 20, 30, 0, 0, Math.PI * 2);
+        context.fill();
+        context.beginPath();
+        context.moveTo(x, y + 30);
+        context.lineTo(x, y + 50);
+        context.lineWidth = 5;
+        context.stroke();
+    }
+    function drawAlien(x, y) {
+        context.fillStyle = '#32cd32';
+        context.beginPath();
+        context.arc(x, y, 15, 0, Math.PI * 2);
+        context.fill();
+        context.strokeStyle = '#006400';
+        context.lineWidth = 2;
+        context.stroke();
+        context.fillStyle = 'white';
+        context.beginPath();
+        context.arc(x - 5, y - 5, 3, 0, Math.PI * 2);
+        context.arc(x + 5, y - 5, 3, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = 'black';
+        context.beginPath();
+        context.arc(x - 5, y - 5, 1, 0, Math.PI * 2);
+        context.arc(x + 5, y - 5, 1, 0, Math.PI * 2);
+        context.fill();
+    }
+    function randomAlienPosition() {
+        return {
+            x: Math.random() * (canvas.width - 60) + 30,
+            y: Math.random() * (canvas.height - 60) + 30
+        };
+    }
+    for (let i = 0; i < 5; i++) {
+        aliens.push(randomAlienPosition());
+    }
+    function drawScene() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawStars();
+        for (let y = 100; y < canvas.height; y += 60) {
+            for (let x = 50; x < canvas.width; x += 100) {
+                drawTentacle(x, y + Math.sin(x + performance.now() / 200) * 30);
+            }
+        }
+        for (let x = 50; x < canvas.width; x += 120) {
+            drawBalloon(x, 50 + (Math.cos(x + performance.now() / 200) * 30));
+        }
+        aliens.forEach(alien => {
+            drawAlien(alien.x, alien.y);
+        });
+        requestAnimationFrame(drawScene);
+    }
+    drawScene();
+    function checkCollision(x, y) {
+        return aliens.some(alien => Math.hypot(alien.x - x, alien.y - y) < 30);
+    }
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        if (checkCollision(x, y)) {
+            aliens = aliens.filter(alien => Math.hypot(alien.x - x, alien.y - y) >= 30);
+            if (aliens.length === 0) {
+                alert("You've captured all the aliens! The circus is saved!");
+                for (let i = 0; i < 5; i++) {
+                    aliens.push(randomAlienPosition());
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

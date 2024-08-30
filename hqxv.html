@@ -1,0 +1,93 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wind World</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+        }
+        #whimsicalBoat {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            animation: sailInfinite 7s infinite linear;
+            cursor: pointer;
+        }
+        @keyframes sailInfinite {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-70%, -60%) rotate(-20deg); }
+            50% { transform: translate(-50%, -40%) rotate(20deg); }
+            75% { transform: translate(-30%, -60%) rotate(-15deg); }
+            100% { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+        #waves {
+            width: 100%;
+            height: 100px;
+            opacity: 0.5;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQwMCIgaGVpZ2h0PSIxMDAiIHZpZXdCb3g9IjAgMCAxNDAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQwMCA0MEgwYTQwIDQwIDAgMCAwIDI0MCAyMCAyMjAgMTgwIDEwMCAwIDAgMCAxMTQwLTQwSDBhMjQwIDQwIDAgMCAxIDI0MCAyMHYxMDAiIGZpbGw9ImxpbmVhci1ncmFkaWVudCgxMTVkZWdyZWUsICMyZDFlNDYsICNuZG4pIi8+PC9zdmc+');
+            position: absolute;
+            top: 90%;
+            left: 0;
+            animation: waveMotion 4s linear infinite;
+        }
+        @keyframes waveMotion {
+            0% { background-position-x: 0; }
+            100% { background-position-x: -1400px; }
+        }
+        .wind {
+            position: absolute;
+            animation: windBlow 5s infinite ease-in-out;
+            font-size: 2rem;
+        }
+        @keyframes windBlow {
+            0% { opacity: 0; left: -10%; top: 20%; }
+            50% { opacity: 1; left: 110%; top: 40%; }
+            100% { opacity: 0; left: 200%; top: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+<img id="whimsicalBoat" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMiIgdmlld0JveD0iMCAwIDEwMSAxMDIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAuMDAwODIwOTUsMTAwLjQ5NDRDLTEuMzA1ODk2MzUsMTAwLjI5MjEgMC40OTIzMjczMzUsODQuMTMwMyA0OC42Mzg2MjcsNTQuNjcwNUM5Ni43ODUwMjcsMjUuMjEwNyA5OS44ODM1NTgsMzkuOTI0OSA5OS45ODM1NTgsMzkuOTI0OUw1Miw5MS45NzM4TDEyLjk0NzcxLDU3LjQ2OTZMMC4wMDA4MjA5NSwxMDAuNDk0NFoiIGZpbGw9IiNGNEY5RjQiLz48L3N2Zz4=" alt="Whimsical Boat">
+
+<div id="waves"></div>
+<div class="wind" style="left:10%;top:30%;">💨</div>
+<div class="wind" style="left:20%;top:60%;">💨</div>
+<div class="wind" style="left:50%;top:20%;">💨</div>
+<div class="wind" style="left:70%;top:80%;">💨</div>
+
+<script>
+    const boat = document.getElementById("whimsicalBoat");
+    boat.addEventListener("click", function() {
+        alert("You've found the whimsical boat! Journey onward to the land of whimsy!");
+    });
+
+    let waves = document.getElementById('waves');
+    let windElements = document.querySelectorAll('.wind');
+    let colors = ['#fbc2eb', '#b6b6b9', '#fcb69f', '#ff9a9e', '#a18cd1'];
+
+    function changeColors() {
+        let randomColor = colors[Math.floor(Math.random() * colors.length)];
+        waves.style.background = `linear-gradient(${randomColor}, white)`;
+        windElements.forEach(function(wind) {
+            wind.style.color = randomColor;
+        });
+    }
+
+    setInterval(changeColors, 4000);
+</script>
+
+</body>
+</html>
+```

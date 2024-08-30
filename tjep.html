@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Galaxy Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0D0D2B;
+            color: #FFF;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .star {
+            position: absolute;
+            background-color: #FFF;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        .black-hole {
+            position: absolute;
+            background: radial-gradient(circle, #090909, #000);
+            border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #wormhole {
+            position: absolute;
+            background-color: #00AAFF;
+            border: 2px dashed #FFF;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        .dialogue {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="dialogue" id="dialogue">Click on the wormhole to explore!</div>
+    <div id="wormhole" style="width: 30px; height: 30px; top: 50%; left: 50%;"></div>
+    <div class="black-hole" style="width: 100px; height: 100px; top: 20%; left: 80%;"></div>
+    <div class="black-hole" style="width: 150px; height: 150px; top: 70%; left: 30%;"></div>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const stars = [];
+        let dialogueIndex = 0;
+        const dialogues = [
+            "Welcome to the Mystical Galaxy!",
+            "Stars are born and twinkle here.",
+            "Black holes spin silently.",
+            "Wormholes offer a quick escape!"
+        ];
+        
+        function initializeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createStars(100);
+            window.addEventListener('resize', initializeCanvas);
+        }
+        
+        function createStars(count) {
+            for (let i = 0; i < count; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.top = `${Math.random() * window.innerHeight}px`;
+                star.style.left = `${Math.random() * window.innerWidth}px`;
+                document.body.appendChild(star);
+                stars.push(star);
+            }
+        }
+
+        document.getElementById('wormhole').onclick = function() {
+            nextDialogue();
+        };
+
+        function nextDialogue() {
+            dialogueIndex = (dialogueIndex + 1) % dialogues.length;
+            document.getElementById('dialogue').innerHTML = dialogues[dialogueIndex];
+        }
+
+        initializeCanvas();
+    </script>
+</body>
+</html>

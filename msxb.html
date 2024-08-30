@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: #222;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: sans-serif;
+        }
+        #mood {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        .face-content {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+        }
+        .eye {
+            position: absolute;
+            top: 35%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+        }
+        .eye:before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #222;
+        }
+        .eye.left-eye {
+            right: 55%;
+        }
+        .eye.right-eye {
+            left: 55%;
+        }
+        .mouth {
+            position: absolute;
+            bottom: 10%;
+            width: 100%;
+            height: 10px;
+            border: 3px solid #9b0606;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+    </style>
+    <title>Interactive Mood Indicator</title>
+</head>
+<body>
+    <div id="mood">
+        <div class="face" style="background: #ffcb9a;"></div>
+        <div class="face-content">
+            <div class="eye left-eye"></div>
+            <div class="eye right-eye"></div>
+            <div class="mouth"></div>
+        </div>
+    </div>
+
+    <script>
+        var moodElement = document.getElementById('mood');
+        var mouthElement = moodElement.querySelector('.mouth');
+        var happyMouth = { bottom: '10%', height: '10px' };
+        var sadMouth = { bottom: '40%', height: '40px' };
+        var isHappy = true;
+
+        moodElement.addEventListener('click', function() {
+            if (isHappy) {
+                morphMouth(sadMouth);
+                isHappy = false;
+            } else {
+                morphMouth(happyMouth);
+                isHappy = true;
+            }
+        });
+
+        function morphMouth(target) {
+            mouthElement.style.bottom = target.bottom;
+            mouthElement.style.height = target.height;
+        }
+    </script>
+</body>
+</html>

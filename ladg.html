@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Abstract Wanderland</title>
+<style>
+body {
+    background: #fcf6f5;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+.shape {
+    width: 50px;
+    height: 50px;
+    background: #ff3f34;
+    position: absolute;
+    transition: all 1s ease;
+}
+
+.button {
+    padding: 10px 20px;
+    background: #ff3f34;
+    color: #fcf6f5;
+    border: none;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+</style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="shuffleBtn" class="button">Shuffle</button>
+    <div id="shapeContainer">
+        <div class="shape hide"></div>
+        <div class="shape hide"></div>
+        <div class="shape hide"></div>
+        <div class="shape hide"></div>
+        <div class="shape hide"></div>
+    </div>
+<script>
+window.onload = function() {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var shapes = document.getElementsByClassName("shape");
+    var btn = document.getElementById("shuffleBtn");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    btn.onclick = function() {
+        for (var i = 0; i < shapes.length; i++) {
+            shapes[i].style.top = Math.random() * canvas.height + "px";
+            shapes[i].style.left = Math.random() * canvas.width + "px";
+            shapes[i].classList.remove("hide");
+        }
+    }
+
+    for (var i = 0; i < shapes.length; i++) {
+        shapes[i].onclick = function() {
+            this.style.backgroundColor = makeRandomColor();
+            drawAtRandomPosition();
+        }
+    }
+
+    function makeRandomColor() {
+        var c = '';
+        while (c.length < 6) {
+            c += (Math.random()).toString(16).substr(-6).substr(0,1)
+        }
+        return '#' + c;
+    }
+
+    function drawAtRandomPosition() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, 0, 2 * Math.PI);
+        ctx.fillStyle = makeRandomColor();
+        ctx.fill();
+    }
+}
+</script>
+</body>
+</html>

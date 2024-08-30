@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wacky Art Site</title>
+  <style>
+    body {background-color: peachpuff;}
+    h1   {color: purple;}
+    div  {color: darkmagenta; padding: 15px;}
+    ::after {content: ""; display: table; clear: both;}
+    canvas {position: absolute;top: 0;left: 0; pointer-events: none;}
+  </style>
+</head>
+<body>
+
+<h1>Welcome to the Wacky Art Site</h1>
+<div>
+  Click anywhere to create a wacky art!
+</div>
+
+<div id="art">
+
+</div>
+
+<style>
+#art > div {
+  width: 50px;
+  height: 50px;
+  background: darkmagenta;
+  position: absolute;
+  pointer-events: none;
+  transition: all 1s ease;
+}
+</style>
+
+<script>
+let artDiv = document.getElementById('art');
+
+document.addEventListener('click', function(e) {
+  let newDiv = document.createElement('div');
+  newDiv.style.left = `${e.pageX}px`;
+  newDiv.style.top = `${e.pageY}px`;
+  newDiv.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+  artDiv.appendChild(newDiv);
+
+  requestAnimationFrame(function moveDiv(){
+    newDiv.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+    requestAnimationFrame(moveDiv);
+  });
+});
+
+setInterval(function() {
+  let divs = document.querySelectorAll('#art > div');
+  if(divs.length > 100) {
+    divs[0].parentNode.removeChild(divs[0]);
+  }
+}, 100);
+</script>
+
+<script>
+let canvas = document.createElement('canvas');
+let ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+document.body.appendChild(canvas);
+
+let colors = ['#ff0', '#f0f', '#0ff', '#f00', '#0f0', '#00f'];
+let particles = [];
+for(let i = 0; i < 50; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    xSpeed: Math.random() * 10 - 5,
+    ySpeed: Math.random() * 10 - 5,
+    size: Math.random() * 5 + 1,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  });
+}
+
+function loop() {
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(function(p) {
+    p.x += p.xSpeed;
+    p.y += p.ySpeed;
+    if(p.x < 0) p.x += canvas.width;
+    if(p.y < 0) p.y += canvas.height;
+    if(p.x > canvas.width) p.x -= canvas.width;
+    if(p.y > canvas.height) p.y -= canvas.height;
+
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+
+</body>
+</html>

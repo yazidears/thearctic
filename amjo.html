@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Clock Forest</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #131862;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 200px;
+            background: brown;
+        }
+        .treetop {
+            width: 140px;
+            height: 140px;
+            background: green;
+            border-radius: 50%;
+            position: absolute;
+            top: -70px;
+            left: -20px;
+        }
+        .clock {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffcc00 60%, transparent 61%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .hour-hand, .minute-hand, .second-hand {
+            position: absolute;
+            background: #000;
+            transform-origin: bottom;
+            transform: translate(-50%, -100%);
+        }
+        .hour-hand {
+            width: 4px;
+            height: 20px;
+            top: 30%;
+        }
+        .minute-hand {
+            width: 2px;
+            height: 26px;
+            top: 35%;
+        }
+        .second-hand {
+            width: 1px;
+            height: 30px;
+            top: 40%;
+        }
+    </style>
+</head>
+<body>
+    <div id="forest"></div>
+    <script>
+        const forest = document.getElementById('forest');
+        const createTree = (x, y, size) => {
+            const tree = document.createElement('div');
+            tree.classList.add('tree');
+            tree.style.left = x + 'px';
+            tree.style.height = size + 'px';
+            const treetop = document.createElement('div');
+            treetop.classList.add('treetop');
+            treetop.style.width = size + 'px';
+            treetop.style.height = size + 'px';
+            tree.appendChild(treetop);
+            const clock = document.createElement('div');
+            clock.classList.add('clock');
+            const hourHand = document.createElement('div');
+            hourHand.classList.add('hour-hand');
+            const minuteHand = document.createElement('div');
+            minuteHand.classList.add('minute-hand');
+            const secondHand = document.createElement('div');
+            secondHand.classList.add('second-hand');
+            clock.append(hourHand, minuteHand, secondHand);
+            tree.appendChild(clock);
+            forest.appendChild(tree);
+            moveHands(clock, hourHand, minuteHand, secondHand);
+        };
+
+        const randomBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+        const generateForest = () => {
+            for (let i = 0; i < 10; i++) {
+                const x = randomBetween(0, window.innerWidth - 100);
+                const y = randomBetween(window.innerHeight / 1.5, window.innerHeight);
+                const size = randomBetween(100, 200);
+                createTree(x, y - size, size);
+            }
+        };
+        
+        const moveHands = (clock, hourHand, minuteHand, secondHand) => {
+            const updateClock = () => {
+                const now = new Date();
+                const seconds = now.getSeconds();
+                const minutes = now.getMinutes();
+                const hours = now.getHours();
+                const sRotation = (seconds / 60) * 360;
+                const mRotation = (minutes / 60) * 360 + (seconds / 60) * 6;
+                const hRotation = (hours % 12 / 12) * 360 + (minutes / 60) * 30;
+                secondHand.style.transform = `rotate(${sRotation}deg) translate(-50%, -100%)`;
+                minuteHand.style.transform = `rotate(${mRotation}deg) translate(-50%, -100%)`;
+                hourHand.style.transform = `rotate(${hRotation}deg) translate(-50%, -100%)`;
+            };
+            setInterval(updateClock, 1000);
+        };
+
+        generateForest();
+    </script>
+</body>
+</html>
+```

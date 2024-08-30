@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Absurd Circus</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: radial-gradient(circle, #ff8a00, #e52e71);
+        }
+        #main-canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 600px;
+            background: #222;
+            box-shadow: 0 0 20px #000;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        canvas {
+            position: absolute;
+        }
+        .popup {
+            width: 100px;
+            height: 100px;
+            background: rgba(34, 34, 34, 0.8);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            position: absolute;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2em;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-canvas">
+        <canvas id="confetti"></canvas>
+        <canvas id="worm"></canvas>
+        <div class="popup" id="click-me" style="left:350px; top:250px;">Click Me</div>
+        <div id="message">Welcome to the Absurd Circus!</div>
+    </div>
+    <script>
+        'use strict';
+        const confettiCanvas = document.getElementById('confetti');
+        confettiCanvas.width = 800;
+        confettiCanvas.height = 600;
+        const ctx1 = confettiCanvas.getContext('2d');
+        const wormCanvas = document.getElementById('worm');
+        wormCanvas.width = 800;
+        wormCanvas.height = 600;
+        const ctx2 = wormCanvas.getContext('2d');
+        const popup = document.getElementById('click-me');
+        let colors = ['#FDFFFC', '#2EC4B6', '#FF9F1C', '#E71D36', '#011627'];
+
+        // Generate confetti
+        let confettis = Array.from({ length: 100 }, () => ({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * confettiCanvas.height,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: Math.random() * 2 + 1
+        }));
+
+        function drawConfetti() {
+            ctx1.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettis.forEach(c => {
+                ctx1.fillStyle = c.color;
+                ctx1.fillRect(c.x, c.y, 5, 5);
+                c.x += c.speedX;
+                c.y += c.speedY;
+                if (c.x < 0 || c.x > confettiCanvas.width || c.y > confettiCanvas.height) {
+                    c.x = Math.random() * confettiCanvas.width;
+                    c.y = -5;
+                    c.speedX = (Math.random() - 0.5) * 2;
+                    c.speedY = Math.random() * 2 + 1;
+                }
+            });
+        }
+
+        // Generate worm
+        let worm = {
+            x: 400,
+            y: 300,
+            segments: Array.from({ length: 20 }, (_, i) => ({ x: 400 - i * 10, y: 300 })),
+            dir: 'r'
+        };
+
+        function drawWorm() {
+            ctx2.clearRect(0, 0, wormCanvas.width, wormCanvas.height);
+            ctx2.fillStyle = '#FF7F11';
+            worm.segments.forEach(s => {
+                ctx2.beginPath();
+                ctx2.arc(s.x, s.y, 9, 0, Math.PI * 2);
+                ctx2.fill();
+            });
+            const head = worm.segments[0];
+            if (worm.dir === 'r') head.x += 2;
+            if (worm.dir === 'l') head.x -= 2;
+            if (worm.dir === 'u') head.y -= 2;
+            if (worm.dir === 'd') head.y += 2;
+            if (head.x < 0) head.x = wormCanvas.width;
+            if (head.x > wormCanvas.width) head.x = 0;
+            if (head.y < 0) head.y = wormCanvas.height;
+            if (head.y > wormCanvas.height) head.y = 0;
+            for (let i = worm.segments.length - 1; i > 0; i--) {
+                worm.segments[i].x = worm.segments[i - 1].x;
+                worm.segments[i].y = worm.segments[i - 1].y;
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            drawConfetti();
+            drawWorm();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Popup interaction
+        popup.addEventListener('mouseover', function() {
+            popup.style.opacity = 1;
+        });
+        popup.addEventListener('mouseout', function() {
+            popup.style.opacity = 0;
+        });
+        popup.addEventListener('click', function() {
+            alert("You've clicked the mysterious box!");
+            const message = document.getElementById('message');
+            message.textContent = "You've unlocked the hidden circus secret!";
+            message.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            setTimeout(() => message.style.transform = 'translate(-50%, -50%) scale(1.0)', 1000);
+        });
+
+        // Key controls for the worm
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') worm.dir = 'r';
+            if (e.key === 'ArrowLeft') worm.dir = 'l';
+            if (e.key === 'ArrowUp') worm.dir = 'u';
+            if (e.key === 'ArrowDown') worm.dir = 'd';
+        });
+    </script>
+</body>
+</html>

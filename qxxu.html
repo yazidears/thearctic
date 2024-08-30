@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Deep Sea Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #01081f, #000);
+            font-family: 'Courier New', Courier, monospace;
+            color: #f0f0f0;
+        }
+        #submarin {
+            position: absolute;
+            width: 100px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.2s ease;
+        }
+        #periscope {
+            width: 15px;
+            height: 40px;
+            background: #666;
+            position: absolute;
+            left: 42%;
+            top: -40px;
+            border-radius: 5px;
+        }
+        .ocean-bubble {
+            width: 10px;
+            height: 10px;
+            background-color: #aaf;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            animation: bubble-rise linear infinite;
+        }
+        @keyframes bubble-rise {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+        #treasure-map {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 20px;
+            border: 2px dotted #fdd;
+            background: rgba(256,256,256,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="submarin">
+        <div id="periscope"></div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Icon_blue_gradient_0006_transparent.png/200px-Icon_blue_gradient_0006_transparent.png" alt="Submarine Body">
+    </div>
+    <canvas id="seaCanvas"></canvas>
+    <div id="treasure-map">
+        <h3>Treasure Adventure Map</h3>
+        <p>Press Arrow Keys to Explore the Depths</p>
+        <ol>
+            <li>Find the Lost Pearl</li>
+            <li>Discover Ancient Artefacts</li>
+            <li>Find the Secret Sea Cave</li>
+        </ol>
+    </div>
+    <script>
+        const submarin = document.getElementById('submarin');
+        const seaCanvas = document.getElementById('seaCanvas');
+        const ctx = seaCanvas.getContext('2d');
+        let x = window.innerWidth / 2, y = window.innerHeight / 2;
+        
+        function resizeCanvas() {
+            seaCanvas.width = window.innerWidth;
+            seaCanvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        function drawBubbles() {
+            const bubbleCount = 30;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'ocean-bubble';
+                bubble.style.left = Math.random() * 100 + 'vw';
+                bubble.style.animationDuration = Math.random() * 5 + 2 + 's';
+                bubble.style.opacity = Math.random();
+                document.body.appendChild(bubble);
+            }
+        }
+        drawBubbles();
+        
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'ArrowUp': y -= 20; break;
+                case 'ArrowDown': y += 20; break;
+                case 'ArrowLeft': x -= 20; break;
+                case 'ArrowRight': x += 20; break;
+            }
+            submarin.style.left = x + 'px';
+            submarin.style.top = y + 'px';
+            updatePeriscope();
+        });
+
+        function updatePeriscope() {
+            const randomAngle = Math.random() * Math.PI * 2;
+            ctx.clearRect(0, 0, seaCanvas.width, seaCanvas.height);
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(randomAngle) * 50, Math.sin(randomAngle) * 50);
+            ctx.strokeStyle = '#ffaaaa';
+            ctx.stroke();
+            ctx.restore();
+        }
+        updatePeriscope();
+    </script>
+</body>
+</html>

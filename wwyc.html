@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Animal Orchestra</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #86a8e7, #7f7fd5);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .animal {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        .note {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            font-size: 18px;
+        }
+        #stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .flying {
+            animation: move 10s linear infinite;
+        }
+        @keyframes move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100vw); }
+        }
+        #maze {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            height: 150px;
+            border: 5px solid black;
+            overflow: hidden;
+        }
+        #roller {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #feac5e 39%, #ff00cc 100%);
+            border-radius: 50%;
+        }
+        #info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            border: 2px solid #000;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="stage">
+        <div class="animal" id="cow" style="top:300px; left:100px;">
+            🐄
+        </div>
+        <div class="animal" id="pig" style="top:200px; left:300px;">
+            🐖
+        </div>
+        <div class="animal" id="cat" style="top:100px; left:500px;">
+            🐈
+        </div>
+        <div class="animal" id="duck" style="top:400px; left:700px;">
+            🦆
+        </div>
+        <div class="note">Click the animals to start the orchestra!</div>
+        <div id="maze">
+            <div id="roller"></div>
+        </div>
+        <div id="info">Move the ball with arrow keys!</div>
+    </div>
+    <script>
+        const sounds = {
+            cow: new Audio('https://www.myinstants.com/media/sounds/cow-moo.mp3'),
+            pig: new Audio('https://www.myinstants.com/media/sounds/pig-noise.mp3'),
+            cat: new Audio('https://www.myinstants.com/media/sounds/cat-noise.mp3'),
+            duck: new Audio('https://www.myinstants.com/media/sounds/duck-quack.mp3')
+        };
+
+        document.querySelectorAll('.animal').forEach(animal => {
+            animal.addEventListener('click', function () {
+                const animalId = this.id;
+                sounds[animalId].play();
+                this.classList.toggle('flying');
+            });
+
+            animal.addEventListener('mouseover', function () {
+                this.style.transform = 'scale(1.2)';
+            });
+
+            animal.addEventListener('mouseleave', function () {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        let x = 0, y = 0;
+        const roller = document.getElementById('roller');
+        
+        window.addEventListener('keydown', function (e) {
+            switch (e.key) {
+                case 'ArrowUp': y = Math.max(y - 10, 0); break;
+                case 'ArrowDown': y = Math.min(y + 10, 120); break;
+                case 'ArrowLeft': x = Math.max(x - 10, 0); break;
+                case 'ArrowRight': x = Math.min(x + 10, 120); break;
+            }
+            roller.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>

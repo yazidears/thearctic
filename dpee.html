@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interdimensional Storyboard</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffcc00, #ff0066);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            border: 8px solid white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+        .message {
+            display: none;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            color: white;
+            border-radius: 10px;
+            font-size: 18px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="message" id="message1">"You have entered the quantum meadow"</div>
+    <div class="message" id="message2">"Beware of the fractal fog"</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const width = canvas.width;
+        const height = canvas.height;
+
+        let stars = [];
+        let numStars = 150;
+        let tick = 0;
+        
+        for(let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 1.5 + 1,
+                velX: (Math.random() * 0.5) - 0.25,
+                velY: (Math.random() * 0.5) - 0.25
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+        }
+
+        function updateStars() {
+            stars.forEach(star => {
+                star.x += star.velX;
+                star.y += star.velY;
+
+                if(star.x < 0 || star.x > width) star.velX *= -1;
+                if(star.y < 0 || star.y > height) star.velY *= -1;
+            });
+        }
+
+        let messageTimeout;
+        function showMessage(messageId) {
+            clearTimeout(messageTimeout);
+            document.querySelectorAll('.message').forEach(m => m.style.display = 'none');
+            const message = document.getElementById(messageId);
+            if (message) {
+                message.style.display = 'block';
+                messageTimeout = setTimeout(() => message.style.display = 'none', 3000);
+            }
+        }
+
+        function animate() {
+            tick++;
+            if (tick % 200 === 0) {
+                const randMessageId = 'message' + (Math.floor(Math.random() * 2) + 1);
+                showMessage(randMessageId);
+            }
+
+            drawStars();
+            updateStars();
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+        document.addEventListener('click', event => {
+            canvas.width = canvas.width; 
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '40px Courier New';
+            ctx.fillText("Welcome to the Multiverse!", 120, 300);
+            clearInterval(messageTimeout);
+            document.querySelectorAll('.message').forEach(m => m.style.display = 'none');
+        });
+    </script>
+</body>
+</html>

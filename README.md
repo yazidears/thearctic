@@ -1,5 +1,5 @@
 **USE CHROMIUM-BASED BROWSERS!!**
-the arctic.
+#the arctic.
 
 a digital wilderness,
 200+ handcrafted webpages bloom,

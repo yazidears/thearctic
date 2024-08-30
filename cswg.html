@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Jellybean Conundrum</title>
+    <style>
+        body { background-color: #fdf3e7; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; }
+        #canvas { position: absolute; top: 0; left: 0; }
+        .jellybean { width: 30px; height: 50px; background-color: #ff69b4; border-radius: 15px 15px 0 0; position: absolute; }
+        #message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #333; font-family: 'Comic Sans MS'; font-size: 30px; white-space: nowrap; display: none; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        #button { position: fixed; top: 90%; left: 90%; background-color: #820000; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        #time { position: fixed; bottom: 10%; left: 10%; color: #333; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="message">Congratulations! You found the secret!</div>
+<button id="button">Do not press!</button>
+<div id="time"></div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let jellybeans = [];
+    
+    for (let i = 0; i < 100; i++) {
+        jellybeans.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            dx: (Math.random() - 0.5) * 4,
+            dy: (Math.random() - 0.5) * 4
+        });
+    }
+
+    function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        for (let bean of jellybeans) {
+            context.save();
+            context.fillStyle = '#ff69b4';
+            context.translate(bean.x, bean.y);
+            context.rotate(Math.PI / 180 * (bean.x + bean.y));
+            context.fillRect(-15, -25, 30, 50);
+            context.restore();
+            bean.x += bean.dx;
+            bean.y += bean.dy;
+            if (bean.x < 0 || bean.x > canvas.width) bean.dx *= -1;
+            if (bean.y < 0 || bean.y > canvas.height) bean.dy *= -1;
+        }
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    const button = document.getElementById('button');
+    button.addEventListener('click', () => {
+        document.body.style.backgroundColor = document.body.style.backgroundColor === 'black' ? '#fdf3e7' : 'black';
+    });
+
+    setInterval(() => {
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+    }, 1000);
+
+    let secretTimer;
+    canvas.addEventListener('mousemove', () => {
+        clearTimeout(secretTimer);
+        document.getElementById('message').style.display = 'none';
+        secretTimer = setTimeout(() => {
+            document.getElementById('message').style.display = 'block';
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>

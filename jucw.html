@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Enchanted Clockwork Menagerie</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #222;
+        color: #eaeaea;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: swim 20s linear infinite alternate;
+    }
+    @keyframes swim {
+        from { background-position: 0 0; }
+        to { background-position: -1000 1000; }
+    }
+    .creature {
+        position: absolute;
+        font-size: 30px;
+        user-select: none;
+        cursor: pointer;
+        transition: transform 0.2s linear;
+    }
+    .creature:hover {
+        transform: scale(1.5);
+    }
+    .creature:active {
+        transform: rotate(45deg);
+    }
+    #controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .button {
+        background: #333;
+        border: 2px solid #555;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background: #555;
+    }
+</style>
+</head>
+<body>
+<div id="world"></div>
+<div id="controls">
+    <div class="button" onclick="addCreature()">Add Creature</div>
+    <div class="button" onclick="removeCreatures()">Clear Creatures</div>
+    <div class="button" onclick="toggleMovement()">Toggle Movement</div>
+</div>
+<script>
+    const world = document.getElementById('world');
+    let creatures = [];
+    let moving = true;
+
+    const createRandomCreature = () => {
+        const creature = document.createElement('div');
+        creature.textContent = ['🐌', '🐢', '🦄', '🐉', '🐙'][Math.floor(Math.random() * 5)];
+        creature.style.left = Math.random() * 100 + 'vw';
+        creature.style.top = Math.random() * 100 + 'vh';
+        creature.style.transitionDuration = Math.random() * 2 + 1 + 's';
+        creature.classList.add('creature');
+        world.appendChild(creature);
+        creatures.push(creature);
+        moveCreature(creature);
+        creature.addEventListener('click', () => {
+            creature.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+        });
+    }
+
+    const addCreature = () => {
+        createRandomCreature();
+    };
+
+    const removeCreatures = () => {
+        creatures.forEach(creature => creature.remove());
+        creatures = [];
+    };
+
+    const moveCreature = (creature) => {
+        if (!moving) return;
+        creature.style.left = Math.random() * 100 + 'vw';
+        creature.style.top = Math.random() * 100 + 'vh';
+        setTimeout(() => moveCreature(creature), creature.style.transitionDuration.replace('s', '') * 1000);
+    };
+
+    const toggleMovement = () => {
+        moving = !moving;
+        if (moving) {
+            creatures.forEach(creature => moveCreature(creature));
+        }
+    }
+
+    for (let i = 0; i < 10; i++) {
+        createRandomCreature();
+    }
+</script>
+</body>
+</html>

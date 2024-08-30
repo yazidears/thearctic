@@ -1,0 +1,143 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Memory Machine</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: #0e0f19;
+            color: #c1c3da;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: radial-gradient(circle at center, #1c1e29, #0e0f19);
+        }
+        #display {
+            border: 2px solid #3a3c5b;
+            background: #24263e;
+            width: 290px;
+            height: 160px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+            position: relative;
+            margin-bottom: 20px;
+        }
+        #display-message {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            font-size: 12px;
+            transition: opacity 0.4s ease-in-out;
+            opacity: 0;
+        }
+        .button {
+            margin: 5px;
+            padding: 10px 20px;
+            background: #3a3c5b;
+            border: none;
+            color: #c1c3da;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:focus {
+            outline: none;
+        }
+        .button:hover {
+            background: #565773;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: #a1a3fa;
+            animation: float 3s infinite;
+            opacity: 0.8;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div id="display">
+        <p id="display-message">Would you dare to recall?</p>
+    </div>
+    <div class="animation">
+        <button class="button" onclick="generateMemory()">Generate Memory</button>
+        <button class="button" onclick="clearMemory()">Clear Memory</button>
+    </div>
+    <script>
+        const memories = [
+            'Dancing with shadows on the moon',
+            'Whispers of ancient trees',
+            'Dreams of electric sheep',
+            'A secret garden sprouting stardust',
+            'Echoes of forgotten libraries',
+            'Rainbows emerging from thunderstorms',
+            'Time-travel picnics in 1892',
+            'Floating islands of imagination',
+            'The sound of galaxies colliding in a tune',
+            'Imaginary realms of abstract wonder'
+        ];
+
+        function randomPosition() {
+            return Math.floor(Math.random() * 100);
+        }
+
+        function randomSize() {
+            return Math.floor(Math.random() * 30) + 10;
+        }
+
+        function generateBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.width = bubble.style.height = randomSize() + 'px';
+            bubble.style.left = randomPosition() + '%';
+            bubble.style.top = randomPosition() + '%';
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 3000);
+        }
+
+        function generateMemory() {
+            const displayMessage = document.getElementById('display-message');
+            displayMessage.innerText = memories[Math.floor(Math.random() * memories.length)];
+            displayMessage.style.opacity = 1;
+
+            setTimeout(() => {
+                displayMessage.style.opacity = 0;
+            }, 4000);
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(generateBubble, i * 500);
+            }
+        }
+
+        function clearMemory() {
+            const displayMessage = document.getElementById('display-message');
+            displayMessage.innerText = "Would you dare to recall?";
+            displayMessage.style.opacity = 0.5;
+        }
+    </script>
+</body>
+</html>
+```

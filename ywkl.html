@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape Engine</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #020024, #090979, #00d4ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: white;
+        }
+        .canvasWrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        .controlPanel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-bottom-left-radius: 10px;
+            z-index: 10;
+        }
+        .button {
+            background-color: #6200ea;
+            border: none;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #3700b3;
+        }
+        .gadget {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="canvasWrapper">
+        <canvas id="dreamCanvas"></canvas>
+    </div>
+    <div class="controlPanel">
+        <button class="button" onclick="changeTheme()">Change Theme</button>
+    </div>
+    <div class="gadget" id="gadget">
+        <p>Hello, Dreamer!</p>
+        <p>Welcome to the Surreal Dreamscape Engine. Interact and explore!</p>
+    </div>
+    <script>
+        const themes = [
+            'linear-gradient(90deg, #ff6f61, #de6b78, #4e5166)', 
+            'linear-gradient(72deg, #c1dfc4, #deecd6, #99c1d9)',
+            'linear-gradient(120deg, #f6d365, #fda085)', 
+            'linear-gradient(-45deg, #000046, #1cb5e0)', 
+            'linear-gradient(60deg, #800080, #ffc0cb, #ff1493)'
+        ];
+        
+        const canvas = document.getElementById('dreamCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let angle = 0;
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        requestAnimationFrame(animate);
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({ 
+                    x: Math.random() * canvas.width, 
+                    y: Math.random() * canvas.height, 
+                    size: Math.random() * 4 + 1,
+                    direction: Math.random() * 2 * Math.PI
+                });
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.x += Math.cos(particle.direction) * particle.size;
+                particle.y += Math.sin(particle.direction) * particle.size;
+                if (particle.x < 0 || particle.x > canvas.width || particle.y < 0 || particle.y > canvas.height) {
+                    particle.x = Math.random() * canvas.width;
+                    particle.y = Math.random() * canvas.height;
+                }
+                ctx.fillStyle = `hsla(${(angle + particle.size * 10) % 360}, 100%, 50%, 1)`;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            angle += 0.5;
+            requestAnimationFrame(animate);
+        }
+
+        function changeTheme() {
+            let newTheme = themes[Math.floor(Math.random() * themes.length)];
+            document.body.style.background = newTheme;
+            document.getElementById('gadget').style.color = getComputedStyle(document.body).color === 'rgb(0, 0, 0)' ? 'white' : 'black';
+        }
+    </script>
+</body>
+</html>

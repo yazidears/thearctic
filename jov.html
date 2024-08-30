@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Happenings</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            overflow: hidden;
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #console {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        #console p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="console">
+        <p id="output">Welcome to the surreal universe!</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const consoleOutput = document.getElementById('output');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16);
+
+        const drawRandomShapes = () => {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = randomColor();
+                ctx.beginPath();
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const radius = Math.random() * 50;
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        };
+
+        const strangeMessages = [
+            "The clouds whisper secrets!",
+            "The clocks tick backwards...",
+            "Colors have no names here.",
+            "Gravity is subjective.",
+            "Thoughts drift on the breeze.",
+            "Time is a curious loop.",
+            "Shapes morph at will.",
+            "Dance with the pixels."
+        ];
+
+        const changeMessage = () => {
+            const message = strangeMessages[Math.floor(Math.random() * strangeMessages.length)];
+            consoleOutput.textContent = message;
+        };
+
+        window.addEventListener('click', () => {
+            drawRandomShapes();
+            changeMessage();
+        });
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            drawRandomShapes();
+        });
+
+        drawRandomShapes();
+
+        // Start with a timer that changes shapes and messages periodically
+        setInterval(() => {
+            drawRandomShapes();
+            changeMessage();
+        }, 3000);
+    </script>
+</body>
+</html>
+```

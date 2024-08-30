@@ -1,0 +1,123 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Cat's Dreamland</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .cloud {
+            position: absolute;
+            background: #fff;
+            border-radius: 100px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 100px;
+            height: 50px;
+            border-radius: 100px;
+        }
+        .cloud:before {
+            top: -30px;
+            left: 20px;
+        }
+        .cloud:after {
+            top: -20px;
+            right: 20px;
+        }
+        .cat {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://i.imgur.com/1YrKv8g.png') no-repeat center center;
+            background-size: contain;
+            animation: float 6s ease-in-out infinite;
+            z-index: 2;
+        }
+        .moon {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #fff196 25%, #ffd700 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #fff196;
+        }
+        @keyframes float {
+            0%, 100% { transform: translatey(0px); }
+            50% { transform: translatey(-20px); }
+        }
+        .cat:hover {
+            transform: scale(1.2) rotate(10deg);
+            transition: all 0.3s ease;
+        }
+        #stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(black, transparent);
+            overflow: hidden;
+            z-index: 0;
+        }
+        .star {
+            width: 2px;
+            height: 2px;
+            position: absolute;
+            background: white;
+            opacity: 0;
+            animation: twinkle 4s infinite ease-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cloud" style="width:150px;height:60px;left:20%;top:30%;"></div>
+    <div class="cloud" style="width:200px;height:80px;left:70%;top:50%;"></div>
+    <div class="cat" style="left:40%;top:70%;"></div>
+    <div class="moon"></div>
+    <div id="stars"></div>
+    <script>
+        function getRandomPosition(element) {
+            let x = document.body.offsetHeight - element.clientHeight;
+            let y = document.body.offsetWidth - element.clientWidth;
+            let randomX = Math.floor(Math.random() * x);
+            let randomY = Math.floor(Math.random() * y);
+            return [randomX, randomY];
+        }
+        
+        const numberOfStars = 100;
+        for (let i = 0; i < numberOfStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const [x, y] = getRandomPosition(star);
+            star.style.top = x + 'px';
+            star.style.left = y + 'px';
+            document.getElementById('stars').appendChild(star);
+            star.style.animationDelay = (Math.random() * 20) + 's';   
+        }
+        
+        document.querySelector('.cat').addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.4) rotate(-20deg)';
+        });
+
+        document.querySelector('.cat').addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1.2) rotate(10deg)';
+        });
+    </script>
+</body>
+</html>
+```

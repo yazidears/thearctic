@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quantum Paintbrush</title>
+    <style>
+        body, html { margin: 0; height: 100%; overflow: hidden; background-color: #1a1a1a; color: #f8f8f2; }
+        canvas { position: absolute; top: 0; left: 0; }
+        #controls { position: absolute; top: 10px; left: 10px; z-index: 100; }
+        button { background-color: #282a36; color: #f8f8f2; border: none; padding: 10px; cursor: pointer; margin-right: 5px; }
+        button:hover { background-color: #44475a; }
+        #toolbox { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .tool { background-color: #bd93f9; padding: 20px; text-align: center; border-radius: 5px; }
+        .art { font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button onclick="resetCanvas()">Reset Canvas</button>
+        <button onclick="saveArt()">Save Art</button>
+        <div id="toolbox">
+            <div class="tool" onclick="setTool('brush')">Brush</div>
+            <div class="tool" onclick="setTool('random')">Quantum</div>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let drawing = false;
+        let tool = 'brush';
+
+        function setTool(selectedTool) {
+            tool = selectedTool;
+        }
+
+        function resetCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveArt() {
+            const link = document.createElement('a');
+            link.download = 'quantum-art.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function randomIntFromRange(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = tool === 'brush' ? '#ff79c6' : getRandomColor();
+
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+
+            if (tool === 'random') {
+                ctx.beginPath();
+                ctx.arc(e.clientX, e.clientY, randomIntFromRange(5, 20), 0, Math.PI * 2, false);
+                ctx.fillStyle = getRandomColor();
+                ctx.fill();
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            draw(e);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('mousemove', draw);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

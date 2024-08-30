@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Enigmatic Bouncing Blob</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #blob-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+            user-select: none;
+        }
+        .hidden {
+            display: none;
+        }
+        #control-panel {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #control-panel button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        #control-panel button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="blobCanvas"></canvas>
+    <div id="blob-info" class="hidden">Blob Info</div>
+    <div id="control-panel">
+        <button onclick="toggleInfo()">Toggle Blob Info</button>
+        <button onclick="changeBackground()">Change Background</button>
+        <button onclick="slower()">Slow Down</button>
+        <button onclick="faster()">Speed Up</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('blobCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let blobs = [];
+        const blobColors = ['red', 'green', 'blue', 'yellow', 'magenta', 'cyan'];
+        let speed = 2;
+        
+        class Blob {
+            constructor(x, y, radius, dx, dy) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.dx = dx;
+                this.dy = dy;
+                this.color = blobColors[Math.floor(Math.random() * blobColors.length)];
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+            update() {
+                if (this.x + this.radius > width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+                if (this.y + this.radius > height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+                this.x += this.dx * speed;
+                this.y += this.dy * speed;
+                this.draw();
+            }
+        }
+        
+        function init() {
+            blobs = [];
+            for (let i = 0; i < 50; i++) {
+                const radius = Math.random() * 20 + 10;
+                let x = Math.random() * (width - radius * 2) + radius;
+                let y = Math.random() * (height - radius * 2) + radius;
+                let dx = (Math.random() - 0.5) * 2;
+                let dy = (Math.random() - 0.5) * 2;
+                blobs.push(new Blob(x, y, radius, dx, dy));
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, width, height);
+            blobs.forEach(blob => blob.update());
+        }
+        
+        function toggleInfo() {
+            const info = document.getElementById('blob-info');
+            if (info.classList.contains('hidden')) {
+                info.classList.remove('hidden');
+            } else {
+                info.classList.add('hidden');
+            }
+            updateBlobInfo();
+        }
+        
+        function updateBlobInfo() {
+            const info = document.getElementById('blob-info');
+            info.textContent = `Blobs: ${blobs.length} | Speed: ${speed}`;
+        }
+        
+        function changeBackground() {
+            const colors = ['#000', '#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999', '#AAA', '#BBB', '#CCC'];
+            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        function slower() {
+            speed = Math.max(0.1, speed - 0.2);
+            updateBlobInfo();
+        }
+
+        function faster() {
+            speed += 0.2;
+            updateBlobInfo();
+        }
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+        updateBlobInfo();
+    </script>
+</body>
+</html>

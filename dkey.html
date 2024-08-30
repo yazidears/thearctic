@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quirky Universe: The Bouncing Bug Symphony</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            display: block;
+            background: radial-gradient(circle, #1a1a1a, #0d0d0d);
+            width: 100vw;
+            height: 100vh;
+        }
+        #control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .bug {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="control-panel">
+        <button id="add-bug">Add Bug</button>
+        <button id="random-music">Random Music</button>
+    </div>
+    <script>
+        const canvas = document.querySelector('#canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Bug {
+            constructor(x, y, dx, dy) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.size = Math.random() * 5 + 5;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fill();
+            }
+
+            update() {
+                if(this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.dx = -this.dx;
+                }
+                if(this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.dy = -this.dy;
+                }
+
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        let bugs = [];
+
+        function addBug() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const dx = (Math.random() - 0.5) * 4;
+            const dy = (Math.random() - 0.5) * 4;
+            bugs.push(new Bug(x, y, dx, dy));
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bugs.forEach(bug => bug.update());
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        document.getElementById('add-bug').onclick = () => addBug();
+        
+        const musicNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        function playRandomMusic() {
+            const synth = new AudioContext();
+            musicNotes.forEach((note, index) => {
+                const osc = synth.createOscillator();
+                const gainNode = synth.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(synth.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(261.63 * Math.pow(2, index/12), synth.currentTime);
+                gainNode.gain.setValueAtTime(0.1, synth.currentTime);
+                
+                osc.start(synth.currentTime + index);
+                osc.stop(synth.currentTime + index + 0.5);
+            });
+        }
+
+        document.getElementById('random-music').onclick = () => playRandomMusic();
+
+        animate();
+    </script>
+</body>
+</html>

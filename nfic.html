@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff8a00, #d1003d);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #canvas {
+            border: 5px solid #fff;
+        }
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .control-panel div {
+            margin-bottom: 5px;
+        }
+        #playArea {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <div><button onclick="startGame()">Start Dream Journey</button></div>
+        <div><span>Score: </span><span id="score">0</span></div>
+    </div>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = window.innerHeight * 0.9;
+        const objects = [];
+        const colors = ['#e63946', '#f1faee', '#a8dadc', '#457b9d', '#1d3557'];
+        let score = 0;
+        let animationFrameId;
+        
+        class DreamObject {
+            constructor(x, y, radius, dx, dy, color) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.dx = dx;
+                this.dy = dy;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+            update() {
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        function initDreamObjects(count) {
+            objects.length = 0;
+            for (let i = 0; i < count; i++) {
+                let radius = (Math.random() * 30) + 10;
+                let x = Math.random() * (canvas.width - radius * 2) + radius;
+                let y = Math.random() * (canvas.height - radius * 2) + radius;
+                let dx = (Math.random() - 0.5) * 2;
+                let dy = (Math.random() - 0.5) * 2;
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                objects.push(new DreamObject(x, y, radius, dx, dy, color));
+            }
+        }
+
+        function animate() {
+            animationFrameId = requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            objects.forEach(obj => obj.update());
+        }
+
+        function startGame() {
+            score = 0;
+            document.getElementById('score').textContent = score;
+            initDreamObjects(34);
+            animate();
+            canvas.addEventListener('click', clickDream);
+        }
+
+        function clickDream(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            objects.forEach((obj, index) => {
+                const dist = Math.sqrt((x - obj.x) ** 2 + (y - obj.y) ** 2);
+                if (dist < obj.radius) {
+                    objects.splice(index, 1);
+                    incrementScore();
+                }
+            });
+        }
+        
+        function incrementScore() {
+            score++;
+            document.getElementById('score').textContent = score;
+            if (!objects.length) {
+                cancelAnimationFrame(animationFrameId);
+                alert('Congrats! You have completed your dream journey!');
+            }
+        }
+
+        window.onresize = function() {
+            canvas.width = window.innerWidth * 0.9;
+            canvas.height = window.innerHeight * 0.9;
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animate();
+            }
+        }
+
+    </script>
+</body>
+</html>

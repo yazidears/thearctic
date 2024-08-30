@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inverted Jellyfish Wonderland</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0f0f2f;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #ff1f5a;
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1f5aff;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #ff5a1f;
+        }
+        .jellyfish {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(31, 255, 26, 0.8) 0%, rgba(31, 128, 255, 0) 70%);
+            transition: all 0.5s;
+            box-shadow: 0px 0px 10px rgba(31, 128, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Inverted Jellyfish Wonderland</h1>
+        <button class="button" onclick="createJellyfish()">Make Jellyfish</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let jellyfishes = [];
+        resizeCanvas();
+
+        window.addEventListener('resize', resizeCanvas);
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createJellyfish() {
+            const size = Math.random() * 50 + 10;
+            const x = Math.random() * (window.innerWidth - size);
+            const y = Math.random() * (window.innerHeight - size);
+            const jellyfish = document.createElement('div');
+            jellyfish.classList.add('jellyfish');
+            jellyfish.style.width = `${size}px`;
+            jellyfish.style.height = `${size}px`;
+            jellyfish.style.left = `${x}px`;
+            jellyfish.style.top = `${y}px`;
+            document.body.appendChild(jellyfish);
+            jellyfish.addEventListener('mouseenter', () => {
+                jellyfish.style.transform = `translateY(${Math.random() * 100}px) scale(${Math.random() * 1.5 + 0.5})`;
+            });
+            jellyfishes.push(jellyfish);
+        }
+
+        function animateJellyfishes() {
+            jellyfishes.forEach(jellyfish => {
+                const floatSpeed = Math.random() * 2 + 0.5;
+                let currentTop = parseFloat(jellyfish.style.top.replace('px', ''));
+                jellyfish.style.top = `${(currentTop + floatSpeed) % window.innerHeight}px`;
+            });
+            requestAnimationFrame(animateJellyfishes);
+        }
+
+        animateJellyfishes();
+    </script>
+</body>
+</html>

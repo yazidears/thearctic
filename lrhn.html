@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Garden of Thoughts</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #002f4b, #dc4225);
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+        .thought {
+            position: absolute;
+            color: #fffecb;
+            font-size: 18px;
+            pointer-events: none;
+            mix-blend-mode: difference;
+        }
+        .controlPanel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="controlPanel">
+        <button onclick="toggleThoughts()">Toggle Thoughts</button>
+        <button onclick="scatterStars()">Scatter Stars</button>
+    </div>
+    <div class="thought" id="thought1" style="top: 20%; left: 40%;">Unraveling mysteries amid the stars...</div>
+    <div class="thought" id="thought2" style="top: 50%; left: 60%;">It's all connected in the quantum dance...</div>
+    <div class="thought" id="thought3" style="top: 80%; left: 30%;">Dreaming in fractals, lost in chaos...</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let stars = [];
+        let showThoughts = true;
+
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                velocity: Math.random() * 0.5
+            });
+        }
+
+        function drawStars() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 0.4;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 1;
+
+            stars.forEach((star) => {
+                ctx.fillStyle = '#fffecb';
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                star.x += star.velocity;
+                if (star.x > canvas.width) star.x = 0;
+            });
+        }
+
+        function animate() {
+            drawStars();
+            requestAnimationFrame(animate);
+        }
+
+        function toggleThoughts() {
+            showThoughts = !showThoughts;
+            const thoughts = document.querySelectorAll('.thought');
+            thoughts.forEach(thought => thought.style.display = showThoughts ? 'block' : 'none');
+        }
+
+        function scatterStars() {
+            stars.forEach(star => {
+                star.x = Math.random() * canvas.width;
+                star.y = Math.random() * canvas.height;
+            });
+        }
+
+        animate();
+    </script>
+</body>
+</html>

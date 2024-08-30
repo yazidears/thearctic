@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Emporium</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background-color: #2e004f; }
+  #bubbleCanvas { position: absolute; z-index: 0; }
+  #messageBox {
+    position: absolute; top: 20px; right: 20px; z-index: 1; width: 200px; height: 100px;
+    padding: 10px; color: #fff; background: rgba(0, 0, 0, 0.5); border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #messageBox h3 { margin: 0; }
+  #textCanvas { position: absolute; z-index: 0; }
+</style>
+</head>
+<body>
+<canvas id="bubbleCanvas"></canvas>
+<canvas id="textCanvas"></canvas>
+<div id="messageBox">
+  <h3>Bubble Emporium</h3>
+  <p>Click to create a bubble!</p>
+  <p>Move around to pop them!</p>
+</div>
+<script>
+  const bubbleCanvas = document.getElementById('bubbleCanvas');
+  const ctx = bubbleCanvas.getContext('2d');
+  const textCanvas = document.getElementById('textCanvas');
+  const textCtx = textCanvas.getContext('2d');
+  let width, height;
+  let bubbles = [];
+  
+  window.addEventListener('resize', resizeCanvas, false);
+  window.addEventListener('mousemove', popBubbles, false);
+  window.addEventListener('click', createRandomBubbles, false);
+  resizeCanvas();
+  
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    bubbleCanvas.width = textCanvas.width = width;
+    bubbleCanvas.height = textCanvas.height = height;
+    drawText();
+  }
+  
+  function drawText() {
+    textCtx.clearRect(0, 0, width, height);
+    textCtx.font = '48px sans-serif';
+    textCtx.textAlign = 'center';
+    textCtx.fillStyle = '#f0c';
+    textCtx.fillText('Welcome to the Bubble Emporium', width / 2, height / 2);
+  }
+  
+  function createRandomBubbles(event) {
+    const randBubbleCount = Math.floor(Math.random() * 5) + 1;
+    for (let i = 0; i < randBubbleCount; i++) {
+      bubbles.push(new Bubble(event.clientX, event.clientY));
+    }
+  }
+  
+  class Bubble {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = Math.random() * 20 + 10;
+      this.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`;
+      this.speedX = Math.random() * 4 - 2;
+      this.speedY = Math.random() * 4 - 2;
+    }
+    
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x + this.radius > width || this.x - this.radius < 0) this.speedX = -this.speedX;
+      if (this.y + this.radius > height || this.y - this.radius < 0) this.speedY = -this.speedY;
+    }
+    
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+  }
+  
+  function popBubbles(event) {
+    bubbles.forEach((bubble, index) => {
+      const dist = Math.hypot(bubble.x - event.clientX, bubble.y - event.clientY);
+      if (dist < bubble.radius) {
+        bubbles.splice(index, 1);
+      }
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    bubbles.forEach(bubble => {
+      bubble.update();
+      bubble.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+</body>
+</html>

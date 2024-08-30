@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Bounce & Random Thoughts</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(120deg, #1b2735, #090a0f);
+            color: #ffffff;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #thoughts-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #thoughts-panel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+        }
+        @keyframes cosmic-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .thought {
+            padding: 10px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cosmic Bounce & Random Thoughts</h1>
+    <canvas id="canvas"></canvas>
+    <div id="thoughts-panel">Click for a Cosmic Thought</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+
+        const colors = ['#ff6f61', '#6b5b95', '#88b04b', '#f7cac9', '#92a8d1'];
+        const thoughts = [
+            "The cosmos is within us. We are made of star-stuff.",
+            "To infinity and beyond!",
+            "Stars can't shine without darkness.",
+            "The universe is not in a hurry. You are.",
+            "Keep looking up, that's the secret of life.",
+            "Somewhere, something incredible is waiting to be known."
+        ];
+
+        class Ball {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 30 + 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.dx = (Math.random() - 0.5) * 5;
+                this.dy = (Math.random() - 0.5) * 5;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+            update() {
+                this.x += this.dx;
+                this.y += this.dy;
+
+                if (this.x + this.radius > width || this.x - this.radius < 0) {
+                    this.dx = -this.dx;
+                }
+
+                if (this.y + this.radius > height || this.y - this.radius < 0) {
+                    this.dy = -this.dy;
+                }
+
+                this.draw();
+            }
+        }
+
+        let balls = [];
+        for (let i = 0; i < 100; i++) {
+            balls.push(new Ball());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            balls.forEach(ball => ball.update());
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        const thoughtsPanel = document.getElementById('thoughts-panel');
+        thoughtsPanel.addEventListener('click', () => {
+            const randomThought = thoughts[Math.floor(Math.random() * thoughts.length)];
+            const thoughtDiv = document.createElement('div');
+            thoughtDiv.classList.add('thought');
+            thoughtDiv.textContent = randomThought;
+            thoughtsPanel.appendChild(thoughtDiv);
+            setTimeout(() => {
+                thoughtsPanel.removeChild(thoughtDiv);
+            }, 4000);
+        });
+    </script>
+</body>
+</html>

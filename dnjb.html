@@ -1,0 +1,156 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peculiar Planetarium</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: #031D44;
+            font-family: 'Courier New', Courier, monospace;
+            color: #FFD700;
+        }
+        #universe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+        @keyframes spin {
+            from {transform: rotateY(0deg);}
+            to {transform: rotateY(360deg);}
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        #puzzleCanvas {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #FFD700;
+        }
+        #factContainer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border: 2px solid #FFD700;
+            text-align: center;
+        }
+        #factHeader {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="universe"></div>
+    <canvas id="puzzleCanvas"></canvas>
+    <div id="factContainer">
+        <div id="factHeader">Did You Know?</div>
+        <div id="factText"></div>
+    </div>
+    <script>
+        const universe = document.getElementById('universe');
+        const factText = document.getElementById('factText');
+        const facts = [
+            "Neutron stars can spin 600 times per second!",
+            "A day on Venus is longer than a year on Venus.",
+            "There are more trees on Earth than stars in the Milky Way.",
+            "Saturn could float in water because it's mostly made of gas.",
+            "Jupiter is so large it wouldn't fit between the Earth and the Moon."
+        ];
+        
+        const starsCount = 500;
+        for (let i = 0; i < starsCount; i++) {
+            const star = document.createElement('div');
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const z = Math.random() * -500;
+            star.className = 'star';
+            star.style = `transform: translate3d(${x}vw, ${y}vh, ${z}px);`;
+            universe.appendChild(star);
+        }
+
+        universe.style.animation = 'spin 100s infinite linear';
+        
+        setInterval(() => {
+            const index = Math.floor(Math.random() * facts.length);
+            factText.innerText = facts[index];
+        }, 5000);
+
+        const canvas = document.getElementById('puzzleCanvas');
+        const ctx = canvas.getContext('2d');
+        let squareSize = 20, snake = [ {x: 4, y: 4} ], direction = 'RIGHT', food = null, growing = false;
+
+        function drawSquare(x, y) {
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
+        }
+
+        function spawnFood() {
+            food = { x: Math.floor(Math.random() * (canvas.width / squareSize)), 
+                     y: Math.floor(Math.random() * (canvas.height / squareSize)) };
+            drawSquare(food.x, food.y);
+        }
+        
+        document.addEventListener('keydown', function(event) {
+            const keyMap = { 'ArrowUp': 'UP', 'ArrowDown': 'DOWN', 'ArrowLeft': 'LEFT', 'ArrowRight': 'RIGHT' };
+            if (keyMap[event.key] && Math.abs(Object.values(keyMap).indexOf(direction) - Object.values(keyMap).indexOf(keyMap[event.key])) !== 2) {
+                direction = keyMap[event.key];
+            }
+        });
+
+        function gameLoop() {
+            const head = { ...snake[0] };
+            if (direction === 'RIGHT') head.x++;
+            if (direction === 'LEFT') head.x--;
+            if (direction === 'DOWN') head.y++;
+            if (direction === 'UP') head.y--;
+            
+            snake.unshift(head);
+            if (!growing) snake.pop();
+            else growing = false;
+
+            if (head.x === food.x && head.y === food.y) {
+                growing = true;
+                spawnFood();
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            snake.forEach(segment => drawSquare(segment.x, segment.y));
+            drawSquare(food.x, food.y);
+
+            if (head.x < 0 || head.x >= canvas.width / squareSize || head.y < 0 || head.y >= canvas.height / squareSize || 
+                snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) return clearInterval(interval);
+        }
+
+        spawnFood();
+        const interval = setInterval(gameLoop, 100);
+    </script>
+</body>
+</html>
+```

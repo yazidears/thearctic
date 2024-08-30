@@ -1,0 +1,115 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wheel of Wonders</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffec99, #ff99c8);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .wheel {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 10px solid #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .wheel-section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background: #ffe0f0;
+            transform-origin: bottom right;
+        }
+        .section1 { transform: rotate(0deg) skew(30deg) scale(1.0); background: #841d74; }
+        .section2 { transform: rotate(90deg) skew(30deg) scale(1.0); background: #ef476f; }
+        .section3 { transform: rotate(180deg) skew(30deg) scale(1.0); background: #ffd166; }
+        .section4 { transform: rotate(270deg) skew(30deg) scale(1.0); background: #06d6a0; }
+
+        .pointer {
+            position: absolute;
+            top: 5%;
+            width: 0; 
+            height: 0; 
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 60px solid white;
+            z-index: 10;
+        }
+
+        .spin-btn {
+            position: absolute;
+            bottom: -50px;
+            background: #118ab2;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        .spin-btn:hover {
+            background: #073b4c;
+        }
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel">
+        <div class="wheel-section section1"></div>
+        <div class="wheel-section section2"></div>
+        <div class="wheel-section section3"></div>
+        <div class="wheel-section section4"></div>
+        <div class="pointer"></div>
+        <div class="spin-btn" onclick="spin()">Spin Me!</div>
+        <div class="message" id="message">Woohoo!</div>
+    </div>
+    <script>
+        const messages = ["You will find a secret treasure!", "A new adventure awaits you.", "A surprise is in store.", "Spin again to win more!"];
+        let isSpinning = false;
+        
+        function spin() {
+            if (isSpinning) return;
+            isSpinning = true;
+            document.querySelector('.message').style.opacity = 0;
+            const wheel = document.querySelector('.wheel');
+            const degrees = Math.floor(Math.random() * 360 + 1080);
+            wheel.style.transition = 'transform 4s ease-out';
+            wheel.style.transform = `rotate(${degrees}deg)`;
+            setTimeout(() => {
+                const index = Math.floor(((degrees % 360) / 90));
+                document.querySelector('#message').textContent = messages[index];
+                document.querySelector('.message').style.opacity = 1;
+                isSpinning = false;
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+```

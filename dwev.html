@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Kaleidoscope Realm</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            border: 5px solid #fff;
+        }
+        .control-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .control-panel button {
+            border: none;
+            padding: 10px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .control-panel button:hover {
+            background-color: #111;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <button onclick="changeColor()">Change Color</button>
+        <button onclick="updateSpeed()">Toggle Speed</button>
+        <button onclick="addParticle()">Add Particle</button>
+    </div>
+    <canvas id="kaleidoscope"></canvas>
+    <script>
+        const canvas = document.getElementById('kaleidoscope');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#FF33A6'];
+        let currentColor = 0;
+        let speed = 0.01;
+        let angle = 0;
+
+        class Particle {
+            constructor(x, y, radius, angle) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.angle = angle;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.angle += speed;
+                this.draw();
+            }
+
+            draw() {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    let theta = i * Math.PI / 3 + this.angle;
+                    let x = this.x + this.radius * Math.cos(theta);
+                    let y = this.y + this.radius * Math.sin(theta);
+                    ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 60 + 20;
+                const angle = Math.random() * Math.PI * 2;
+                particles.push(new Particle(x, y, radius, angle));
+            }
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let particle of particles) {
+                particle.update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function changeColor() {
+            currentColor = (currentColor + 1) % colors.length;
+            particles.forEach(p => p.color = colors[currentColor]);
+        }
+
+        function updateSpeed() {
+            speed = speed === 0.01 ? 0.05 : 0.01;
+        }
+
+        function addParticle() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = Math.random() * 60 + 20;
+            const angle = Math.random() * Math.PI * 2;
+            particles.push(new Particle(x, y, radius, angle));
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        init();
+    </script>
+</body>
+</html>

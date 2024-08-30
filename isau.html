@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intergalactic Jellyfish Circus</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #03045e, #000);
+            color: #ffffff;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .tentacle {
+            position: absolute;
+            width: 10px;
+            height: 100px;
+            background: linear-gradient(to bottom, #00f5d4, #00bbf9);
+            border-radius: 50% 50% 0 0;
+            animation: wave 5s infinite;
+        }
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+        }
+        .jellyfish {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 50px;
+            margin-top: -25px;
+            margin-left: -50px;
+            background: radial-gradient(circle at center, #e63946, #f3722c);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .jellyfish::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: #d6d5a8;
+            border-radius: 0 0 50% 50%;
+        }
+        .star {
+            position: absolute;
+            background: radial-gradient(circle, #ffd700, transparent);
+            width: 5px;
+            height: 5px;
+            animation: twinkle 1s infinite alternate;
+        }
+        @keyframes twinkle {
+            from { transform: scale(1); }
+            to { transform: scale(1.5); }
+        }
+        #score {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+        }
+        #message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="jellyfish" class="jellyfish"></div>
+    <div id="score">Score: 0</div>
+    <div id="message">Congratulations! You reached 5 stars!</div>
+    <script>
+        const jellyfish = document.getElementById('jellyfish');
+        const scoreEl = document.getElementById('score');
+        const messageEl = document.getElementById('message');
+        let score = 0;
+        const screenHeight = window.innerHeight;
+        const screenWidth = window.innerWidth;
+
+        for (let i = 0; i < 4; i++) {
+            const tentacle = document.createElement('div');
+            tentacle.className = 'tentacle';
+            tentacle.style.bottom = '0';
+            tentacle.style.left = `${20 * i + 20}px`;
+            tentacle.style.transformOrigin = 'center top';
+            jellyfish.appendChild(tentacle);
+        }
+
+        for (let i = 0; i < 10; i++) {
+            createStar();
+        }
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * screenWidth}px`;
+            star.style.top = `${Math.random() * screenHeight}px`;
+            document.body.appendChild(star);
+
+            star.addEventListener('click', () => {
+                star.remove();
+                score++;
+                scoreEl.textContent = 'Score: ' + score;
+                createStar();
+                if (score === 5) {
+                    messageEl.style.display = 'block';
+                    setTimeout(() => {
+                        messageEl.style.display = 'none';
+                    }, 4000);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

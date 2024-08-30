@@ -1,0 +1,87 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonious Chaos</title>
+</head>
+<body style="margin: 0; background: #1a1a1a; font-family: 'Comic Sans MS', cursive;">
+    <div id="canvasContainer" style="position: relative; width: 100vw; height: 100vh;">
+        <canvas id="artCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+        <div id="controlPanel" style="position: absolute; bottom: 0; width: 100%; padding: 20px; background: rgba(255, 255, 255, 0.8); display: flex; justify-content: space-around;">
+            <button id="changeColor" style="padding: 10px 20px; font-size: 16px; background: #ff77aa; border: none; cursor: pointer;">Change Color</button>
+            <button id="resetCanvas" style="padding: 10px 20px; font-size: 16px; background: #77ffaa; border: none; cursor: pointer;">Reset</button>
+            <button id="activateMagic" style="padding: 10px 20px; font-size: 16px; background: #aa77ff; border: none; cursor: pointer;">Activate Magic</button>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById("artCanvas");
+        const ctx = canvas.getContext("2d");
+        let width, height;
+        let color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        function drawRandomShape() {
+            const type = Math.floor(Math.random() * 3);
+            ctx.fillStyle = color;
+            switch (type) {
+                case 0:
+                    ctx.beginPath();
+                    ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 50 + 10, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 1:
+                    ctx.fillRect(Math.random() * width, Math.random() * height, Math.random() * 100 + 20, Math.random() * 100 + 20);
+                    break;
+                case 2:
+                    ctx.beginPath();
+                    ctx.moveTo(Math.random() * width, Math.random() * height);
+                    ctx.lineTo(Math.random() * width, Math.random() * height);
+                    ctx.lineTo(Math.random() * width, Math.random() * height);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+            }
+        }
+
+        function randomArt() {
+            drawRandomShape();
+            if (Math.random() < 0.97) {
+                requestAnimationFrame(randomArt);
+            }
+        }
+
+        function changeColor() {
+            color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        }
+
+        function resetCanvas() {
+            ctx.clearRect(0, 0, width, height);
+        }
+
+        function activateMagic() {
+            const hueShiftInterval = setInterval(() => {
+                color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }, 200);
+
+            setTimeout(() => {
+                clearInterval(hueShiftInterval);
+            }, 5000);
+        }
+
+        document.getElementById("changeColor").onclick = changeColor;
+        document.getElementById("resetCanvas").onclick = resetCanvas;
+        document.getElementById("activateMagic").onclick = activateMagic;
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        randomArt();
+    </script>
+</body>
+</html>
+```

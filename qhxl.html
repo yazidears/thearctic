@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical World of Colors</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .button {
+            position: absolute;
+            background: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .button:active {
+            transform: scale(0.9);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        #funFactBtn {
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #funFact {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            width: 80%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        @keyframes float {
+            0%, 100% { transform: translatey(0); }
+            50% { transform: translatey(-10px); }
+        }
+        .floating {
+            animation: float 3s ease infinite;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="button" id="funFactBtn">Show Me a Fun Fact!</button>
+    <div id="funFact"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const funFactBtn = document.getElementById('funFactBtn');
+        const funFact = document.getElementById('funFact');
+
+        let particles = [];
+        let funFacts = [
+            "Bananas are berries, but strawberries aren't!",
+            "Honey never spoils.",
+            "A flock of flamingos is called a 'flamboyance'.",
+            "Octopuses have three hearts.",
+            "Bees can make colored honey."
+        ];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            createParticles();
+        });
+
+        function Particle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 15 + 5;
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+            this.color = color;
+        }
+
+        Particle.prototype.update = function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.size > 0.2) this.size -= 0.1;
+        };
+
+        Particle.prototype.draw = function() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+        };
+
+        function createParticles() {
+            const colors = ['#6a0572', '#e2062c', '#efefef', '#3b93a5', '#f9e076'];
+            for (let i = 0; i < 200; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(x, y, color));
+            }
+        }
+        createParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].size <= 0.2) {
+                    particles.splice(i, 1);
+                    i--;
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const colors = ['#6a0572', '#e2062c', '#efefef', '#3b93a5', '#f9e076'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particles.push(new Particle(x, y, color));
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        funFactBtn.addEventListener('click', () => {
+            funFact.style.opacity = 0;
+            setTimeout(() => {
+                funFact.innerText = funFacts[Math.floor(Math.random() * funFacts.length)];
+                funFact.style.opacity = 1;
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Continuum</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            color: #fff;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            background: #333;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="control-panel">
+        <button onclick="changeDimensions()">Change Dimensions</button>
+        <button onclick="changeShape()">Change Shape</button>
+        <button onclick="randomizeColors()">Randomize Colors</button>
+        <button onclick="warp()">Warp Space</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        resizeCanvas();
+
+        let width = canvas.width;
+        let height = canvas.height;
+        let shapes = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function randomColor() {
+            return '#' + Math.floor(Math.random()*16777215).toString(16);
+        }
+
+        function randomShape() {
+            return Math.random() > 0.5 ? 'circle' : 'rectangle';
+        }
+
+        function randomizeColors() {
+            shapes = shapes.map(shape => ({ ...shape, color: randomColor() }));
+            draw();
+        }
+
+        function changeShape() {
+            shapes = shapes.map(shape => ({ ...shape, type: randomShape() }));
+            draw();
+        }
+
+        function warp() {
+            shapes = shapes.map(shape => ({
+                ...shape, 
+                x: (Math.random() - 0.5) * width + width / 2, 
+                y: (Math.random() - 0.5) * height + height / 2
+            }));
+            draw();
+        }
+
+        function changeDimensions() {
+            width = Math.random() * 200 + 100;
+            height = Math.random() * 200 + 100;
+            shapes = [];
+            generateShapes();
+            draw();
+        }
+
+        function generateShapes() {
+            for (let i = 0; i < Math.floor(Math.random() * 10) + 5; i++) {
+                shapes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    type: randomShape(),
+                    color: randomColor(),
+                    size: Math.random() * 50 + 20
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => {
+                ctx.fillStyle = shape.color;
+                if (shape.type === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(shape.x, shape.y, shape.size, shape.size);
+                }
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        generateShapes();
+        setInterval(draw, 1000 / 60);
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Time Warp Quantum Garden</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: radial-gradient(circle, #1E1E1E, #111111);
+            color: #EAEAEA;
+        }
+        #universe {
+            position: relative;
+            height: 100vh;
+        }
+        .planet {
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 1s ease-in-out;
+        }
+        .portal {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #4200A6, #00FFC9);
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="universe">
+        <div class="portal"></div>
+        <h1 style="text-align:center; position: absolute; width: 100%; top: 40%; transform: translateY(-50%); color: #FFD700;">
+            Welcome to the Time Warp Quantum Garden
+        </h1>
+        <p id="instructions">Click on a planet to warp through it!</p>
+    </div>
+    <script>
+        const universe = document.getElementById('universe');
+        const planets = [];
+
+        function createPlanet() {
+            const size = Math.random() * 50 + 10;
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            planet.style.width = `${size}px`;
+            planet.style.height = `${size}px`;
+            planet.style.background = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.8)`;
+            planet.style.top = `${Math.random() * (window.innerHeight - size)}px`;
+            planet.style.left = `${Math.random() * (window.innerWidth - size)}px`;
+            planet.addEventListener('click', () => moveToPortal(planet));
+            universe.appendChild(planet);
+            planets.push(planet);
+        }
+
+        function moveToPortal(planet) {
+            const portal = document.querySelector('.portal');
+            planet.style.transform = `translate(${portal.offsetLeft}px, ${portal.offsetTop}px) scale(0.5)`;
+            planet.style.opacity = 0;
+            setTimeout(() => {
+                planet.style.display = 'none';
+                createPlanet();
+            }, 1000);
+        }
+
+        function initGarden() {
+            for (let i = 0; i < 15; i++) {
+                createPlanet();
+            }
+        }
+
+        initGarden();
+
+        function handleMouseMove(e) {
+            const portal = document.querySelector('.portal');
+            const moveX = (e.clientX / window.innerWidth) * 10;
+            const moveY = (e.clientY / window.innerHeight) * 10;
+            portal.style.transform = `translate(${moveX}%, ${moveY}%)`;
+        }
+
+        window.addEventListener('mousemove', handleMouseMove);
+    </script>
+</body>
+</html>

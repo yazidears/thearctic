@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Time Garden</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(#3b3a30, #f5f5dc);
+    font-family: 'Courier New', Courier, monospace;
+    color: #2f4f4f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  canvas {
+    border: 3px dashed #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  .controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 10;
+  }
+  .controls button {
+    background: #556b2f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  .controls button:hover {
+    background: #6b8e23;
+  }
+  .controls input {
+    width: 50px;
+    text-align: center;
+    margin-right: 5px;
+  }
+</style>
+</head>
+<body>
+<canvas id="timeCanvas"></canvas>
+<div class="controls">
+  <button id="stop">Stop</button>
+  <button id="play">Play</button>
+  <button id="warp">Warp Speed</button>
+  <button id="normal">Normal Speed</button>
+</div>
+<script>
+  const canvas = document.getElementById('timeCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth - 20;
+  canvas.height = window.innerHeight - 20;
+
+  let isPlaying = true;
+  let timeSpeed = 1;
+
+  class QuantumParticle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 5 + 1;
+      this.speedX = (Math.random() * 2 - 1) * timeSpeed;
+      this.speedY = (Math.random() * 2 - 1) * timeSpeed;
+      this.color = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, ${Math.random()})`;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+      if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+  }
+
+  let particlesArray;
+
+  function init() {
+    particlesArray = [];
+    for (let i = 0; i < 200; i++) {
+      particlesArray.push(new QuantumParticle());
+    }
+  }
+
+  function animate() {
+    if (isPlaying) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+    }
+    requestAnimationFrame(animate);
+  }
+
+  init();
+  animate();
+
+  document.getElementById('stop').addEventListener('click', () => {
+    isPlaying = false;
+  });
+
+  document.getElementById('play').addEventListener('click', () => {
+    isPlaying = true;
+  });
+
+  document.getElementById('warp').addEventListener('click', () => {
+    timeSpeed = 5;
+    particlesArray.forEach(particle => {
+      particle.speedX *= 5;
+      particle.speedY *= 5;
+    });
+  });
+
+  document.getElementById('normal').addEventListener('click', () => {
+    timeSpeed = 1;
+    particlesArray.forEach(particle => {
+      particle.speedX /= 5;
+      particle.speedY /= 5;
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth - 20;
+    canvas.height = window.innerHeight - 20;
+    init();
+  });
+</script>
+</body>
+</html>

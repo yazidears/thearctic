@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Tesseract</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1a1a1d, #4e4e50);
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        #title {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 2px 2px #474747;
+            font-size: 2.5em;
+            animation: colorchange 5s infinite;
+        }
+        .tesseract {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-style: preserve-3d;
+            transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
+            animation: spin 20s linear infinite, float 6s ease-in-out infinite;
+        }
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px #000;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg); }
+            100% { transform: translate(-50%, -50%) rotateX(360deg) rotateY(360deg); }
+        }
+        @keyframes colorchange {
+            0% { color: #ffffff; }
+            25% { color: #d4af37; }
+            50% { color: #dda0dd; }
+            75% { color: #87ceeb; }
+            100% { color: #ffffff; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-20px); }
+        }
+        #toggle {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #555;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #toggle:hover {
+            background: #777;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(5px, -5px); }
+            60% { transform: translate(-5px, -5px); }
+            80% { transform: translate(5px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+        #glitch {
+            animation: glitch 1s infinite;
+            font-size: 3em;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">Whimsical Tesseract</div>
+    <div class="tesseract" id="tesseract">
+        <div class="face" style="transform: translateZ(50px);"></div>
+        <div class="face" style="transform: rotateY(90deg) translateZ(50px);"></div>
+        <div class="face" style="transform: rotateY(180deg) translateZ(50px);"></div>
+        <div class="face" style="transform: rotateY(-90deg) translateZ(50px);"></div>
+        <div class="face" style="transform: rotateX(90deg) translateZ(50px);"></div>
+        <div class="face" style="transform: rotateX(-90deg) translateZ(50px);"></div>
+    </div>
+    <button id="toggle">Switch Vibes</button>
+    <script>
+        var isGlitching = false;
+        document.getElementById('toggle').onclick = function() {
+            var title = document.getElementById('title');
+            if(!isGlitching) {
+                title.innerHTML = "<span id='glitch'>G!itchy</span> Tesseract";
+                title.style.animation = 'none';
+                isGlitching = true;
+            } else {
+                title.innerHTML = "Whimsical Tesseract";
+                title.style.animation = "colorchange 5s infinite";
+                isGlitching = false;
+            }
+        }
+    </script>
+</body>
+</html>

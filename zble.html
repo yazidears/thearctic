@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Infinity Machine</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: black; color: white; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #machine { width: 70vw; height: 70vh; background: linear-gradient(135deg, #833ab4, #fcb045, #fd1d1d); border-radius: 15px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.8); overflow: hidden; position: relative; }
+        #animation { width: 100%; height: 100%; position: absolute; top: 0; left: 0; overflow: hidden; }
+        .bubble { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.7); box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); animation: moveBubbles 5s infinite; }
+        @keyframes moveBubbles {
+            0% { opacity: 0; transform: translateY(20px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-800px); }
+        }
+        #interactive-panel { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; }
+        button { background: #fd1d1d; color: white; border: none; border-radius: 5px; padding: 10px; margin-top: 5px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #fcb045; }
+        #message { font-size: 18px; opacity: 0; transition: opacity 2s; }
+        #feedback { position: absolute; right: 10px; top: 10px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; font-size: 20px; }
+        @keyframes colorTransition {
+            0% { color: #833ab4; }
+            33% { color: #fd1d1d; }
+            66% { color: #fcb045; }
+            100% { color: #833ab4; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="machine">
+            <div id="animation"></div>
+            <div id="interactive-panel">
+                <button onclick="generateBubbles()">Generate Bubbles</button>
+                <div id="message">Welcome to the Infinity Machine!</div>
+            </div>
+            <div id="feedback">Feedback Score: <span id="score" style="animation: colorTransition 10s infinite">100</span></div>
+        </div>
+    </div>
+    <script>
+        const maxBubbles = 100;
+        const animationContainer = document.getElementById('animation');
+        const messageElement = document.getElementById('message');
+        const feedbackScoreElement = document.getElementById('score');
+        let feedbackScore = 100;
+        let bubbleCount = 0;
+
+        function generateBubbles() {
+            if (bubbleCount < maxBubbles) {
+                const bubble = document.createElement('div');
+                const size = Math.random() * 50 + 10;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * (70 - size) + 'vw';
+                bubble.style.animationDuration = 3 + Math.random() * 2 + 's';
+                bubble.classList.add('bubble');
+                animationContainer.appendChild(bubble);
+
+                bubble.addEventListener('animationend', function() {
+                    animationContainer.removeChild(bubble);
+                    bubbleCount--;
+                });
+
+                bubbleCount++;
+                messageElement.style.opacity = 1;
+                setTimeout(() => messageElement.style.opacity = 0, 2000);
+            } else {
+                alert('Bubble maximum reached!');
+            }
+
+            feedbackScore = Math.max(0, feedbackScore - Math.random() * 5);
+            feedbackScoreElement.textContent = feedbackScore.toFixed(0);
+        }
+    </script>
+</body>
+</html>

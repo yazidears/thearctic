@@ -1,0 +1,91 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wobble Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(132deg, #f8afff, #bae1ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .orb {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff, #f0f);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            animation: wobble infinite 2s ease-in-out;
+        }
+        @keyframes wobble {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); }
+            25% { transform: translateX(20px) translateY(-10px) rotate(10deg); }
+            50% { transform: translateX(-20px) translateY(10px) rotate(-10deg); }
+            75% { transform: translateX(10px) translateY(-20px) rotate(5deg); }
+            100% { transform: translateX(0) translateY(0) rotate(0deg); }
+        }
+        .randomButton {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #ff007f;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.3s;
+        }
+        .randomButton:hover {
+            background: #e60072;
+        }
+        h1 {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            text-align: center;
+            font-size: 50px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Wobble Wonderland!</h1>
+    <button class="randomButton" onclick="generateOrbs()">Add Wobble</button>
+    <script>
+        const orbColors = ['#ff4081', '#3f51b5', '#00bcd4', '#4caf50', '#ffeb3b', '#795548'];
+        
+        function generateOrbs() {
+            const orbCount = Math.floor(Math.random() * 20) + 10;
+            for (let i = 0; i < orbCount; i++) {
+                let orb = document.createElement('div');
+                orb.classList.add('orb');
+                orb.style.background = `radial-gradient(circle, #fff, ${orbColors[Math.floor(Math.random() * orbColors.length)]})`;
+                orb.style.left = `${Math.random() * 100}vw`;
+                orb.style.top = `${Math.random() * 100}vh`;
+                orb.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                document.body.appendChild(orb);
+
+                setTimeout(() => {
+                    orb.remove();
+                }, 5000);
+            }
+        }
+
+        function initOrbs() {
+            generateOrbs();
+            setInterval(generateOrbs, 7000);
+        }
+        
+        window.onload = initOrbs;
+    </script>
+</body>
+</html>
+```

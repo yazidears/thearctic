@@ -1,0 +1,91 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Jellyfish Dance</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #1a2e30, #000);
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        .jellyfish {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            animation: float infinite;
+            will-change: transform;
+            pointer-events: none;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        .game-panel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:active {
+            background: #1976d2;
+        }
+        .score {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-panel">
+        <span class="score">Score: <span id="score">0</span></span>
+        <button onclick="spawnJellyfish()">Spawn Jellyfish</button>
+    </div>
+    <script>
+        let score = 0;
+        function spawnJellyfish() {
+            const jellyfish = document.createElement('div');
+            jellyfish.className = 'jellyfish';
+            const size = Math.random() * 50 + 20;
+            jellyfish.style.width = `${size}px`;
+            jellyfish.style.height = `${size}px`;
+            jellyfish.style.top = `${Math.random() * window.innerHeight}px`;
+            jellyfish.style.left = `${Math.random() * window.innerWidth}px`;
+            jellyfish.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            jellyfish.addEventListener('click', () => {
+                increaseScore();
+                document.body.removeChild(jellyfish);
+            });
+            document.body.appendChild(jellyfish);
+        }
+
+        function increaseScore() {
+            score++;
+            document.getElementById('score').innerText = score;
+        }
+
+        function cosmicDance() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(spawnJellyfish, Math.random() * 5000);
+            }
+        }
+
+        cosmicDance();
+    </script>
+</body>
+</html>
+```

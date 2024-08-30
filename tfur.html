@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Surreal Time-Traveling Tea Party</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #FFEEAD, #E6AA68);
+    font-family: 'Courier New', Courier, monospace;
+    color: #2C2A32;
+}
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.tea-cup {
+    position: absolute;
+    border-radius: 50%;
+    background: #FAF0E6;
+    border: 3px solid #654321;
+    overflow: hidden;
+    animation: float 5s infinite ease-in-out;
+}
+.tea {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    background: #D2691E;
+    bottom: 0;
+    border-radius: 0 0 50% 50%;
+}
+@keyframes float {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-20px);}
+}
+#time-machine {
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    top: 10vh;
+    left: calc(50% - 100px);
+    border: 10px solid #8B4513;
+    border-radius: 10px;
+    background: #F4A460;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+#time-machine::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: linear-gradient(to bottom, #DEB887, #F5DEB3);
+    border-radius: 5px;
+    box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
+}
+.time-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    padding: 20px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+#time-machine:hover .time-message {
+    display: none;
+}
+.hidden-message {
+    display: none;
+    opacity: 0;
+    color: darkred;
+    animation: fadeInUp 2s forwards;
+}
+@keyframes fadeInUp {
+    0% {opacity: 0; transform: translateY(20px);}
+    100% {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="tea-cup" style="width:100px;height:100px;top:50%;left:20%;">
+    <div class="tea"></div>
+</div>
+<div class="tea-cup" style="width:150px;height:150px;top:65%;left:70%;">
+    <div class="tea"></div>
+</div>
+<div id="time-machine">
+    <div class="time-message">Click to Time Travel!</div>
+    <div class="hidden-message" id="hidden-message">Welcome to 1885, the age of innovation!</div>
+</div>
+<script>
+document.getElementById('time-machine').addEventListener('click', function() {
+    const message = document.getElementById('hidden-message');
+    if (!message.style.display || message.style.display === 'none') {
+        message.style.display = 'block';
+    } else {
+        message.style.opacity = +message.style.opacity === 1 ? 0 : 1;
+    }
+});
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let stars = [];
+function createStars() {
+    for (let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            weight: Math.random() * 0.1,
+            dx: -2
+        });
+    }
+}
+function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(star => {
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    });
+}
+function updateStars() {
+    stars.forEach(star => {
+        star.x += star.dx;
+        star.y += star.weight;
+        if (star.x < 0) {
+            star.x = canvas.width;
+        }
+    });
+}
+function animate() {
+    drawStars();
+    updateStars();
+    requestAnimationFrame(animate);
+}
+createStars();
+animate();
+</script>
+</body>
+</html>

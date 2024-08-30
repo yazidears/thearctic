@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galloping Giraffes in the Galaxy</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #121212;
+            color: #fff;
+            font-family: 'Comic Sans MS', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        canvas {
+            border: 5px solid #fff;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            user-select: none;
+        }
+        #info p {
+            margin: 5px;
+        }
+        #controlPanel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+        #controlPanel button {
+            cursor: pointer;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background: #007BFF;
+            color: white;
+            font-size: 14px;
+            margin: 5px;
+        }
+        #controlPanel button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <p>Welcome to the Giraffe Galore Galaxy!</p>
+        <p>Watch as our cosmic giraffes gallop across the stars.</p>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div id="controlPanel">
+        <button onclick="changeColor()">Change Background Color</button>
+        <button onclick="toggleGiraffes()">Toggle Giraffes</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let running = true;
+        let giraffeColor = '#f0c674';
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createGiraffe(x, y, size) {
+            ctx.fillStyle = giraffeColor;
+            ctx.beginPath();
+            ctx.arc(x, y - size / 2, size / 6, 0, Math.PI * 2);
+            ctx.rect(x - size / 6, y - size / 2, size / 3, size / 2);
+            ctx.rect(x - size / 2, y, size, size / 3);
+            ctx.arc(x - size / 4, y + size / 3, size / 8, 0, Math.PI * 2);
+            ctx.arc(x + size / 4, y + size / 3, size / 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function animate() {
+            if (!running) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < 5; i++) {
+                const x = (Math.random() * canvas.width) + 50;
+                const y = (Math.random() * canvas.height);
+                const size = Math.random() * 30 + 50;
+                createGiraffe(x % canvas.width, y % canvas.height, size);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function changeColor() {
+            const colors = ['#1ABC9C', '#3498DB', '#9B59B6', '#F1C40F', '#E74C3C'];
+            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function toggleGiraffes() {
+            running = !running;
+            if (running) animate();
+        }
+
+        animate();
+    </script>
+</body>
+</html>

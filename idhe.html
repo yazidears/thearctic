@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Dreamscape</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #191919;
+            color: #ffffff;
+        }
+        #weirdCanvas {
+            display: block;
+        }
+        #floatingText {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #actionPrompt {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ff0080;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .button {
+            cursor: pointer;
+            background-color: #ff0080;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #ff0080;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="weirdCanvas"></canvas>
+<div id="floatingText">Hello from the Dreamscape!</div>
+<div id="actionPrompt">Press B to Burst the Bubble!</div>
+
+<script>
+    const canvas = document.getElementById('weirdCanvas');
+    const ctx = canvas.getContext('2d');
+    const floatingText = document.getElementById('floatingText');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const circles = Array.from({ length: 50 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 25 + 15,
+        dx: Math.random() * 2 - 1,
+        dy: Math.random() * 2 - 1,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+    }));
+
+    function drawBackground() {
+        ctx.fillStyle = '#051622';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawCircles() {
+        circles.forEach(circle => {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = circle.color;
+            ctx.fill();
+        });
+    }
+
+    function updateCircles() {
+        circles.forEach(circle => {
+            circle.x += circle.dx;
+            circle.y += circle.dy;
+
+            if (circle.x + circle.radius > canvas.width || circle.x - circle.radius < 0) {
+                circle.dx = -circle.dx;
+            }
+            if (circle.y + circle.radius > canvas.height || circle.y - circle.radius < 0) {
+                circle.dy = -circle.dy;
+            }
+        });
+    }
+
+    function animate() {
+        drawBackground();
+        drawCircles();
+        updateCircles();
+        requestAnimationFrame(animate);
+    }
+
+    function showFloatingText() {
+        const {innerWidth, innerHeight} = window;
+        floatingText.style.left = `${Math.random() * (innerWidth - 200)}px`;
+        floatingText.style.top = `${Math.random() * (innerHeight - 50)}px`;
+        floatingText.style.opacity = 1;
+        setTimeout(() => {
+            floatingText.style.opacity = 0;
+        }, 1000);
+    }
+
+    function burstBubble() {
+        const index = Math.floor(Math.random() * circles.length);
+        circles.splice(index, 1);
+        showFloatingText();
+    }
+
+    document.body.addEventListener('keydown', (e) => {
+        if (e.key === 'b' || e.key === 'B') {
+            burstBubble();
+        }
+    });
+
+    animate();
+</script>
+
+</body>
+</html>

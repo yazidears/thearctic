@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serendipitous Symphony</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(45deg, #ff6f61, #ffcccb);
+        }
+        #main-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+        }
+        .note {
+            position: absolute;
+            border-radius: 50%;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #64b5f6;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #42a5f5;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <div id="symphony">Serendipitous Symphony</div>
+    </div>
+    <div class="controls">
+        <button class="btn" onclick="changeBackground()">Change Background</button>
+        <button class="btn" onclick="addNote()">Add Musical Note</button>
+    </div>
+    <script>
+        const colors = ['#ff6f61', '#ffcccb', '#ffc107', '#9575cd', '#81d4fa', '#e0f7fa', '#aed581', '#ffd54f'];
+        
+        function changeBackground() {
+            document.body.style.background = 
+                'linear-gradient(45deg, ' + randomColor() + ', ' + randomColor() + ')';
+        }
+        
+        function randomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        function addNote() {
+            const container = document.getElementById('main-container');
+            const note = document.createElement('div');
+            note.className = 'note';
+            note.innerText = getRandomNote();
+            note.style.left = Math.random() * window.innerWidth + 'px';
+            note.style.top = Math.random() * window.innerHeight + 'px';
+            animateNote(note);
+            container.appendChild(note);
+            setTimeout(() => note.remove(), 3000);
+        }
+        
+        function getRandomNote() {
+            const notes = ['♫', '♬', '♪', '♩', '♮', '♯', '♭'];
+            return notes[Math.floor(Math.random() * notes.length)];
+        }
+        
+        function animateNote(note) {
+            let x = 0, y = 0;
+            const interval = setInterval(() => {
+                note.style.transform = `translate(${x}px, ${y}px)`;
+                x += (Math.random() - 0.5) * 20;
+                y += (Math.random() - 0.5) * 20;
+                if (Math.random() < 0.1) clearInterval(interval);
+            }, 100);
+        }
+    </script>
+</body>
+</html>

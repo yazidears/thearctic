@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Whimsical Garden of Code</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(180deg, #f0f8ff, #4682B4);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .garden {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            border: 15px solid #8B4513;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background: #228B22;
+        }
+        .blooms {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #FF4500;
+            animation: float 5s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .butterfly {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYgcHgiIGhlaWdodD0iNTYgcHgiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgNEwzIDExLjVWMjBMMTYgMjhMMzYuNSA0MEw0MiAzMEw0OSA0N0w1OSA1NUw0MiAzMEwzIDExLjVWMlY0TDAgNEwzIDExLjVWNkozLTFWLTdWMUtEMTFWLTcgTTEyLSBNMTAtU00xMC0gTTEyKEMxMC02KDJMLTcgKC02JylNWWUsMC14Ij48L3BhdGg+Cjwvc3ZnPgo=') no-repeat center;
+            background-size: cover;
+            animation: fly 3s infinite alternate;
+        }
+        @keyframes fly {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(20px) translateY(-20px) rotate(20deg); }
+        }
+        .fairy {
+            position: absolute;
+            width: 30px;
+            height: 55px;
+            background: pink;
+            border-radius: 15px;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.6);
+            animation: flutter 2s infinite alternate;
+        }
+        @keyframes flutter {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px) rotate(-10deg); }
+        }
+        .whisk {
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+            color: #fff;
+            background: rgba(0,0,0,0.4);
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="garden" id="garden">
+        <div class="blooms" style="left: 30%; top: 10%;"></div>
+        <div class="blooms" style="left: 50%; top: 40%; background: #FF69B4;"></div>
+        <div class="blooms" style="left: 20%; top: 60%; background: #FFD700;"></div>
+        <div class="butterfly" style="left: 10%; top: 40%;"></div>
+        <div class="butterfly" style="left: 70%; top: 20%;"></div>
+        <div class="fairy" style="left: 80%; top: 70%;"></div>
+    </div>
+    <div class="whisk">Hover over me!</div>
+    <script>
+        const garden = document.getElementById('garden');
+        let fairyTimer;
+        garden.addEventListener('mousemove', (e) => {
+            clearTimeout(fairyTimer);
+            const newFairy = document.createElement('div');
+            newFairy.className = 'fairy';
+            newFairy.style.left = `${e.pageX - garden.offsetLeft}px`;
+            newFairy.style.top = `${e.pageY - garden.offsetTop}px`;
+            garden.appendChild(newFairy);
+            fairyTimer = setTimeout(() => {
+                garden.removeChild(newFairy);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

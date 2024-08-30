@@ -1,0 +1,123 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(45deg, #ff6ec4, #7873f5);
+            user-select: none;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .bubble {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #fff, transparent);
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            opacity: 0.7;
+            animation: float 5s infinite ease-in-out, wobble 3s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% {transform: translateY(0);}
+            50% {transform: translateY(-100px);}
+            100% {transform: translateY(0);}
+        }
+        @keyframes wobble {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-10px);}
+            75% {transform: translateX(10px);}
+        }
+        #controlPanel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        #msg {
+            background-color: #fffc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controlPanel">
+        <button onclick="createBubbles()">Create Bubbles</button>
+        <button onclick="changeColor()">Change Color</button>
+        <div id="msg">Click around to interact!</div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let bgColor = {r: 0, g: 0, b: 0};
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        let message = false;
+        document.addEventListener('click', (event) => {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = (event.clientX - 30) + 'px';
+            bubble.style.top = (event.clientY - 30) + 'px';
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 8000);
+            
+            if (!message) {
+                document.getElementById('msg').style.display = 'block';
+                message = true;
+            }
+        });
+
+        function createBubbles() {
+            for (let i = 0; i < 100; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = getRandomInt(0, window.innerWidth) + 'px';
+                bubble.style.top = getRandomInt(0, window.innerHeight) + 'px';
+                document.body.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 8000);
+            }
+        }
+
+        function changeColor() {
+            bgColor = {
+                r: getRandomInt(0, 255),
+                g: getRandomInt(0, 255),
+                b: getRandomInt(0, 255)
+            };
+            drawBackground();
+        }
+
+        function drawBackground() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const img = ctx.createImageData(window.innerWidth, window.innerHeight);
+            for (let i = 0; i < img.data.length; i += 4) {
+                img.data[i] = bgColor.r;
+                img.data[i + 1] = bgColor.g;
+                img.data[i + 2] = bgColor.b;
+                img.data[i + 3] = 255;
+            }
+            ctx.putImageData(img, 0, 0);
+        }
+
+        window.onresize = drawBackground;
+        drawBackground();
+    </script>
+</body>
+</html>

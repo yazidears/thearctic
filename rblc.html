@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Aquarium</title>
+    <style>
+        body, html {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001f3f;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #aquarium {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background-image: linear-gradient(to bottom, #001f3f, #003366, #001f3f);
+            animation: oceanMove 10s infinite linear;
+        }
+        @keyframes oceanMove {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+        .fish {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            animation: swim 8s infinite ease-in-out alternate;
+        }
+        @keyframes swim {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(100vw); }
+        }
+        .bubble {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ffffff88;
+            animation: rise 5s infinite linear;
+        }
+        @keyframes rise {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-100vmin); }
+        }
+        .seaweed {
+            position: absolute;
+            width: 15px;
+            height: 75px;
+            background-color: #228b22;
+            border-radius: 10px 10px 0 0;
+            bottom: 0;
+            animation: sway 3s infinite alternate;
+        }
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(15deg); }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const aquarium = document.getElementById('aquarium');
+
+            function createFish() {
+                const fish = document.createElement('div');
+                fish.classList.add('fish');
+                fish.style.top = Math.random() * 80 + 'vh';
+                fish.style.left = Math.random() * 80 + 'vw';
+                fish.style.backgroundColor = ['#ff6347', '#ffa07a', '#ff4500'][Math.floor(Math.random() * 3)];
+                fish.style.animationDuration = (5 + Math.random() * 5) + 's';
+                fish.addEventListener('mouseover', () => fish.style.animationPlayState = 'paused');
+                fish.addEventListener('mouseout', () => fish.style.animationPlayState = 'running');
+                aquarium.appendChild(fish);
+            }
+
+            function createBubble() {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                bubble.style.left = Math.random() * 100 + 'vw';
+                bubble.style.animationDuration = (3 + Math.random() * 2) + 's';
+                aquarium.appendChild(bubble);
+                setTimeout(() => aquarium.removeChild(bubble), 5000);
+            }
+
+            function createSeaweed() {
+                const seaweed = document.createElement('div');
+                seaweed.classList.add('seaweed');
+                seaweed.style.left = Math.random() * 100 + 'vw';
+                aquarium.appendChild(seaweed);
+            }
+
+            for (let i = 0; i < 10; i++) createFish();
+            for (let i = 0; i < 10; i++) createBubble();
+            for (let i = 0; i < 5; i++) createSeaweed();
+
+            setInterval(createBubble, 500);
+        });
+    </script>
+</head>
+<body>
+    <div id="aquarium"></div>
+</body>
+</html>

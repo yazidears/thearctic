@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical World of Wobbles</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f5f7fa;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .button-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .control-button {
+            background-color: transparent;
+            border: 2px solid #FF4081;
+            color: #FF4081;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin-right: 10px;
+        }
+        .control-button:hover {
+            background-color: #FF4081;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="control-button" onclick="spawnWobble()">Add Wobble</button>
+        <button class="control-button" onclick="animateWobbles()">Dance!</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let wobbles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Wobble {
+            constructor(x, y, color, speed, radius) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.speed = speed;
+                this.radius = radius;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            update() {
+                this.x += this.speed * (Math.random() - 0.5);
+                this.y += this.speed * (Math.random() - 0.5);
+                this.bounce();
+                this.draw();
+            }
+
+            bounce() {
+                if (this.x < this.radius || this.x > canvas.width - this.radius) this.speed = -this.speed;
+                if (this.y < this.radius || this.y > canvas.height - this.radius) this.speed = -this.speed;
+
+                this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
+                this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, this.y));
+            }
+        }
+
+        function spawnWobble() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const speed = Math.random() * 2 + 1;
+            const radius = Math.random() * 20 + 10;
+            const color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+            wobbles.push(new Wobble(x, y, color, speed, radius));
+        }
+
+        function animateWobbles() {
+            requestAnimationFrame(animateWobbles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let wobble of wobbles) {
+                wobble.update();
+            }
+        }
+
+        window.onload = () => {
+            for (let i = 0; i < 10; i++) {
+                spawnWobble();
+            }
+            animateWobbles();
+        };
+    </script>
+</body>
+</html>

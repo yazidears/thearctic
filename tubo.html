@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Worlds: Kaleidoscope Planet</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #info h1 {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+        #info p {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">
+        <h1>Kaleidoscope Planet</h1>
+        <p>Click and drag to explore the surreal landscape.</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let posX = 0, posY = 0;
+        let dragging = false;
+
+        function randomColor() {
+            return `rgb(${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)})`;
+        }
+
+        function draw(x, y, angle, depth, maxDepth) {
+            if (depth > maxDepth) return;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(100, 0);
+            ctx.strokeStyle = randomColor();
+            ctx.stroke();
+            for (let i = 0; i < 3; i++) {
+                draw(100, 0, Math.PI / 2 * i, depth + 1, maxDepth);
+            }
+            ctx.restore();
+        }
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    ctx.save();
+                    ctx.translate(canvas.width / 2 + posX + i * 300, canvas.height / 2 + posY + j * 300);
+                    draw(0, 0, 0, 0, 5);
+                    ctx.restore();
+                }
+            }
+        }
+
+        function update() {
+            drawScene();
+            requestAnimationFrame(update);
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            dragging = true;
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            dragging = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (dragging) {
+                posX += e.movementX;
+                posY += e.movementY;
+            }
+        });
+
+        update();
+    </script>
+</body>
+</html>

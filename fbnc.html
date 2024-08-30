@@ -1,0 +1,104 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Imaginary Zoo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #1a1a1a;
+        }
+        #zoo-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .animal {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+        }
+        .penguin {
+            animation: move1 12s infinite;
+            color: #00f;
+        }
+        .dancing-cat {
+            animation: move2 10s infinite, dance 1s infinite alternate;
+            color: #f0f;
+        }
+        .glowing-fish {
+            animation: move3 8s infinite, glow 1.5s infinite alternate;
+            color: #0ff;
+        }
+        @keyframes move1 {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(50vw, 30vh); opacity: 0.5;}
+            50% { transform: translate(80vw, 50vh); opacity: 0.8; }
+            75% { transform: translate(30vw, 70vh); opacity: 0.5; }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+        @keyframes move2 {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(40vw, 20vh); opacity: 0.7;}
+            50% { transform: translate(70vw, 60vh); opacity: 0.9; }
+            75% { transform: translate(20vw, 80vh); opacity: 0.6; }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+        @keyframes move3 {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(60vw, 10vh); opacity: 0.9;}
+            50% { transform: translate(90vw, 40vh); opacity: 0.5; }
+            75% { transform: translate(40vw, 90vh); opacity: 0.4; }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+        @keyframes dance {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2) rotate(10deg); }
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 15px #00f; }
+            100% { text-shadow: 0 0 15px #ff0, 0 0 20px #f00, 0 0 30px #ff0; }
+        }
+        #info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #fff;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div id="zoo-container">
+    <div class="animal penguin">🐧</div>
+    <div class="animal dancing-cat">🐱</div>
+    <div class="animal glowing-fish">🐠</div>
+</div>
+
+<div id="info">
+    Welcome to the Imaginary Zoo! Enjoy watching the random animal animations. Click anywhere to make them scatter!
+</div>
+
+<script>
+    document.onclick = function() {
+        var animals = document.querySelectorAll('.animal');
+        animals.forEach(function(animal) {
+            animal.style.left = Math.random() * window.innerWidth + 'px';
+            animal.style.top = Math.random() * window.innerHeight + 'px';
+        });
+    }
+</script>
+
+</body>
+</html>
+```

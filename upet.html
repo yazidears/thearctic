@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>The Surreal Adventure of Blob & Cubie</title>
+<style>
+  body {
+    margin: 0; 
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+    background-color: #282c34; 
+    overflow: hidden;
+    color: #ffffff;
+    text-align: center;
+  }
+  .blob, .cubie {
+    position: absolute;
+    transition: all 0.5s ease-in-out;
+  }
+  .blob {
+    width: 50px; 
+    height: 50px; 
+    background-color: #ff4500; 
+    border-radius: 50%; 
+  }
+  .cubie {
+    width: 50px; 
+    height: 50px; 
+    background-color: #32cd32; 
+  }
+  #canvas {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  #control-panel {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+  }
+  button {
+    background-color: #61dafb;
+    border: none;
+    padding: 10px; 
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  #message {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    opacity: 0;
+    transition: opacity 1s;
+  }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="blob" id="blob"></div>
+  <div class="cubie" id="cubie"></div>
+  <div id="message">Wowza! You Did It!</div>
+</div>
+<div id="control-panel">
+  <button onclick="moveBlob()">Move Blob</button>
+  <button onclick="moveCubie()">Move Cubie</button>
+  <button onclick="changeColor()">Change Color</button>
+</div>
+<script>
+  const blob = document.getElementById('blob');
+  const cubie = document.getElementById('cubie');
+  const message = document.getElementById('message');
+  const directions = ['left', 'top', 'right', 'bottom'];
+  
+  function getRandomDirection() {
+    return directions[Math.floor(Math.random() * directions.length)];
+  }
+
+  function getRandomPosition(max) {
+    return Math.floor(Math.random() * max) + 'px';
+  }
+
+  function moveBlob() {
+    const dir = getRandomDirection();
+    blob.style[dir] = getRandomPosition(window['inner' + (dir === 'top' || dir === 'bottom' ? 'Height' : 'Width')]);
+    checkCollision();
+  }
+
+  function moveCubie() {
+    const dir = getRandomDirection();
+    cubie.style[dir] = getRandomPosition(window['inner' + (dir === 'top' || dir === 'bottom' ? 'Height' : 'Width')]);
+    checkCollision();
+  }
+
+  function changeColor() {
+    blob.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+    cubie.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+  }
+
+  function checkCollision() {
+    const bRect = blob.getBoundingClientRect();
+    const cRect = cubie.getBoundingClientRect();
+
+    if (!(bRect.right < cRect.left || 
+          bRect.left > cRect.right || 
+          bRect.bottom < cRect.top || 
+          bRect.top > cRect.bottom)) {
+      displayMessage();
+    }
+  }
+
+  function displayMessage() {
+    message.style.opacity = 1;
+    setTimeout(() => message.style.opacity = 0, 2000);
+  }
+  
+  function initPosition() {
+    blob.style.top = getRandomPosition(window.innerHeight);
+    blob.style.left = getRandomPosition(window.innerWidth);
+    cubie.style.top = getRandomPosition(window.innerHeight);
+    cubie.style.left = getRandomPosition(window.innerWidth);
+  }
+
+  initPosition();
+</script>
+</body>
+</html>

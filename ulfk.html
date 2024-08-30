@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Wonderland</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #canvas {
+            border: 5px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        .button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 10;
+        }
+        #message {
+            position: absolute;
+            bottom: 20px;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="button" onclick="toggleAnimation()">Pause/Play</button>
+    <div id="message"></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const message = document.getElementById('message');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let sprinkleX = canvas.width / 2;
+        let sprinkleY = canvas.height / 2;
+        let sprinkleRadius = 50;
+        let turningAngle = 0;
+        let hue = 0;
+        let paused = false;
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function drawSprinkle(x, y, radius, angle) {
+            ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < 12; i++) {
+                const theta = (Math.PI / 6) * i + angle;
+                ctx.moveTo(x, y);
+                ctx.lineTo(
+                    x + radius * Math.cos(theta),
+                    y + radius * Math.sin(theta)
+                );
+            }
+            ctx.stroke();
+        }
+
+        function toggleAnimation() {
+            paused = !paused;
+        }
+
+        function animate() {
+            if (paused) {
+                requestAnimationFrame(animate);
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSprinkle(sprinkleX, sprinkleY, sprinkleRadius, turningAngle);
+            sprinkleX += random(-3, 3);
+            sprinkleY += random(-3, 3);
+            sprinkleRadius += random(-1, 1);
+            turningAngle += 0.01;
+            hue = (hue + 1) % 360;
+            if (Math.random() < 0.01) {
+                sprinkleRadius = random(30, 70);
+            }
+            message.textContent = `Whimsical Wandering: Sprinkle at (${Math.round(sprinkleX)}, ${Math.round(sprinkleY)})`;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Balloon Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffcc70, #ff6673);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        #center {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h1 {
+            color: #ff3368;
+        }
+        p {
+            color: #555;
+        }
+        #start-button {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+            background: #ff3368;
+            border-radius: 8px;
+            transition: background 0.5s;
+        }
+        #start-button:hover {
+            background: #ff66a1;
+        }
+    </style>
+</head>
+<body>
+    <div id="center">
+        <h1>Welcome to the Surreal Balloon Symphony 🌈</h1>
+        <p>Pop the balloons and compose your own magical music.</p>
+        <button id="start-button">Begin Symphony</button>
+    </div>
+    <canvas id="balloon-canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('balloon-canvas');
+        const ctx = canvas.getContext('2d');
+        const balloons = [];
+        const colors = ['#FF6666', '#FFB266', '#FFFF66', '#B2FF66', '#66FFB2', '#66B2FF', '#B266FF'];
+        const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        document.getElementById('start-button').addEventListener('click', startSymphony);
+
+        function startSymphony() {
+            createBalloons();
+            animate();
+            document.getElementById('center').style.display = 'none';
+        }
+
+        function createBalloons() {
+            for (let i = 0; i < 50; i++) {
+                balloons.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 200,
+                    radius: 20 + Math.random() * 30,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: 1 + Math.random() * 3,
+                    noteIndex: Math.floor(Math.random() * notes.length)
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            balloons.forEach(balloon => {
+                ctx.beginPath();
+                ctx.arc(balloon.x, balloon.y, balloon.radius, 0, Math.PI * 2);
+                ctx.fillStyle = balloon.color;
+                ctx.fill();
+                ctx.closePath();
+
+                balloon.y -= balloon.speed;
+
+                if (balloon.y + balloon.radius < 0) {
+                    balloon.y = canvas.height + Math.random() * 200;
+                    balloon.noteIndex = Math.floor(Math.random() * notes.length);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener('click', popBalloon);
+
+        function popBalloon(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            for (let i = 0; i < balloons.length; i++) {
+                const balloon = balloons[i];
+                const dist = Math.sqrt((mouseX - balloon.x) ** 2 + (mouseY - balloon.y) ** 2);
+
+                if (dist < balloon.radius) {
+                    playNote(balloon.noteIndex);
+                    balloons.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        function playNote(index) {
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(getFrequencyFromNote(notes[index]), audioContext.currentTime);
+            oscillator.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function getFrequencyFromNote(note) {
+            const scale = { C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88 };
+            return scale[note];
+        }
+    </script>
+</body>
+</html>

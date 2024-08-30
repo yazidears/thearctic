@@ -1,0 +1,92 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Forest Adventure</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; font-family: 'Courier New', Courier, monospace; background: #001f3f; color: #FFF; }
+        #canvas { position: absolute; top: 0; left: 0; }
+        #info { position: absolute; top: 10px; left: 10px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
+        #info h1 { margin: 0 0 10px 0; font-size: 24px; }
+        #info p { margin: 5px 0; font-size: 16px; }
+        #start { font-size: 18px; padding: 10px 20px; cursor: pointer; background: #FF4136; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Dream Forest Adventure</h1>
+        <p>Navigate through the enchanted forest.</p>
+        <p>Use arrow keys to move.</p>
+        <button id="start">Start Adventure</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 50,
+            width: 20,
+            height: 20,
+            color: '#7FDBFF'
+        };
+        const trees = [];
+        for (let i = 0; i < 50; i++) {
+            trees.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 20 + 10,
+                color: ['#2ECC40', '#01FF70', '#3D9970'][Math.floor(Math.random() * 3)],
+            });
+        }
+        const moveSpeed = 5;
+        const keys = {};
+
+        window.addEventListener('keydown', (e) => keys[e.key] = true);
+        window.addEventListener('keyup', (e) => delete keys[e.key]);
+
+        function updatePlayerPosition() {
+            if (keys['ArrowUp'] && player.y > 0) player.y -= moveSpeed;
+            if (keys['ArrowDown'] && player.y + player.height < canvas.height) player.y += moveSpeed;
+            if (keys['ArrowLeft'] && player.x > 0) player.x -= moveSpeed;
+            if (keys['ArrowRight'] && player.x + player.width < canvas.width) player.x += moveSpeed;
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawTrees() {
+            trees.forEach(tree => {
+                ctx.beginPath();
+                ctx.arc(tree.x, tree.y, tree.radius, 0, Math.PI * 2);
+                ctx.fillStyle = tree.color;
+                ctx.fill();
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            updatePlayerPosition();
+            drawTrees();
+            drawPlayer();
+
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('start').addEventListener('click', () => {
+            document.getElementById('info').style.display = 'none';
+            animate();
+        });
+    </script>
+</body>
+</html>
+```

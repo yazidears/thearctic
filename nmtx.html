@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intergalactic Jellyfish Symphony</title>
+<style>
+  body, html { margin: 0; padding: 0; overflow: hidden; background-color: #0a0a0a; color: #ffffff; font-family: 'Courier New', Courier, monospace; }
+  canvas { position: absolute; top: 0; left: 0; z-index: 0; }
+  #content { position: absolute; z-index: 1; padding: 20px; }
+  button { background: #0984e3; color: white; border: none; padding: 10px; cursor: pointer; }
+  button:hover { background: #74b9ff; }
+  .floating-text { position: absolute; color: rgba(255, 255, 255, 0.7); animation: float 6s infinite; }
+  @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0); } }
+  .jellyfish-container { position: absolute; width: 100px; height: 150px; animation: moveJellyfish 12s infinite; }
+  @keyframes moveJellyfish { 0% { transform: translateX(0); } 100% { transform: translateX(100vw); } }
+</style>
+</head>
+<body>
+
+<div id="content">
+  <h1>Intergalactic Jellyfish Symphony</h1>
+  <p>Tap into the sound as the jellyfish float by...</p>
+  <button onclick="spawnJellyfish()">More Jellyfish!</button>
+</div>
+<canvas id="spaceCanvas"></canvas>
+
+<script>
+  const canvas = document.getElementById('spaceCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  const stars = [];
+  function Star() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2;
+    this.speed = Math.random() * 0.5;
+    this.update = function() {
+      this.x -= this.speed;
+      if(this.x < 0) this.x = canvas.width;
+    };
+    this.draw = function() {
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    };
+  }
+  
+  for(let i = 0; i < 300; i++) {
+    stars.push(new Star());
+  }
+  
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i=0; i<stars.length; i++) {
+      stars[i].update();
+      stars[i].draw();
+    }
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+
+  const colors = ['#00cec9', '#81ecec', '#74b9ff', '#ff7675'];
+  function randomColor() {
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+  
+  function spawnJellyfish() {
+    const jellyfish = document.createElement('div');
+    jellyfish.className = 'jellyfish-container';
+    jellyfish.style.top = Math.random() * (window.innerHeight - 150) + 'px';
+    jellyfish.style.left = '-100px';
+    document.body.appendChild(jellyfish);
+
+    for (let i = 0; i < 5; i++) {
+      const bubble = document.createElement('div');
+      bubble.style.position = 'absolute';
+      bubble.style.width = '20px';
+      bubble.style.height = '20px';
+      bubble.style.borderRadius = '50%';
+      bubble.style.background = randomColor();
+      bubble.style.left = Math.random() * 80 + 'px';
+      bubble.style.top = Math.random() * 50 + 50 + 'px';
+      jellyfish.appendChild(bubble);
+    }
+
+    jellyfish.addEventListener('click', function() {
+      playSound();
+    });
+    
+    setTimeout(() => {
+      jellyfish.remove();
+    }, 12000);
+  }
+  
+  function crashSound(freq) {
+    const context = new AudioContext();
+    const oscillator = context.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(freq, context.currentTime);
+    oscillator.connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.5);
+  }
+  
+  function playSound() {
+    const freq = Math.random() * 1000 + 200;
+    crashSound(freq);
+  }
+
+  spawnJellyfish();
+</script>
+
+</body>
+</html>

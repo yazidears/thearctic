@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Sushi Wars</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #fff;
+            image-rendering: pixelated;
+        }
+        .controlPanel {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        #message {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .starfield {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: #ffffff;
+            animation: twinkle 2s infinite alternate;
+            opacity: 0.3;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="controlPanel">
+        <button onclick="startGame()">Start Game</button>
+        <div id="message"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const context = canvas.getContext("2d");
+        const message = document.getElementById("message");
+
+        const ship = new Image();
+        ship.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAd0lEQVQ4T2NkIAIwEqmOgEW64KFW8n8uogIZVYKCdXINkCtWiJO9JpM2rZDZRvwFJc0q5AOpDhaoQchMzVKqB2EUwP8UESYAgLSkAWUjNUKoF2MLDOliLblUJvMIchinYh1BMCxWteh7A0hsBZZ0QfsqggEKAAANG1MQ7y/143YAAAAASUVORK5CYII="; 
+        const sushi = new Image();
+        sushi.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAAAztbZnAAAA/ElEQVQ4T+3SP0sDcRTF8c9MoWI2aXpFmjFsGAIa0kRbi5i9A3EvTGPgSYW/gG4GdiZCsEpKKZRpESqlgKOJtNI8DNOHePOyB3yTd/3+/+b4vvDAfA/ycBfoRAA3VhRbSgJJyECBwD79RHGAwFY2hVoe8+VoHEk9RCg0fi8CkDZmgM7XAD64XnZpGRkPZ0LVQdd4DWzQXe8DYs8rfQrf7TiUn6kZPHobWGRUTA+Tn5yczuIoCY7IjvAU7kLeERYUiA6siF1oKDK8Dl5U2fT8OpukkJ1MT9LpqnkmBL75DN22HtIy1RmxNT5vTdC0Uyr2V6IZLT2P9J3xPbaZ5lkXfFSmZD2MRo1XFSqBGGNCcdXtUgV61UwA0q/xWzFQwn2AAAAAElFTkSuQmCC"; 
+
+        let shipX = canvas.width / 2;
+        let shipY = canvas.height - 60;
+        let sushiX = Math.random() * canvas.width;
+        let sushiY = 0;
+
+        const starCount = 150;
+        const stars = Array.from({ length: starCount }, () => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight
+        }));
+
+        document.addEventListener('keydown', moveShip);
+
+        function startGame() {
+            message.textContent = "Dodge the flying sushi!";
+            requestAnimationFrame(loop);
+        }
+
+        function moveShip(event) {
+            if (event.key === "ArrowLeft" && shipX > 0) {
+                shipX -= 10;
+            }
+            if (event.key === "ArrowRight" && shipX < canvas.width - 32) {
+                shipX += 10;
+            }
+        }
+
+        function loop() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(ship, shipX, shipY, 32, 32);
+            context.drawImage(sushi, sushiX, sushiY, 16, 16);
+            sushiY += 2;
+
+            if (sushiY > canvas.height) {
+                sushiX = Math.random() * canvas.width;
+                sushiY = 0;
+            }
+
+            for (const star of stars) {
+                context.fillRect(star.x, star.y, 2, 2);
+                star.y += 1;
+                if (star.y > window.innerHeight) {
+                    star.x = Math.random() * window.innerWidth;
+                    star.y = 0;
+                }
+            }
+
+            if (shipX < sushiX + 16 && shipX + 32 > sushiX && shipY < sushiY + 16 && shipY + 32 > sushiY) {
+                message.textContent = "You've been hit by flying sushi! Game Over!";
+                return;
+            }
+
+            requestAnimationFrame(loop);
+        }
+    </script>
+    <script>
+        const starsContainer = document.createElement('div');
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'starfield';
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
+        }
+        document.body.appendChild(starsContainer);
+    </script>
+</body>
+</html>

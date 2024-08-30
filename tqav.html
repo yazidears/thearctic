@@ -1,0 +1,128 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surreal Jellyverse</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #051622;
+            font-family: 'Courier New', Courier, monospace;
+            color: #F6F5AE;
+        }
+        #sky {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+        }
+        #jellyplane {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: url('https://i.imgur.com/VTqA7u3.png') repeat;
+            animation: drift 10s linear infinite;
+        }
+        @keyframes drift {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .jelly {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FF7597 0%, #FF3D68 70%);
+            box-shadow: 0 0 10px #FF7597, 0 0 20px #FF3D68;
+            animation: bobbing 4s ease-in-out infinite, glide 12s linear infinite;
+            animation-delay: calc(-1s * var(--i));
+            z-index: 1;
+        }
+        @keyframes bobbing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(30px); }
+        }
+        @keyframes glide {
+            from { transform: translateX(0); }
+            to { transform: translateX(100vw); }
+        }
+        #control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        #control-panel button {
+            background: #FF7597;
+            color: #051622;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: background 0.3s;
+        }
+        #control-panel button:hover {
+            background: #FF3D68;
+        }
+    </style>
+</head>
+<body>
+    <div id="sky"></div>
+    <div id="jellyplane"></div>
+    <div id="control-panel">
+        <button onclick="addJelly()">Add Jelly</button>
+        <button onclick="removeJelly()">Remove Jelly</button>
+        <button onclick="changeTheme()">Change Theme</button>
+    </div>
+    <script>
+        let jellies = [];
+        let themes = [
+            {start: '#1B2735', end: '#090A0F'},
+            {start: '#FFB1C1', end: '#F8D7E4'},
+            {start: '#53354A', end: '#342E37'}
+        ];
+        let currentTheme = 0;
+
+        function createJelly(index) {
+            const jelly = document.createElement('div');
+            const size = Math.random() * 50 + 50;
+            jelly.className = 'jelly';
+            jelly.style.width = jelly.style.height = size + 'px';
+            jelly.style.left = Math.random() * (window.innerWidth - size) + 'px';
+            jelly.style.setProperty('--i', index);
+            document.body.appendChild(jelly);
+            jellies.push(jelly);
+        }
+
+        function addJelly() {
+            createJelly(jellies.length);
+        }
+
+        function removeJelly() {
+            if(jellies.length > 0) {
+                const jelly = jellies.pop();
+                jelly.remove();
+            }
+        }
+
+        function changeTheme() {
+            currentTheme = (currentTheme + 1) % themes.length;
+            document.getElementById('sky').style.background = `linear-gradient(180deg, ${themes[currentTheme].start} 0%, ${themes[currentTheme].end} 100%)`;
+        }
+
+        window.onload = () => {
+            for (let i = 0; i < 10; i++) {
+                createJelly(i);
+            }
+        };
+    </script>
+</body>
+</html>
+```

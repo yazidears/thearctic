@@ -1,0 +1,151 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Surreal Garden</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(315deg, #eccabb, #96e4df);
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #character {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            cursor: pointer;
+            animation: float 3s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -55%); }
+            50% { transform: translate(-50%, -45%); }
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: rise 5s infinite ease-in-out;
+        }
+        @keyframes rise {
+            0% { transform: translateY(100vh); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="character">😀</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        function drawTree(x, y, len, angle, branchWidth, color1, color2) {
+            ctx.beginPath();
+            ctx.save();
+            ctx.strokeStyle = color1;
+            ctx.fillStyle = color2;
+            ctx.lineWidth = branchWidth;
+            ctx.translate(x, y);
+            ctx.rotate(angle * Math.PI/180);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -len);
+            ctx.stroke();
+            if(len < 10) {
+                ctx.restore();
+                return;
+            }
+            drawTree(0, -len, len * 0.7, angle - 15, branchWidth * 0.7, color1, color2);
+            drawTree(0, -len, len * 0.7, angle + 15, branchWidth * 0.7, color1, color2);
+            ctx.restore();
+        }
+
+        drawTree(canvas.width/2, canvas.height, 120, 0, 10, 'sienna', 'green');
+
+        class Bubble {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 20 + 5;
+                this.shape = Math.random() > 0.5 ? 'circle' : 'star';
+                this.speedY = Math.random() * 1 + 0.5;
+                this.color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < -this.size) {
+                    this.y = canvas.height + this.size;
+                }
+            }
+            draw() {
+                if (this.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(Math.cos((18+(72*i))*(Math.PI/180)) * this.size + this.x, 
+                                   -Math.sin((18+(72*i))*(Math.PI/180)) * this.size + this.y);
+                        ctx.lineTo(Math.cos((54+(72*i))*(Math.PI/180)) * (this.size/2) + this.x, 
+                                   -Math.sin((54+(72*i))*(Math.PI/180)) * (this.size/2) + this.y);
+                    }
+                    ctx.closePath();
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+        }
+        
+        let bubblesArray;
+        
+        function init() {
+            bubblesArray = [];
+            for (let i = 0; i < 100; i++) {
+                bubblesArray.push(new Bubble());
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTree(canvas.width / 2, canvas.height, 120, 0, 10, 'sienna', 'green');
+            bubblesArray.forEach(bubble => {
+                bubble.update();
+                bubble.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        
+        init();
+        animate();
+        
+        const character = document.getElementById('character');
+        character.addEventListener('click', () => {
+            alert('Welcome to the Surreal Garden! 🌳');
+        });
+
+        for (let i = 0; i < 50; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.width = `${Math.random() * 60 + 20}px`;
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = `${Math.random() * 100}%`;
+            bubble.style.animationDelay = `${Math.random() * 5}s`;
+            document.body.appendChild(bubble);
+        }
+    </script>
+</body>
+</html>
+```

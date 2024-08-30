@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Bubble Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #001f3f, #005f99);
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            animation: bubble-rise linear infinite;
+        }
+        @keyframes bubble-rise {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-150%); }
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+            text-align: center;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">Click Bubbles to Pop! Score: <span id="score">0</span></div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        
+        const bubbles = [];
+        let score = 0;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        class Bubble {
+            constructor(x, y, radius, dx, dy, startTime) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.dx = dx;
+                this.dy = dy;
+                this.startTime = startTime;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+                ctx.closePath();
+            }
+            
+            move() {
+                if (Date.now() - this.startTime > 5000) {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                }
+            }
+        }
+        
+        function addBubbles() {
+            for (let i = 0; i < 10; i++) {
+                const radius = Math.random() * 20 + 10;
+                const x = Math.random() * (canvas.width - radius * 2) + radius;
+                const y = canvas.height + Math.random() * 100;
+                const dx = (Math.random() - 0.5) * 2;
+                const dy = -Math.random() * 2 - 1;
+                const startTime = Date.now();
+                
+                bubbles.push(new Bubble(x, y, radius, dx, dy, startTime));
+            }
+        }
+        
+        function updateBubbles() {
+            bubbles.forEach((bubble, index) => {
+                if (bubble.y + bubble.radius < 0) {
+                    bubbles.splice(index, 1);
+                }
+                bubble.move();
+                bubble.draw();
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateBubbles();
+            requestAnimationFrame(animate);
+        }
+        
+        canvas.addEventListener('click', function(e) {
+            const clickX = e.clientX;
+            const clickY = e.clientY;
+            
+            bubbles.forEach((bubble, index) => {
+                const dist = Math.sqrt((clickX - bubble.x) ** 2 + (clickY - bubble.y) ** 2);
+                if (dist < bubble.radius) {
+                    bubbles.splice(index, 1);
+                    score += 10;
+                    scoreEl.textContent = score;
+                }
+            });
+        });
+        
+        setInterval(() => {
+            if (bubbles.length < 50) {
+                addBubbles();
+            }
+        }, 1000);
+        
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Ice Cream Symphony</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: #f39c12;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        #controlLayer, #gameLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #controlLayer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: rgba(44, 62, 80, 0.8);
+            box-shadow: 0 0 10px #f39c12;
+            animation: fadeOut 2s 5s forwards;
+        }
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        .iceCream {
+            fill: #f39c12;
+            stroke: #f1c40f;
+            transform-origin: center;
+        }
+        .iceCream:hover {
+            transform: scale(1.2);
+        }
+        #gameLayer svg {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+        }
+        .symphony {
+            font-size: 24px;
+            text-shadow: 2px 2px #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <div id="controlLayer">
+        <h1 class="symphony">Welcome to the Galactic Ice Cream Symphony!</h1>
+    </div>
+    <div id="gameLayer"></div>
+
+    <script>
+        const colors = ['#e74c3c','#f1c40f','#2ecc71','#8e44ad','#3498db','#e67e22'];
+        const iceCreamShapes = [
+            'M20 0 L25 17 H15 L20 0 Z M15 17 A5 5 0 0 0 25 17 Z',
+            'M30 0 L40 15 H20 L30 0 Z M20 15 A10 10 0 0 0 40 15 Z'
+        ];
+
+        function createRandomIceCream() {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', iceCreamShapes[Math.floor(Math.random() * iceCreamShapes.length)]);
+            path.setAttribute('class', 'iceCream');
+            path.setAttribute('fill', colors[Math.floor(Math.random() * colors.length)]);
+            svg.appendChild(path);
+            return svg;
+        }
+
+        function positionIceCream(svg) {
+            svg.style.left = Math.random() * window.innerWidth + 'px';
+            svg.style.top = Math.random() * window.innerHeight + 'px';
+        }
+
+        function populateIceCream() {
+            const gameLayer = document.getElementById('gameLayer');
+            for (let i = 0; i < 50; i++) {
+                const iceCream = createRandomIceCream();
+                positionIceCream(iceCream);
+                gameLayer.appendChild(iceCream);
+            }
+        }
+
+        let xDir = 1, yDir = 1;
+        function animateIceCreams() {
+            const iceCreams = document.querySelectorAll('.iceCream');
+            iceCreams.forEach(iceCream => {
+                let x = parseFloat(iceCream.parentElement.style.left);
+                let y = parseFloat(iceCream.parentElement.style.top);
+                x += xDir * (Math.random() * 2 + 1);
+                y += yDir * (Math.random() * 2 + 1);
+
+                if (x > window.innerWidth - 60 || x < 0) xDir *= -1;
+                if (y > window.innerHeight - 60 || y < 0) yDir *= -1;
+
+                iceCream.parentElement.style.left = x + 'px';
+                iceCream.parentElement.style.top = y + 'px';
+            });
+            requestAnimationFrame(animateIceCreams);
+        }
+
+        window.onload = () => {
+            populateIceCream();
+            animateIceCreams();
+        };
+    </script>
+</body>
+</html>

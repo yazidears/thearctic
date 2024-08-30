@@ -1,0 +1,79 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Shape Shifter</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ade0f0, #f0ade0);
+        }
+        #shape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #8A2BE2;
+            transition: all 0.5s ease-in-out;
+        }
+        .square {
+            border-radius: 0;
+            background-color: #FFD700;
+        }
+        #message {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #2E8B57;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="shape"></div>
+    <div id="message">Double-click the shape to transform it!</div>
+    <script>
+        const shape = document.getElementById('shape');
+        const messages = [
+            "You've reached another dimension!",
+            "A new perspective unfolds...",
+            "Cosmic transformation complete.",
+            "Shapes are just an illusion.",
+            "Reality is malleable.",
+            "Are you even real?"
+        ];
+        let clickCount = 0;
+        let currentClass = '';
+
+        function getRandomMessage() {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            return messages[randomIndex];
+        }
+        
+        function changeShape() {
+            shape.style.transform = `translate(-50%, -50%) scale(${Math.random() * 2 + 0.5}) rotate(${Math.random() * 360}deg)`;
+            currentClass = currentClass === 'square' ? '' : 'square';
+            shape.className = currentClass;
+            document.getElementById('message').textContent = getRandomMessage();
+        }
+        
+        shape.addEventListener('dblclick', changeShape);
+        
+        document.body.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount >= 10) {
+                document.body.style.background = `linear-gradient(135deg, #${Math.random().toString(16).slice(2, 8)}, #${Math.random().toString(16).slice(2, 8)})`;
+                clickCount = 0;
+            }
+        });
+    </script>
+</body>
+</html>
+```

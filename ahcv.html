@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstract Interactive Canvas</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #canvas {
+            background-color: black;
+            display: block;
+            margin: 0 auto;
+        }
+        .info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="info">Hover and Click: Unleash the Chaos</div>
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A13FFF'];
+    const shapes = ['circle', 'square', 'triangle'];
+    
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomColor() {
+        return colors[randomInt(0, colors.length - 1)];
+    }
+
+    function drawShape(x, y, type) {
+        const size = randomInt(10, 60);
+        ctx.fillStyle = randomColor();
+        
+        switch(type) {
+            case 'circle':
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+            case 'square':
+                ctx.beginPath();
+                ctx.rect(x - size / 2, y - size / 2, size, size);
+                ctx.fill();
+                break;
+            case 'triangle':
+                ctx.beginPath();
+                ctx.moveTo(x, y - size);
+                ctx.lineTo(x - size, y + size);
+                ctx.lineTo(x + size, y + size);
+                ctx.closePath();
+                ctx.fill();
+                break;
+        }
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        drawShape(x, y, shapes[randomInt(0, shapes.length - 1)]);
+    });
+
+    canvas.addEventListener('click', () => {
+        for(let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                drawShape(randomInt(0, width), randomInt(0, height), shapes[randomInt(0, shapes.length - 1)]);
+            }, i * 100);
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    });
+
+</script>
+
+</body>
+</html>

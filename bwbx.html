@@ -1,0 +1,106 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical Space Odyssey</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: radial-gradient(circle, #282c34, #1b1f23);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #spaceship {
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/ZDxANnL.png') no-repeat center;
+            background-size: cover;
+            position: absolute;
+            transition: transform 0.2s;
+        }
+        #instruction {
+            position: absolute;
+            top: 20px;
+            font-size: 1.5em;
+            text-shadow: 0 0 5px rgba(255,255,255,0.6);
+        }
+        .star {
+            width: 3px;
+            height: 3px;
+            background: white;
+            position: absolute;
+            border-radius: 50%;
+            animation: twinkling 1.5s infinite alternate;
+        }
+        @keyframes twinkling {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="spaceship"></div>
+    <div id="instruction">Use your mouse to navigate the spaceship</div>
+    <script>
+        const spaceship = document.getElementById('spaceship');
+        const body = document.body;
+        const starsCount = 100;
+        
+        const getRandomPosition = () => {
+            const x = Math.floor(Math.random() * window.innerWidth);
+            const y = Math.floor(Math.random() * window.innerHeight);
+            return { x, y };
+        }
+
+        for (let i = 0; i < starsCount; i++) {
+            const { x, y } = getRandomPosition();
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = `${x}px`;
+            star.style.top = `${y}px`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            body.appendChild(star);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            const rect = spaceship.getBoundingClientRect();
+            const spaceshipX = e.clientX - rect.width / 2;
+            const spaceshipY = e.clientY - rect.height / 2;
+            spaceship.style.transform = `translate(${spaceshipX}px, ${spaceshipY}px) rotate(${e.clientX}deg)`;
+        });
+
+        function createAsteroids() {
+            setInterval(() => {
+                const asteroid = document.createElement('div');
+                asteroid.style.width = `${Math.random() * 20 + 10}px`;
+                asteroid.style.height = asteroid.style.width;
+                asteroid.style.background = 'gray';
+                asteroid.style.position = 'absolute';
+                asteroid.style.borderRadius = '50%';
+                const { x, y } = getRandomPosition();
+                asteroid.style.left = `${x}px`;
+                asteroid.style.top = `-${y}px`;
+                body.appendChild(asteroid);
+
+                asteroid.animate([
+                    { transform: `translateY(0)` },
+                    { transform: `translateY(${window.innerHeight + y}px)` }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'linear',
+                }).onfinish = () => body.removeChild(asteroid);
+            }, 500);
+        }
+
+        createAsteroids();
+    </script>
+</body>
+</html>
+```

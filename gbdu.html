@@ -1,0 +1,98 @@
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to top, #ff80ed, #f041b8, #ff6f61);
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+        #surreal {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://i.imgur.com/3suxlvm.gif') center/cover no-repeat;
+            opacity: 0.5;
+        }
+        .moon {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: sparkle 2s infinite ease-in-out alternate;
+        }
+        @keyframes sparkle {
+            from { transform: scale(1); }
+            to { transform: scale(1.5); }
+        }
+        #controlPanel {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #slider {
+            width: 100px;
+            transform: rotate(-90deg);
+        }
+        #controlPanel label {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="surreal"></div>
+    <div class="moon" id="moon"></div>
+    <div id="controlPanel">
+        <label for="slider">Move Moon:</label>
+        <input type="range" id="slider" min="0" max="100" value="50">
+    </div>
+    <script>
+        const stars = Array.from({ length: 100 }, (_, i) => {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+            document.body.appendChild(star);
+            return star;
+        });
+
+        const moon = document.getElementById('moon');
+        const slider = document.getElementById('slider');
+
+        function animateMoon(e) {
+            const value = parseInt(e.target.value, 10);
+            const angle = (value / 100) * Math.PI * 2;
+            const radius = Math.min(window.innerWidth, window.innerHeight) / 4;
+            const x = Math.cos(angle) * radius + window.innerWidth / 2 - 40;
+            const y = Math.sin(angle) * radius + window.innerHeight / 2 - 40;
+            moon.style.transform = `translate(${x}px, ${y}px)`;
+            stars.forEach(star => {
+                star.style.transform = `translate(${(Math.random() - 0.5) * 6}px, ${(Math.random() - 0.5) * 6}px)`;
+            });
+        }
+
+        moon.style.top = `${window.innerHeight / 2}px`;
+        moon.style.left = `${window.innerWidth / 2}px`;
+        slider.addEventListener('input', animateMoon);
+    </script>
+</body>
+</html>

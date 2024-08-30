@@ -1,0 +1,117 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Aquatic Discord - An Underwater Odyssey</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #001f3f;
+            color: #fff;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+        }
+        .fish {
+            position: absolute;
+            width: 80px;
+            height: 20px;
+            background: orange;
+            border-radius: 10px;
+        }
+        .fish::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-right: 10px solid orange;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            opacity: 0;
+            animation: bubble 4s infinite;
+        }
+        @keyframes bubble {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-800px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>The Aquatic Discord</h1>
+    <p>Click to spawn fish and let the underwater madness unfold!</p>
+    <div id="ocean"></div>
+    <script>
+        const ocean = document.getElementById('ocean');
+        
+        ocean.addEventListener('click', addFish);
+
+        function addFish(e) {
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.style.left = `${e.pageX - 40}px`;
+            fish.style.top = `${e.pageY - 10}px`;
+
+            const direction = Math.random() > 0.5 ? 1 : -1;
+            const speed = Math.random() * 4 + 2;
+
+            fish.style.transform = `scaleX(${direction})`;
+            ocean.appendChild(fish);
+
+            moveFish(fish, direction, speed);
+            createBubbles();
+        }
+
+        function moveFish(fish, direction, speed) {
+            let pos = parseInt(fish.style.left || 0);
+
+            function frame() {
+                pos += direction * speed; 
+                fish.style.left = pos + 'px';
+
+                if (pos > window.innerWidth || pos < -80) {
+                    fish.parentElement.removeChild(fish);
+                } else {
+                    requestAnimationFrame(frame);
+                }
+            }
+            frame();
+        }
+
+        function createBubbles() {
+            for (let i = 0; i < 10; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.width = bubble.style.height = `${Math.random() * 20 + 10}px`;
+                bubble.style.left = `${Math.random() * window.innerWidth}px`;
+                bubble.style.bottom = '0';
+                ocean.appendChild(bubble);
+
+                if (Math.random() < 0.5) bubble.remove();
+            }
+        }
+
+        setInterval(createBubbles, 2000);
+    </script>
+</body>
+</html>
+```

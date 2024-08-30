@@ -1,0 +1,145 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Jellyfish Ballet</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #020024, #090979, #00d4ff);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .universe {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            position: relative;
+            padding-top: 2em;
+        }
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .jellyfish {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 100px;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+        }
+        .tentacles {
+            position: absolute;
+            bottom: 0;
+            width: 12px;
+            height: 100px;
+            background: #fffb96;
+            border-radius: 50%;
+            animation: float 3s infinite ease-in-out;
+        }
+        .tentacle-1 { left: 5px; animation-delay: -0.2s; }
+        .tentacle-2 { left: 25px; animation-delay: -0.4s; }
+        .tentacle-3 { left: 45px; animation-delay: -0.6s; }
+        .tentacle-4 { left: 65px; animation-delay: -0.8s; }
+        .tentacle-5 { left: 85px; animation-delay: -1s; }
+        .head {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            border-radius: 60px 60px 0 0;
+            background: rgba(255, 255, 255, 0.7);
+            animation: pulse 3s infinite alternate;
+        }
+        @keyframes float {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.7); }
+        }
+        @keyframes pulse {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="universe">
+        <h1 class="title">Welcome to the Galactic Jellyfish Ballet</h1>
+        <p>The dance of the universe is calling. Witness the ethereal creatures glide effortlessly!</p>
+    </div>
+    <canvas id="stars"></canvas>
+    <div class="jellyfish">
+        <div class="head"></div>
+        <div class="tentacles tentacle-1"></div>
+        <div class="tentacles tentacle-2"></div>
+        <div class="tentacles tentacle-3"></div>
+        <div class="tentacles tentacle-4"></div>
+        <div class="tentacles tentacle-5"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let stars = [];
+
+        for(let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speed: Math.random() * 1
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function updateStars() {
+            stars.forEach(star => {
+                star.y += star.speed;
+                if(star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+        }
+
+        function animate() {
+            drawStars();
+            updateStars();
+            requestAnimationFrame(animate);
+        }
+
+        const jelly = document.querySelector('.jellyfish');
+        let angle = 0;
+        function moveJellyfish() {
+            angle += 0.05;
+            jelly.style.top = (window.innerHeight / 2 + Math.sin(angle) * 20) + 'px';
+            jelly.style.left = (window.innerWidth / 2 + Math.cos(angle) * 20) + 'px';
+            requestAnimationFrame(moveJellyfish);
+        }
+
+        animate();
+        moveJellyfish();
+    </script>
+</body>
+</html>
+```
